@@ -1,0 +1,6 @@
+
+
+
+read up on instancing on learnopengl because there might be a better and more efficient way to do it
+
+create optimization that removes internal sides

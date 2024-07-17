@@ -1,0 +1,57 @@
+# cmake minimum version required
+cmake_minimum_required(VERSION 3.28.3)
+
+# ---
+
+# set output directories for binary and libraries
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# ---
+
+# project name
+project(mc_clone)
+
+# ---
+
+# set include directories
+INCLUDE_DIRECTORIES(./include)
+
+# ---
+
+# add source fles
+add_executable(${PROJECT_NAME} 
+	./include/STB/stb_image.h # IMPORTANT HEADER ONLY LIBRARY
+
+	./src/main.c
+	./src/camera.c
+	./src/world.c
+	./src/shader.c
+	./src/image.c
+	./src/file.c
+
+	./src/headers/camera.h
+	./src/headers/world.h
+	./src/headers/shader.h
+	./src/headers/image.h
+	./src/headers/file.h
+
+	./src/headers/mesh.h
+)
+
+# add cglm library
+add_subdirectory(./include/deps/cglm)
+
+# add glfw directory
+add_subdirectory(./include/deps/glfw-3.4)
+
+# add glad as a library
+add_library(glad STATIC ./include/GLAD33/glad.c)
+
+# ---
+
+# link cglm, glfw and glad to project
+target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} glad)
+target_link_libraries(${PROJECT_NAME} cglm)
