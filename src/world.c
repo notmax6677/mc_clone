@@ -53,7 +53,7 @@ void init_world() {
 void draw_world() {
 	draw_chunk(firstChunk, blockShaderProgram, worldAtlas);
 
-	draw_test_block(blockShaderProgram, worldAtlas);
+	//draw_test_block(blockShaderProgram, worldAtlas);
 }
 
 

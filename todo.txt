@@ -1,1 +1,3 @@
-optimize chunk create functionality and organize the code
+try to remove the amount of iterations that occur in a chunk as a way of optimization
+
+fix movement so that horizontal speed doesnt change with where im looking

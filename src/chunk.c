@@ -32,6 +32,168 @@ struct Chunk {
 	struct Mesh mesh; // mesh of chunk
 };
 
+// ---
+
+
+// grass block texture coordinates
+int GRASS_TEX_COORDS[] = {
+	// front
+	0,  0,
+	16, 0,
+	0,  16,
+	16, 16,
+
+	// back
+	16, 0,
+	0,  0,
+	16, 16,
+	0,  16,
+
+	// left
+	0,  0,
+	16, 0,
+	0,  16,
+	16, 16,
+
+	// right
+	0,  0,
+	16, 0,
+	0,  16,
+	16, 16,
+
+	// bottom
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// top
+	32, 0,
+	48, 0,
+	32, 16,
+	48, 16,
+};
+
+
+// ---
+
+
+// creates a side vertices array from a template based on inputted side and coordinates, and writes it to given array
+void create_side_vertices(const char* side, const char* blockType, int xPos, int yPos, int zPos, float* array) {
+
+	// create initial coordinate values for vertices array
+	float x1, y1, z1;
+	float x2, y2, z2;
+	float x3, y3, z3;
+	float x4, y4, z4;
+
+	// declare texture coordinates
+	int tex_x1, tex_y1;
+	int tex_x2, tex_y2;
+	int tex_x3, tex_y3;
+	int tex_x4, tex_y4;
+
+	// texture offset for indexing a pre-made tex coords array
+	int textureOffset;
+
+	// declare texture coordinate values
+	int texCoords[8*6];
+
+	// load texture coordinates based on block type
+	if(strcmp(blockType, "grass") == 0) {
+		// copy grass texture coords array to tex_coords
+		memcpy(texCoords, GRASS_TEX_COORDS, sizeof(int) * 8*6);
+	}
+
+	// compare side string to string literals and define coordinate floats, as well as set texture offset
+	if(strcmp(side, "front") == 0) {
+		x1 = 0.0f; y1 = 1.0f; z1 = 1.0f;
+		x2 = 1.0f; y2 = 1.0f; z2 = 1.0f;
+		x3 = 0.0f; y3 = 0.0f; z3 = 1.0f;
+		x4 = 1.0f; y4 = 0.0f; z4 = 1.0f;
+
+		textureOffset = 0;
+	}
+	else if(strcmp(side, "back") == 0) {
+		x1 = 0.0f; y1 = 1.0f; z1 = 0.0f;
+		x2 = 1.0f; y2 = 1.0f; z2 = 0.0f;
+		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
+		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
+
+		textureOffset = 8;
+	}
+	else if(strcmp(side, "left") == 0) {
+		x1 = 0.0f; y1 = 1.0f; z1 = 0.0f;
+		x2 = 0.0f; y2 = 1.0f; z2 = 1.0f;
+		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
+		x4 = 0.0f; y4 = 0.0f; z4 = 1.0f;
+
+		textureOffset = 16;
+	}
+	else if(strcmp(side, "right") == 0) {
+		x1 = 1.0f; y1 = 1.0f; z1 = 1.0f;
+		x2 = 1.0f; y2 = 1.0f; z2 = 0.0f;
+		x3 = 1.0f; y3 = 0.0f; z3 = 1.0f;
+		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
+
+		textureOffset = 24;
+	}
+	else if(strcmp(side, "bottom") == 0) {
+		x1 = 0.0f; y1 = 0.0f; z1 = 1.0f;
+		x2 = 1.0f; y2 = 0.0f; z2 = 1.0f;
+		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
+		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
+
+		textureOffset = 32;
+	}
+	else if(strcmp(side, "top") == 0) {
+		x1 = 0.0f; y1 = 1.0f; z1 = 1.0f;
+		x2 = 1.0f; y2 = 1.0f; z2 = 1.0f;
+		x3 = 0.0f; y3 = 1.0f; z3 = 0.0f;
+		x4 = 1.0f; y4 = 1.0f; z4 = 0.0f;
+
+		textureOffset = 40;
+	}
+
+	// assign texture coordinates
+	tex_x1 = texCoords[0+textureOffset]; tex_y1 = texCoords[1+textureOffset];
+	tex_x2 = texCoords[2+textureOffset]; tex_y2 = texCoords[3+textureOffset];
+	tex_x3 = texCoords[4+textureOffset]; tex_y3 = texCoords[5+textureOffset];
+	tex_x4 = texCoords[6+textureOffset]; tex_y4 = texCoords[7+textureOffset];
+
+	// generate vertices array
+	float sideVertices[] = {
+		// position                     color                texture coords
+
+		x1+xPos,  y1+yPos,  z1+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(tex_x1), calc_at_tex_y(tex_y1),  // top left
+		x2+xPos,  y2+yPos,  z2+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(tex_x2), calc_at_tex_y(tex_y2),  // top right
+		x3+xPos,  y3+yPos,  z3+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(tex_x3), calc_at_tex_y(tex_y3),  // bot left
+		x4+xPos,  y4+yPos,  z4+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(tex_x4), calc_at_tex_y(tex_y4),  // bot right
+	};
+
+	// copy contents of new sideVertices array into passed in array
+	memcpy(array, sideVertices, sizeof(float) * 4*8);
+
+}
+
+
+// ---
+
+
+// creates a side indices array from a template based on indices offset and index, and writes it to given array
+void create_side_indices(int indicesOffset, int index, int* array) {
+
+	// generate indices array
+	int sideIndices[] = {
+		indicesOffset+(index*24), indicesOffset+1+(index*24), indicesOffset+2+(index*24),
+		indicesOffset+1+(index*24), indicesOffset+2+(index*24), indicesOffset+3+(index*24),
+	};
+
+	// copy contents of new sideIndices array into passed in array
+	memcpy(array, sideIndices, sizeof(int) * 6);
+
+}
+
 
 // ---
 
@@ -111,10 +273,29 @@ struct Chunk generate_chunk() {
 
 	}
 
+
+	// ---
+
+
+	// reset coordinates values aftre that first loop
 	xPos = 0;
 	yPos = 0;
 	zPos = 0;
+
 	
+	// ---
+	
+
+	// define side vertices arrays for each side of a block
+	float frontVertices  [4*8];
+	float backVertices   [4*8];
+	float leftVertices   [4*8];
+	float rightVertices  [4*8];
+	float bottomVertices [4*8];
+	float topVertices    [4*8];
+
+	// create single side indices array
+	int sideIndices[6];
 
 	// now iterate (again) thru all block positions
 	for(int i=0; i < blockAmount; i++) {
@@ -125,103 +306,22 @@ struct Chunk generate_chunk() {
 		int indicesIndex = 0;
 		int indicesOffset = 0;
 
-		// front vertices
-		float frontVertices[] = {
-			// position                           color                texture coords
 
-			// front
-			0.0f+xPos,  1.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(0),  calc_at_tex_y(0),   // top left
-			1.0f+xPos,  1.0f+yPos,  1.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(16), calc_at_tex_y(0),   // top right
-			0.0f+xPos,  0.0f+yPos,  1.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(0),  calc_at_tex_y(16),  // bot left
-			1.0f+xPos,  0.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(16), calc_at_tex_y(16),  // bot right
-		};
-		float backVertices[] = {
-			// position                           color                texture coords
+		// ---
 
-			// back (flip x tex coords here so that back shows same image as rest and not flipped)
-		   0.0f+xPos,  1.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(16), calc_at_tex_y(0),   // top left
-			1.0f+xPos,  1.0f+yPos,  0.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(0),  calc_at_tex_y(0),   // top right
-		   0.0f+xPos,  0.0f+yPos,  0.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(16), calc_at_tex_y(16),  // bot left
-			1.0f+xPos,  0.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(0),  calc_at_tex_y(16),  // bot right			
-		};
-		float leftVertices[] = {
-			// position                           color                texture coords
-
-			// left
-		   0.0f+xPos,  1.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(0),  calc_at_tex_y(0),   // top left
-		   0.0f+xPos,  1.0f+yPos,  1.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(16), calc_at_tex_y(0),   // top right
-		   0.0f+xPos,  0.0f+yPos,  0.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(0),  calc_at_tex_y(16),  // bot left
-		   0.0f+xPos,  0.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(16), calc_at_tex_y(16),  // bot right
-		};
-		float rightVertices[] = {
-			// position                           color                texture coords
-
-			// right
-			1.0f+xPos,  1.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(0),  calc_at_tex_y(0),   // top left
-			1.0f+xPos,  1.0f+yPos,  0.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(16), calc_at_tex_y(0),   // top right
-			1.0f+xPos,  0.0f+yPos,  1.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(0),  calc_at_tex_y(16),  // bot left
-			1.0f+xPos,  0.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(16), calc_at_tex_y(16),  // bot right
-		};
-		float bottomVertices[] = {
-			// position                           color                texture coords
-
-			// bottom
-		   0.0f+xPos,  0.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(16), calc_at_tex_y(0),   // top left
-			1.0f+xPos,  0.0f+yPos,  1.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(32), calc_at_tex_y(0),   // top right
-		   0.0f+xPos,  0.0f+yPos,  0.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(16), calc_at_tex_y(16),  // bot left
-			1.0f+xPos,  0.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(32), calc_at_tex_y(16),  // bot right	
-		};
-		float topVertices[] = {
-			// position                           color                texture coords
-
-			// top
-		   0.0f+xPos,  1.0f+yPos,  1.0f+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(32), calc_at_tex_y(0),   // top left
-			1.0f+xPos,  1.0f+yPos,  1.0f+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(48), calc_at_tex_y(0),   // top right
-		   0.0f+xPos,  1.0f+yPos,  0.0f+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(32), calc_at_tex_y(16),  // bot left
-			1.0f+xPos,  1.0f+yPos,  0.0f+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(48), calc_at_tex_y(16),  // bot right
-		};
-
-
-
-		// indices array
-		int indices[] = {
-			// front
-			0+(i*24), 1+(i*24), 2+(i*24),
-			1+(i*24), 2+(i*24), 3+(i*24),
-
-			// back
-			4+(i*24), 5+(i*24), 6+(i*24),
-			5+(i*24), 6+(i*24), 7+(i*24),
-
-			// left
-			8+(i*24), 9+(i*24), 10+(i*24),
-			9+(i*24), 10+(i*24), 11+(i*24),
-
-			// right
-			12+(i*24), 13+(i*24), 14+(i*24),
-			13+(i*24), 14+(i*24), 15+(i*24),
-
-			// bottom
-			16+(i*24), 17+(i*24), 18+(i*24),
-			17+(i*24), 18+(i*24), 19+(i*24),
-
-			// top
-			20+(i*24), 21+(i*24), 22+(i*24),
-			21+(i*24), 22+(i*24), 23+(i*24),
-		};
 
 		// booleans to tell whether to add those sides or not
-		bool front = true;
-		bool back = true;
-		bool left = true;
-		bool right = true;
+		bool front  = true;
+		bool back   = true;
+		bool left   = true;
+		bool right  = true;
 		bool bottom = true;
-		bool top = true;
+		bool top    = true;
 
 		// iterate through all blocks again
 		for(int b = 0; b < blockAmount; b++) {
-			// if both indexed blocks arent the same block
-			if(i != b) {
+			// if both indexed blocks arent the same block and second block isnt just an air block
+			if(i != b && newChunk.blockPositions[b][3] != 0) {
 				
 				// create and write new block position vectors for both blocks
 				vec4 block1Pos;
@@ -229,34 +329,31 @@ struct Chunk generate_chunk() {
 				glm_vec4_copy(newChunk.blockPositions[i], block1Pos);
 				glm_vec4_copy(newChunk.blockPositions[b], block2Pos);
 
-				// if second block isnt just an air block
-				if(block2Pos[3] != 0) {
-
-					// front
-					if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]+1 == block2Pos[2]) {
-						front = false;
-					}
-					// back
-					if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]-1 == block2Pos[2]) {
-						back = false;
-					}
-					// left
-					if(block1Pos[0]-1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-						left = false;
-					}
-					// right
-					if(block1Pos[0]+1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-						right = false;
-					}
-					// bottom
-					if(block1Pos[0] == block2Pos[0] && block1Pos[1]-1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-						bottom = false;
-					}
-					// top
-					if(block1Pos[0] == block2Pos[0] && block1Pos[1]+1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-						top = false;
-					}
+				// front
+				if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]+1 == block2Pos[2]) {
+					front = false;
 				}
+				// back
+				if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]-1 == block2Pos[2]) {
+					back = false;
+				}
+				// left
+				if(block1Pos[0]-1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
+					left = false;
+				}
+				// right
+				if(block1Pos[0]+1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
+					right = false;
+				}
+				// bottom
+				if(block1Pos[0] == block2Pos[0] && block1Pos[1]-1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
+					bottom = false;
+				}
+				// top
+				if(block1Pos[0] == block2Pos[0] && block1Pos[1]+1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
+					top = false;
+				}
+
 			}
 		}
 
@@ -264,84 +361,95 @@ struct Chunk generate_chunk() {
 		
 
 		if(front) {
+			// generate proper vertices array and load it into frontVertices
+			create_side_vertices("front", "grass", xPos, yPos, zPos, frontVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
-
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(frontVertices), frontVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
+			// increment vertices and indices index, as well as indices offset
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
 		}
 		if(back) {
+			// generate proper vertices array and load it into backVertices
+			create_side_vertices("back", "grass", xPos, yPos, zPos, backVertices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(backVertices), backVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
+			// increment vertices and indices index, as well as indices offset
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
 		}
 		if(left) {
+			// generate proper vertices array and load it into leftVertices
+			create_side_vertices("left", "grass",  xPos, yPos, zPos, leftVertices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(leftVertices), leftVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
+			// increment vertices and indices index, as well as indices offset
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
 		}
 		if(right) {
+			// generate proper vertices array and load it into rightVertices
+			create_side_vertices("right", "grass", xPos, yPos, zPos, rightVertices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(rightVertices), rightVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
+			// increment vertices and indices index, as well as indices offset
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
 		}
 		if(bottom) {
+			// generate proper vertices array and load it into bottomVertices
+			create_side_vertices("bottom", "grass", xPos, yPos, zPos, bottomVertices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(bottomVertices), bottomVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
+			// increment vertices and indices index, as well as indices offset
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
 		}
 		if(top) {
+			// generate proper vertices array and load it into topVertices
+			create_side_vertices("top", "grass", xPos, yPos, zPos, topVertices);
 
-			int indices_addition[] = {
-				indicesOffset+(i*24), indicesOffset+1+(i*24), indicesOffset+2+(i*24),
-				indicesOffset+1+(i*24), indicesOffset+2+(i*24), indicesOffset+3+(i*24),
-			};
+			// generate proper indices array and load it into sideIndices
+			create_side_indices(indicesOffset, i, sideIndices);
 
+			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(topVertices), topVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(indices_addition), indices_addition);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 		}
 
 
