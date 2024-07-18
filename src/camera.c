@@ -103,7 +103,8 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 
 		// calculate and store product of camera speed and camera front
 		vec3 product;
-		glm_vec3_mul(cameraFront, (vec3){cameraSpeed*deltaTime, 0, cameraSpeed*deltaTime}, product);
+		glm_vec3_mul((vec3){cameraFront[0] / cos(glm_rad(pitch)), 0, cameraFront[2] / cos(glm_rad(pitch))}, 
+				(vec3){cameraSpeed*deltaTime, 0, cameraSpeed*deltaTime}, product);
 
 		// add product to camera position
 		glm_vec3_add(cameraPos, product, cameraPos);
@@ -115,7 +116,8 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 
 		// calculate and store product of camera speed and camera front
 		vec3 product;
-		glm_vec3_mul(cameraFront, (vec3){cameraSpeed*deltaTime, 0, cameraSpeed*deltaTime}, product);
+		glm_vec3_mul((vec3){cameraFront[0] / cos(glm_rad(pitch)), 0, cameraFront[2] / cos(glm_rad(pitch))}, 
+				(vec3){cameraSpeed*deltaTime, 0, cameraSpeed*deltaTime}, product);
 
 		// subtract product from camera position
 		glm_vec3_sub(cameraPos, product, cameraPos);
@@ -127,7 +129,7 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 
 		// calculate and store cross value
 		vec3 cross;
-		glm_cross(cameraFront, cameraUp, cross);
+		glm_cross((vec3){cameraFront[0] / cos(glm_rad(pitch)), 0, cameraFront[2] / cos(glm_rad(pitch))}, cameraUp, cross);
 
 		// then normalized value
 		vec3 normalized;
@@ -148,7 +150,7 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 
 		// calculate and store cross value
 		vec3 cross;
-		glm_cross(cameraFront, cameraUp, cross);
+		glm_cross((vec3){cameraFront[0] / cos(glm_rad(pitch)), 0, cameraFront[2] / cos(glm_rad(pitch))}, cameraUp, cross);
 
 		// then normalized value
 		vec3 normalized;
