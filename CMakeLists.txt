@@ -24,20 +24,36 @@ INCLUDE_DIRECTORIES(./include)
 add_executable(${PROJECT_NAME} 
 	./include/STB/stb_image.h # IMPORTANT HEADER ONLY LIBRARY
 
+	# --- source files ---
 	./src/main.c
+
 	./src/camera.c
+
+	./src/chunk.c
+	./src/test_block.c
 	./src/world.c
+
 	./src/shader.c
 	./src/image.c
 	./src/file.c
+	# --- --- ---
 
+
+	# --- headers ---
 	./src/headers/camera.h
+
+	./src/headers/test_block.h
+	./src/headers/chunk.h
 	./src/headers/world.h
+
 	./src/headers/shader.h
 	./src/headers/image.h
 	./src/headers/file.h
+	# --- --- ---
 
+	# --- header only ---
 	./src/headers/mesh.h
+	# --- --- ---
 )
 
 # add cglm library

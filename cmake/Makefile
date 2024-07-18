@@ -307,6 +307,30 @@ src/camera.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/camera.c.s
 .PHONY : src/camera.c.s
 
+src/chunk.o: src/chunk.c.o
+.PHONY : src/chunk.o
+
+# target to build an object file
+src/chunk.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/chunk.c.o
+.PHONY : src/chunk.c.o
+
+src/chunk.i: src/chunk.c.i
+.PHONY : src/chunk.i
+
+# target to preprocess a source file
+src/chunk.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/chunk.c.i
+.PHONY : src/chunk.c.i
+
+src/chunk.s: src/chunk.c.s
+.PHONY : src/chunk.s
+
+# target to generate assembly for a file
+src/chunk.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/chunk.c.s
+.PHONY : src/chunk.c.s
+
 src/file.o: src/file.c.o
 .PHONY : src/file.o
 
@@ -403,6 +427,30 @@ src/shader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/shader.c.s
 .PHONY : src/shader.c.s
 
+src/test_block.o: src/test_block.c.o
+.PHONY : src/test_block.o
+
+# target to build an object file
+src/test_block.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/test_block.c.o
+.PHONY : src/test_block.c.o
+
+src/test_block.i: src/test_block.c.i
+.PHONY : src/test_block.i
+
+# target to preprocess a source file
+src/test_block.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/test_block.c.i
+.PHONY : src/test_block.c.i
+
+src/test_block.s: src/test_block.c.s
+.PHONY : src/test_block.s
+
+# target to generate assembly for a file
+src/test_block.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/test_block.c.s
+.PHONY : src/test_block.c.s
+
 src/world.o: src/world.c.o
 .PHONY : src/world.o
 
@@ -453,6 +501,9 @@ help:
 	@echo "... src/camera.o"
 	@echo "... src/camera.i"
 	@echo "... src/camera.s"
+	@echo "... src/chunk.o"
+	@echo "... src/chunk.i"
+	@echo "... src/chunk.s"
 	@echo "... src/file.o"
 	@echo "... src/file.i"
 	@echo "... src/file.s"
@@ -465,6 +516,9 @@ help:
 	@echo "... src/shader.o"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"
+	@echo "... src/test_block.o"
+	@echo "... src/test_block.i"
+	@echo "... src/test_block.s"
 	@echo "... src/world.o"
 	@echo "... src/world.i"
 	@echo "... src/world.s"

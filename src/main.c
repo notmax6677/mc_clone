@@ -177,6 +177,9 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
+	// set the line width for wireframe lines
+	glLineWidth(3);
+
 	// call init function for other stuff
 	init(window);
 

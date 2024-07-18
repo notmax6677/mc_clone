@@ -1,5 +1,5 @@
-CMakeFiles/mc_clone.dir/src/world.c.o: \
- /home/max/Projects/c/mc_clone/src/world.c /usr/include/stdc-predef.h \
+CMakeFiles/mc_clone.dir/src/chunk.c.o: \
+ /home/max/Projects/c/mc_clone/src/chunk.c /usr/include/stdc-predef.h \
  /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
  /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
@@ -139,9 +139,6 @@ CMakeFiles/mc_clone.dir/src/world.c.o: \
  /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /usr/include/strings.h /home/max/Projects/c/mc_clone/src/headers/image.h \
- /home/max/Projects/c/mc_clone/src/headers/camera.h \
- /home/max/Projects/c/mc_clone/src/headers/shader.h \
- /home/max/Projects/c/mc_clone/src/headers/test_block.h \
- /home/max/Projects/c/mc_clone/src/headers/chunk.h \
- /home/max/Projects/c/mc_clone/src/headers/mesh.h
+ /usr/include/strings.h /home/max/Projects/c/mc_clone/src/headers/mesh.h \
+ /home/max/Projects/c/mc_clone/src/headers/image.h \
+ /home/max/Projects/c/mc_clone/src/headers/camera.h
