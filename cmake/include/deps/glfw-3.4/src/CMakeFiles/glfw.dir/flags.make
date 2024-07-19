@@ -6,5 +6,5 @@ C_DEFINES = -DHAVE_MEMFD_CREATE -D_DEFAULT_SOURCE -D_GLFW_WAYLAND -D_GLFW_X11
 
 C_INCLUDES = -I/home/max/Projects/c/mc_clone/./include -I/home/max/Projects/c/mc_clone/include/deps/glfw-3.4/include -I/home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src -I/home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src
 
-C_FLAGS = -g -std=c99 -fPIC -Wall
+C_FLAGS = -g -std=c99 -fPIC -ggdb3 -O0 -Wall
 

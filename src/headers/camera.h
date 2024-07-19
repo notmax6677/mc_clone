@@ -19,6 +19,8 @@ mat4* get_model();
 mat4* get_view();
 mat4* get_projection();
 
+vec3* get_camera_pos();
+
 bool get_cursor_lock();
 
 // setters

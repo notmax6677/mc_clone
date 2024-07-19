@@ -43,6 +43,8 @@ void update(GLFWwindow* window) {
 	lastFrameTime = currentFrameTime; // assign last frame time to current
 
 	update_camera(window, deltaTime);
+
+	update_world();
 }
 
 // frame draw
@@ -178,7 +180,7 @@ int main() {
 	glEnable(GL_BLEND);
 
 	// set the line width for wireframe lines
-	glLineWidth(3);
+	glLineWidth(2);
 
 	// call init function for other stuff
 	init(window);

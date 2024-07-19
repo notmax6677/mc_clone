@@ -293,6 +293,10 @@ mat4* get_projection() {
 	return &projection;
 }
 
+vec3* get_camera_pos() {
+	return &cameraPos;
+}
+
 bool get_cursor_lock() {
 	return cursorLocked;
 }

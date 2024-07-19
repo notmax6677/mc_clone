@@ -1,8 +1,11 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-// inititate world
+// initiate world
 void init_world();
+
+// update world
+void update_world();
 
 // draw world
 void draw_world();

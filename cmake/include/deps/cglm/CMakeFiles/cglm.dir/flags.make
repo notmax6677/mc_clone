@@ -6,5 +6,5 @@ C_DEFINES = -DCGLM_EXPORTS -Dcglm_EXPORTS
 
 C_INCLUDES = -I/home/max/Projects/c/mc_clone/./include -I/home/max/Projects/c/mc_clone/include/deps/cglm/include -I/home/max/Projects/c/mc_clone/include/deps/cglm/src
 
-C_FLAGS = -g -std=gnu11 -fPIC -Wall
+C_FLAGS = -g -std=gnu11 -fPIC -ggdb3 -O0 -Wall
 

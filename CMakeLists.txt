@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.28.3)
 
 # ---
 
+# compile options
+add_compile_options(-ggdb3 -O0)
+
+# ---
+
 # set output directories for binary and libraries
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

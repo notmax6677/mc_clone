@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = -I/home/max/Projects/c/mc_clone/./include
 
-C_FLAGS = -g
+C_FLAGS = -g -ggdb3 -O0
 

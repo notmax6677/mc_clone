@@ -14,9 +14,9 @@
 
 
 // settings
-const int CHUNK_WIDTH = 16;  // x
-const int CHUNK_HEIGHT = 32; // y
-const int CHUNK_LENGTH = 16; // z
+const int CHUNK_WIDTH  = 16;  // x
+const int CHUNK_HEIGHT = 32;  // y
+const int CHUNK_LENGTH = 16;  // z
 
 
 // ---
@@ -209,7 +209,7 @@ void create_side_indices(int indicesOffset, int index, int* array) {
 // ---
 
 
-struct Chunk generate_chunk() {
+struct Chunk generate_chunk(vec2 position) {
 
 	// create new chunk structure instance
 	struct Chunk newChunk;
@@ -560,6 +560,9 @@ struct Chunk generate_chunk() {
 	// apply mesh to chunk object
 	newChunk.mesh = chunkMesh;
 
+	// apply position to chunk object
+	glm_vec2_copy(position, newChunk.pos);
+
 	// return newly generated chunk object
 	return newChunk;
 
@@ -590,14 +593,18 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	int projLoc = glGetUniformLocation(shaderProgram, "proj");
 
+	// get location of chunk offset uniform
+	int posLoc = glGetUniformLocation(shaderProgram, "chunkOffset");
+
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
 
+	// load chunk position/offset into corresponding uniform vector
+	glUniform2f(posLoc, chunk.pos[0]*16, chunk.pos[1]*16);
+
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);
 
 }
-
-
