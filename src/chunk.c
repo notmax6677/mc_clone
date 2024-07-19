@@ -14,7 +14,9 @@
 
 
 // settings
-const int CHUNK_HEIGHT = 32;
+const int CHUNK_WIDTH = 16;  // x
+const int CHUNK_HEIGHT = 32; // y
+const int CHUNK_LENGTH = 16; // z
 
 
 // ---
@@ -24,13 +26,13 @@ const int CHUNK_HEIGHT = 32;
 struct Chunk {
 	vec2 pos; // multiplied by 16
 	
-	int blockCount; // amount of blocks
+	int sides; // how many sides do render (used when drawing it)
 	
-	// block positions
-	vec4* blockPositions;
+	int* blockTypes; // array of block types
 	
 	struct Mesh mesh; // mesh of chunk
 };
+
 
 // ---
 
@@ -73,6 +75,15 @@ int GRASS_TEX_COORDS[] = {
 	32, 16,
 	48, 16,
 };
+
+
+// ---
+
+
+// gets the block type at a position relative to the chunk based on coordinates
+int get_block_type(int* blockTypes, int xPos, int yPos, int zPos) {
+	return blockTypes[yPos*16*16 + zPos*16 + xPos];
+}
 
 
 // ---
@@ -204,7 +215,7 @@ struct Chunk generate_chunk() {
 	struct Chunk newChunk;
 
 	// allocate integer amount of maximum blocks possible in a chunk
-	int blockAmount = 16*16*CHUNK_HEIGHT;
+	int blockAmount = CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_LENGTH;
 
 	// x and y pos for placing blocks
 	int xPos = 0;
@@ -212,7 +223,10 @@ struct Chunk generate_chunk() {
 	int zPos = 0;
 
 	// allocate memory to block amount to be used as an array
-	newChunk.blockPositions = calloc(sizeof(vec4), blockAmount);
+	newChunk.blockTypes = calloc(blockAmount, sizeof(int));
+
+	// set sides to 0
+	newChunk.sides = 0;
 
 	
 	// ---
@@ -244,14 +258,16 @@ struct Chunk generate_chunk() {
 	// ---
 	
 
-	// keep track of blocks
-	int blockCount = 0;
-
 	// first iteration, load all coordinates of blocks, as this allows for later optimization
 	for(int i=0; i < blockAmount; i++) {
-		// write position vector of current block to blockpositions array
-		glm_vec4_copy((vec4){xPos, yPos, zPos, 1}, newChunk.blockPositions[i]);
-
+		
+		// store block type
+		if(xPos == 5 && zPos == 8) {
+			newChunk.blockTypes[i] = 0;
+		}
+		else {
+			newChunk.blockTypes[i] = 1;
+		}
 
 		// ---
 
@@ -275,9 +291,9 @@ struct Chunk generate_chunk() {
 
 
 	// ---
+	
 
-
-	// reset coordinates values aftre that first loop
+	// reset positions
 	xPos = 0;
 	yPos = 0;
 	zPos = 0;
@@ -318,46 +334,44 @@ struct Chunk generate_chunk() {
 		bool bottom = true;
 		bool top    = true;
 
-		// iterate through all blocks again
-		for(int b = 0; b < blockAmount; b++) {
-			// if both indexed blocks arent the same block and second block isnt just an air block
-			if(i != b && newChunk.blockPositions[b][3] != 0) {
-				
-				// create and write new block position vectors for both blocks
-				vec4 block1Pos;
-				vec4 block2Pos;
-				glm_vec4_copy(newChunk.blockPositions[i], block1Pos);
-				glm_vec4_copy(newChunk.blockPositions[b], block2Pos);
-
-				// front
-				if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]+1 == block2Pos[2]) {
-					front = false;
-				}
-				// back
-				if(block1Pos[0] == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2]-1 == block2Pos[2]) {
-					back = false;
-				}
-				// left
-				if(block1Pos[0]-1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-					left = false;
-				}
-				// right
-				if(block1Pos[0]+1 == block2Pos[0] && block1Pos[1] == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-					right = false;
-				}
-				// bottom
-				if(block1Pos[0] == block2Pos[0] && block1Pos[1]-1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-					bottom = false;
-				}
-				// top
-				if(block1Pos[0] == block2Pos[0] && block1Pos[1]+1 == block2Pos[1] && block1Pos[2] == block2Pos[2]) {
-					top = false;
-				}
-
-			}
+		// set all to false if block type is 0 (air)
+		if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 0) {
+			front  = false;
+			back   = false;
+			left   = false;
+			right  = false;
+			bottom = false;
+			top    = false;
 		}
 
-		// set values to 0 based on side booleans
+				
+		// front
+		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) ) {
+			front = false;
+		}
+		// back
+		if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) ) {
+			back = false;
+		}
+		// left
+		if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) ) {
+			left = false;
+		}
+		// right
+		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) ) {
+			right = false;
+		}
+		// bottom
+		if( yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) ) {
+			bottom = false;
+		}
+		// top
+		if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) ) {
+			top = false;
+		}
+
+
+		// only load vertices and indices for necessary sides
 		
 
 		if(front) {
@@ -375,6 +389,9 @@ struct Chunk generate_chunk() {
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
 		if(back) {
 			// generate proper vertices array and load it into backVertices
@@ -391,6 +408,9 @@ struct Chunk generate_chunk() {
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
 		if(left) {
 			// generate proper vertices array and load it into leftVertices
@@ -407,6 +427,9 @@ struct Chunk generate_chunk() {
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
 		if(right) {
 			// generate proper vertices array and load it into rightVertices
@@ -423,6 +446,9 @@ struct Chunk generate_chunk() {
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
 		if(bottom) {
 			// generate proper vertices array and load it into bottomVertices
@@ -439,6 +465,9 @@ struct Chunk generate_chunk() {
 			verticesIndex += 4*8 * sizeof(float);
 			indicesIndex += 6 * sizeof(int);
 			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
 		if(top) {
 			// generate proper vertices array and load it into topVertices
@@ -450,17 +479,10 @@ struct Chunk generate_chunk() {
 			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(topVertices), topVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
 		}
-
-
-		// load vertices data into vbo
-		//glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices) * i, sizeof(vertices), vertices);
-
-		// load indices data into ebo
-		//glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * i, sizeof(indices), indices);
-
-		// increment block count
-		blockCount++;
 
 
 		// ---
@@ -538,9 +560,6 @@ struct Chunk generate_chunk() {
 	// apply mesh to chunk object
 	newChunk.mesh = chunkMesh;
 
-	// apply block count to chunk
-	newChunk.blockCount = blockCount;
-
 	// return newly generated chunk object
 	return newChunk;
 
@@ -577,7 +596,7 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
 
 	// draw the elements
-	glDrawElements(GL_TRIANGLES, 36 * chunk.blockCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);
 
 }
 
