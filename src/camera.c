@@ -17,8 +17,7 @@ float cursorLastX, cursorLastY; // cursor last frame coordinates
 
 // camera pitch + yaw
 float pitch = 0.0f;
-float yaw = 0.0f; // initiate with -90.0f to still be looking to the negative z axis direction when locking in mouse for first time
-
+float yaw = 0.0f;
 
 // layer matrices for camera
 mat4 model = GLM_MAT4_IDENTITY_INIT;
@@ -184,6 +183,14 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 		// subtract vector with magnitude cameraSpeed * deltaTime from camera position
 		glm_vec3_sub(cameraPos, (vec3){0, cameraSpeed*deltaTime, 0}, cameraPos);
 
+	}
+
+	// KEY LEFT CTRL - sprint
+	if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+		cameraSpeed = 10.0f; // set camera speed to higher value
+	}
+	else {
+		cameraSpeed = 5.0f; // otherwise restore to normal lower value
 	}
 
 }

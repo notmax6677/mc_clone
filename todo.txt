@@ -1,3 +1,2 @@
 try to remove the amount of iterations that occur in a chunk as a way of optimization
 
-fix movement so that you arent faster when moving diagonally
