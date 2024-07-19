@@ -2,6 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
 
+#include <NOISE/noise1234.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -17,6 +19,10 @@
 const int CHUNK_WIDTH  = 16;  // x
 const int CHUNK_HEIGHT = 32;  // y
 const int CHUNK_LENGTH = 16;  // z
+
+// noise settings
+const int NOISE_ZOOM = 25;
+const int NOISE_OFFSET = 15;
 
 
 // ---
@@ -257,17 +263,28 @@ struct Chunk generate_chunk(vec2 position) {
 
 	// ---
 	
+	int noiseValue = 0;
 
 	// first iteration, load all coordinates of blocks, as this allows for later optimization
 	for(int i=0; i < blockAmount; i++) {
+
+		// calculate noise value
+		noiseValue = (int)(noise2((float)(xPos + position[0]*CHUNK_WIDTH)/NOISE_ZOOM, 
+					(float)(zPos + position[1]*CHUNK_LENGTH)/NOISE_ZOOM) * CHUNK_HEIGHT) + NOISE_OFFSET;
 		
-		// store block type
-		if(xPos == 5 && zPos == 8) {
-			newChunk.blockTypes[i] = 0;
-		}
-		else {
+		// based on noise value, fill with blocks or air
+		if(yPos <= noiseValue) {
 			newChunk.blockTypes[i] = 1;
 		}
+		else {
+			newChunk.blockTypes[i] = 0;
+		}
+
+		// if bottom most layer, then fill it in automatically
+		if(yPos == 0) {
+			newChunk.blockTypes[i] = 1;
+		}
+
 
 		// ---
 

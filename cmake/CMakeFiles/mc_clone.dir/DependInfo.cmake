@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/max/Projects/c/mc_clone/include/NOISE/noise1234.c" "CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.o" "gcc" "CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.o.d"
   "/home/max/Projects/c/mc_clone/src/camera.c" "CMakeFiles/mc_clone.dir/src/camera.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/camera.c.o.d"
   "/home/max/Projects/c/mc_clone/src/chunk.c" "CMakeFiles/mc_clone.dir/src/chunk.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/chunk.c.o.d"
   "/home/max/Projects/c/mc_clone/src/file.c" "CMakeFiles/mc_clone.dir/src/file.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/file.c.o.d"

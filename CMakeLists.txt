@@ -29,6 +29,10 @@ INCLUDE_DIRECTORIES(./include)
 add_executable(${PROJECT_NAME} 
 	./include/STB/stb_image.h # IMPORTANT HEADER ONLY LIBRARY
 
+	# noise library
+	./include/NOISE/noise1234.c
+	./include/NOISE/noise1234.h
+
 	# --- source files ---
 	./src/main.c
 

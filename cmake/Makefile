@@ -283,6 +283,30 @@ include/GLAD33/glad.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/glad.dir/build.make CMakeFiles/glad.dir/include/GLAD33/glad.c.s
 .PHONY : include/GLAD33/glad.c.s
 
+include/NOISE/noise1234.o: include/NOISE/noise1234.c.o
+.PHONY : include/NOISE/noise1234.o
+
+# target to build an object file
+include/NOISE/noise1234.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.o
+.PHONY : include/NOISE/noise1234.c.o
+
+include/NOISE/noise1234.i: include/NOISE/noise1234.c.i
+.PHONY : include/NOISE/noise1234.i
+
+# target to preprocess a source file
+include/NOISE/noise1234.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.i
+.PHONY : include/NOISE/noise1234.c.i
+
+include/NOISE/noise1234.s: include/NOISE/noise1234.c.s
+.PHONY : include/NOISE/noise1234.s
+
+# target to generate assembly for a file
+include/NOISE/noise1234.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.s
+.PHONY : include/NOISE/noise1234.c.s
+
 src/camera.o: src/camera.c.o
 .PHONY : src/camera.o
 
@@ -498,6 +522,9 @@ help:
 	@echo "... include/GLAD33/glad.o"
 	@echo "... include/GLAD33/glad.i"
 	@echo "... include/GLAD33/glad.s"
+	@echo "... include/NOISE/noise1234.o"
+	@echo "... include/NOISE/noise1234.i"
+	@echo "... include/NOISE/noise1234.s"
 	@echo "... src/camera.o"
 	@echo "... src/camera.i"
 	@echo "... src/camera.s"

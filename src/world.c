@@ -21,7 +21,8 @@
 bool wireframeMode = false;
 
 // render distance of chunks
-const int RENDER_DISTANCE = 9;
+const int RENDER_DISTANCE = 8;
+const int WORLD_SIZE = 20;
 
 // keep track of last chunk position of player
 vec2 lastChunkPos = GLM_VEC2_ZERO;
@@ -39,8 +40,6 @@ unsigned int blockShaderProgram;
 // ---
 
 
-struct Chunk firstChunk;
-
 struct Chunk* chunks;
 
 int chunkCount = 0;
@@ -57,16 +56,16 @@ void init_world() {
 	worldAtlas = load_texture("assets/atlas.png");
 
 	// allocate size to chunks
-	chunks = calloc(RENDER_DISTANCE*RENDER_DISTANCE, sizeof(struct Chunk));
+	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 
 	// coordinates for drawing chunks (from a 2D top-down perspective)
 	int xPos = 0;
 	int yPos = 0;
 
 	// iterate thru x and z based on render distance
-	for(int i = 0; i < RENDER_DISTANCE*RENDER_DISTANCE; i++) {
+	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(RENDER_DISTANCE/2), yPos - floor(RENDER_DISTANCE/2)});
+		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)});
 
 		chunkCount++;
 
@@ -76,15 +75,13 @@ void init_world() {
 
 		// handle incrementing xPos and yPos
 		xPos++;
-		if(xPos >= RENDER_DISTANCE) {
+		if(xPos >= WORLD_SIZE) {
 			xPos = 0;
 			yPos++;
 		}
 	}
 
 	init_test_block();
-
-	//firstChunk = generate_chunk((vec2){1, 1});
 }
 
 void update_world() {
@@ -96,18 +93,6 @@ void update_world() {
 	glm_vec2_copy(
 			(vec2) { floor((*camPos)[0] / 16), floor((*camPos)[2] / 16)}, 
 			playerChunkPos);
-	
-
-	if(playerChunkPos[0] == lastChunkPos[0]+1) {
-
-	
-		//chunks[chunkCount] = generate_chunk(
-		//		(vec2){ playerChunkPos[0], playerChunkPos[1] });
-
-
-		//chunkCount++;
-
-	}
 
 
 	// at end of function, copy over player chunk position to lastChunkPos for next frame
@@ -115,14 +100,18 @@ void update_world() {
 }
 
 void draw_world() {
-	draw_chunk(firstChunk, blockShaderProgram, worldAtlas);
 
 	//draw_test_block(blockShaderProgram, worldAtlas);
 	
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < chunkCount; i++) {
-	
-		draw_chunk(chunks[i], blockShaderProgram, worldAtlas);
+		
+		if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE && chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE) &&
+			(chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE && chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+
+			draw_chunk(chunks[i], blockShaderProgram, worldAtlas);
+		}
+			
 
 	}
 }

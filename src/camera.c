@@ -6,7 +6,7 @@
 // settings
 float fov = 45.0f; // field of view (in degrees)
 float nearZ = 0.1f; // closest point to render at
-float farZ = 100.0f; // furthest point to render at
+float farZ = 200.0f; // furthest point to render at
 
 float cameraSpeed = 5.0f; // speed of camera movement
 
@@ -84,7 +84,7 @@ void camera_mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 		// write normalized value to camera front vector
 		glm_vec3_copy(normalized, cameraFront);
-	
+
 	}
 
 
@@ -257,6 +257,9 @@ void init_camera(GLFWwindow* window) {
 
 	// write normalized value to camera front vector
 	glm_vec3_copy(normalized, cameraFront);
+
+	// set initial cam pos
+	cameraPos[1] = 64;
 
 }
 

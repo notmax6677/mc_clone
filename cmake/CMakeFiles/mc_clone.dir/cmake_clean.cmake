@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.o"
+  "CMakeFiles/mc_clone.dir/include/NOISE/noise1234.c.o.d"
   "CMakeFiles/mc_clone.dir/src/camera.c.o"
   "CMakeFiles/mc_clone.dir/src/camera.c.o.d"
   "CMakeFiles/mc_clone.dir/src/chunk.c.o"
