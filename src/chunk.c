@@ -30,6 +30,21 @@ const int STONE_LEVEL = 5;
 // level at which sand blocks appear, coming from bottom
 const int SAND_LEVEL = 5;
 
+// water level (this is purely for rendering some stuff when under the water level)
+const float WATER_LEVEL = SAND_LEVEL+0.5;
+
+// boolean that checks if camera is under water
+bool underWaterLevel = false;
+
+
+// ---
+
+
+// getter for underwater level
+bool get_underwater_level() {
+	return underWaterLevel;
+}
+
 
 // ---
 
@@ -201,6 +216,44 @@ int SAND_TEX_COORDS[] = {
 	96, 16,
 	112, 16,
 };
+// water block texture coordinates
+int WATER_TEX_COORDS[] = {
+	// front
+   240, 224,
+	256, 224,
+	240, 240,
+	256, 240,
+
+	// back
+   240, 224,
+	256, 224,
+	240, 240,
+	256, 240,
+
+	// left
+   240, 224,
+	256, 224,
+	240, 240,
+	256, 240,
+
+	// right
+   240, 224,
+	256, 224,
+	240, 240,
+	256, 240,
+
+	// bottom
+   240, 224,
+	256, 224,
+	240, 240,
+	256, 240,
+
+	// top
+	112, 0,
+	128, 0,
+	112, 16,
+	128, 16,
+};
 
 
 // ---
@@ -223,6 +276,9 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 	float x2, y2, z2;
 	float x3, y3, z3;
 	float x4, y4, z4;
+
+	// y position offset
+	float yOff = 0;
 
 	// declare and define color values (defaults are 1.0f)
 	float r = 1.0f, g = 1.0f, b = 1.0f;
@@ -255,6 +311,12 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 	else if(strcmp(blockType, "sand") == 0) {
 		// copy sand texture coords array to tex_coords
 		memcpy(texCoords, SAND_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "water") == 0) {
+		// copy sand texture coords array to tex_coords
+		memcpy(texCoords, WATER_TEX_COORDS, sizeof(int) * 8*6);
+		
+		yOff = 0.2f;
 	}
 
 	// compare side string to string literals and define coordinate floats, as well as set texture offset
@@ -323,12 +385,12 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 
 	// generate vertices array
 	float sideVertices[] = {
-		// position                     color       texture coords
+		// position                          color       texture coords
 
-		x1+xPos,  y1+yPos,  z1+zPos,    r, g, b,    calc_at_tex_x(tex_x1), calc_at_tex_y(tex_y1),  // top left
-		x2+xPos,  y2+yPos,  z2+zPos,    r, g, b,    calc_at_tex_x(tex_x2), calc_at_tex_y(tex_y2),  // top right
-		x3+xPos,  y3+yPos,  z3+zPos,    r, g, b,    calc_at_tex_x(tex_x3), calc_at_tex_y(tex_y3),  // bot left
-		x4+xPos,  y4+yPos,  z4+zPos,    r, g, b,    calc_at_tex_x(tex_x4), calc_at_tex_y(tex_y4),  // bot right
+		x1+xPos,  y1+yPos-yOff,  z1+zPos,    r, g, b,    calc_at_tex_x(tex_x1), calc_at_tex_y(tex_y1),  // top left
+		x2+xPos,  y2+yPos-yOff,  z2+zPos,    r, g, b,    calc_at_tex_x(tex_x2), calc_at_tex_y(tex_y2),  // top right
+		x3+xPos,  y3+yPos-yOff,  z3+zPos,    r, g, b,    calc_at_tex_x(tex_x3), calc_at_tex_y(tex_y3),  // bot left
+		x4+xPos,  y4+yPos-yOff,  z4+zPos,    r, g, b,    calc_at_tex_x(tex_x4), calc_at_tex_y(tex_y4),  // bot right
 	};
 
 	// copy contents of new sideVertices array into passed in array
@@ -358,7 +420,7 @@ void create_side_indices(int indicesOffset, int index, int* array) {
 // ---
 
 
-struct Chunk generate_chunk(vec2 position) {
+struct Chunk generate_chunk(vec2 position, bool water) {
 
 	// create new chunk structure instance
 	struct Chunk newChunk;
@@ -421,29 +483,44 @@ struct Chunk generate_chunk(vec2 position) {
 			noiseValue = CHUNK_HEIGHT-1;
 		}
 
+		if(!water) {
+			// based on noise value, fill with blocks or air
+			if(yPos > CHUNK_HEIGHT-STONE_LEVEL && yPos <= noiseValue) {
+				newChunk.blockTypes[i] = 3; // stone
+			}
+			else if(yPos <= SAND_LEVEL && yPos <= noiseValue) {
+				newChunk.blockTypes[i] = 4; // sand
+			}
+			else if(yPos == noiseValue) {
+				newChunk.blockTypes[i] = 1; // grass
+			}
+			else if(yPos < noiseValue) {
+				newChunk.blockTypes[i] = 2; // dirt
+			}
+			else {
+				newChunk.blockTypes[i] = 0; // air
+			}
 
-		// based on noise value, fill with blocks or air
-		if(yPos > CHUNK_HEIGHT-STONE_LEVEL && yPos <= noiseValue) {
-			newChunk.blockTypes[i] = 3; // stone
-		}
-		else if(yPos < 5 && yPos <= noiseValue) {
-			newChunk.blockTypes[i] = 4; // sand
-		}
-		else if(yPos == noiseValue) {
-			newChunk.blockTypes[i] = 1; // grass
-		}
-		else if(yPos < noiseValue) {
-			newChunk.blockTypes[i] = 2; // dirt
+			// if bottom most layer, then fill it in automatically
+			if(yPos == 0) {
+				newChunk.blockTypes[i] = 4; // sand
+			}
 		}
 		else {
-			newChunk.blockTypes[i] = 0; // air
-		}
+			if(yPos == SAND_LEVEL-1 && yPos >= noiseValue/2) {
+				newChunk.blockTypes[i] = -1; // water
+			}
+			else {
+				newChunk.blockTypes[i] = 0; // air
+			}
 
-		// if bottom most layer, then fill it in automatically
-		if(yPos == 0) {
-			newChunk.blockTypes[i] = 4; // sand
-		}
+			// if bottom most layer, then fill it in automatically
+			if(yPos == 0) {
+				newChunk.blockTypes[i] = 0; // air
+			}
 
+		}
+		
 
 		// ---
 
@@ -519,6 +596,31 @@ struct Chunk generate_chunk(vec2 position) {
 			bottom = false;
 			top    = false;
 		}
+				
+		// front
+		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) > 0 ) {
+			front = false;
+		}
+		// back
+		if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) > 0 ) {
+			back = false;
+		}
+		// left
+		if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) > 0 ) {
+			left = false;
+		}
+		// right
+		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
+			right = false;
+		}
+		// bottom
+		if( yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0 ) {
+			bottom = false;
+		}
+		// top
+		if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) > 0 ) {
+			top = false;
+		}
 
 		// declare type string
 		char* type;
@@ -536,30 +638,8 @@ struct Chunk generate_chunk(vec2 position) {
 		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 4) {
 			type = "sand";
 		}
-				
-		// front
-		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) ) {
-			front = false;
-		}
-		// back
-		if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) ) {
-			back = false;
-		}
-		// left
-		if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) ) {
-			left = false;
-		}
-		// right
-		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) ) {
-			right = false;
-		}
-		// bottom
-		if( yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) ) {
-			bottom = false;
-		}
-		// top
-		if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) ) {
-			top = false;
+		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == -1) {
+			type = "water";
 		}
 
 
@@ -788,6 +868,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	// get location of chunk offset uniform
 	int posLoc = glGetUniformLocation(shaderProgram, "chunkOffset");
 
+	// get location of underwater uniform
+	int uwLoc = glGetUniformLocation(shaderProgram, "underWater");
+
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
@@ -795,6 +878,25 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// load chunk position/offset into corresponding uniform vector
 	glUniform2f(posLoc, chunk.pos[0]*16, chunk.pos[1]*16);
+
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+	// check if camera is under water level and adjust underWaterLevel boolean accordingly
+	if((*camPos)[1] <= WATER_LEVEL) {
+		underWaterLevel = true;
+	}
+	else {
+		underWaterLevel = false;
+	}
+
+	// pass underWaterLevel boolean in the form of an integer to fragment shader
+	if(underWaterLevel) {
+		glUniform1i(uwLoc, 1);
+	}
+	else {
+		glUniform1i(uwLoc, 0);
+	}
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);

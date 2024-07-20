@@ -38,6 +38,7 @@ add_executable(${PROJECT_NAME}
 
 	./src/camera.c
 
+	./src/sort_chunk.c
 	./src/chunk.c
 	./src/test_block.c
 	./src/world.c
@@ -51,6 +52,7 @@ add_executable(${PROJECT_NAME}
 	# --- headers ---
 	./src/headers/camera.h
 
+	./src/headers/sort_chunk.h
 	./src/headers/test_block.h
 	./src/headers/chunk.h
 	./src/headers/world.h

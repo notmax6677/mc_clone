@@ -5,6 +5,8 @@
 
 #include "mesh.h"
 
+// whether or not the player is under the water level
+bool get_underwater_level();
 
 // chunk structure
 struct Chunk {
@@ -18,7 +20,7 @@ struct Chunk {
 };
 
 // generates a chunk
-struct Chunk generate_chunk(vec2 position);
+struct Chunk generate_chunk(vec2 position, bool water);
 
 // draw a chunk
 void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas);

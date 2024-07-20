@@ -20,6 +20,7 @@ mat4* get_view();
 mat4* get_projection();
 
 vec3* get_camera_pos();
+vec3* get_camera_front();
 
 bool get_cursor_lock();
 

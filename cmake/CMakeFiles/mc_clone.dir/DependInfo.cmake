@@ -15,6 +15,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/max/Projects/c/mc_clone/src/image.c" "CMakeFiles/mc_clone.dir/src/image.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/image.c.o.d"
   "/home/max/Projects/c/mc_clone/src/main.c" "CMakeFiles/mc_clone.dir/src/main.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/main.c.o.d"
   "/home/max/Projects/c/mc_clone/src/shader.c" "CMakeFiles/mc_clone.dir/src/shader.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/shader.c.o.d"
+  "/home/max/Projects/c/mc_clone/src/sort_chunk.c" "CMakeFiles/mc_clone.dir/src/sort_chunk.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/sort_chunk.c.o.d"
   "/home/max/Projects/c/mc_clone/src/test_block.c" "CMakeFiles/mc_clone.dir/src/test_block.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/test_block.c.o.d"
   "/home/max/Projects/c/mc_clone/src/world.c" "CMakeFiles/mc_clone.dir/src/world.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/world.c.o.d"
   )

@@ -13,6 +13,8 @@
 #include "headers/test_block.h"
 #include "headers/chunk.h"
 
+#include "headers/sort_chunk.h"
+
 
 // ---
 
@@ -42,6 +44,8 @@ unsigned int blockShaderProgram;
 
 struct Chunk* chunks;
 
+struct Chunk* waterChunks;
+
 int chunkCount = 0;
 
 
@@ -57,6 +61,8 @@ void init_world() {
 
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
+	// and watercChunks
+	waterChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 
 	// coordinates for drawing chunks (from a 2D top-down perspective)
 	int xPos = 0;
@@ -65,7 +71,10 @@ void init_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)});
+		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false);
+
+		// generate indexed chunk, but now for water part of the chunk
+		waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true);
 
 		chunkCount++;
 
@@ -103,17 +112,43 @@ void draw_world() {
 
 	//draw_test_block(blockShaderProgram, worldAtlas);
 	
+	//sort_chunks(chunks, WORLD_SIZE);
+	
+
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < chunkCount; i++) {
 		
-		if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE && chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE) &&
-			(chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE && chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+		if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+			&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+			&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+			&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
 			draw_chunk(chunks[i], blockShaderProgram, worldAtlas);
-		}
-			
 
+
+		}
 	}
+
+
+	// if not underwater
+	if(!get_underwater_level()) {
+		// iterate thru x and z based on render distance
+		for(int i = 0; i < chunkCount; i++) {
+			
+			if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+				&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+				&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+				&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+
+
+				draw_chunk(waterChunks[i], blockShaderProgram, worldAtlas);
+
+			}
+		}
+	}
+
+
+
 }
 
 

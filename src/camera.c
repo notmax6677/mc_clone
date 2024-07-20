@@ -299,6 +299,9 @@ mat4* get_projection() {
 vec3* get_camera_pos() {
 	return &cameraPos;
 }
+vec3* get_camera_front() {
+	return &cameraFront;
+}
 
 bool get_cursor_lock() {
 	return cursorLocked;
