@@ -8,7 +8,7 @@ float fov = 45.0f; // field of view (in degrees)
 float nearZ = 0.1f; // closest point to render at
 float farZ = 200.0f; // furthest point to render at
 
-float cameraSpeed = 5.0f; // speed of camera movement
+float cameraSpeed = 10.0f; // speed of camera movement
 
 float sensitivity = 0.1f;
 bool cursorLocked = false; // if cursor is locked or not
@@ -187,10 +187,10 @@ void process_camera_inputs(GLFWwindow* window, float deltaTime) {
 
 	// KEY LEFT CTRL - sprint
 	if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-		cameraSpeed = 10.0f; // set camera speed to higher value
+		cameraSpeed = 20.0f; // set camera speed to higher value
 	}
 	else {
-		cameraSpeed = 5.0f; // otherwise restore to normal lower value
+		cameraSpeed = 10.0f; // otherwise restore to normal lower value
 	}
 
 }

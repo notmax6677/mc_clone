@@ -24,6 +24,12 @@ const int CHUNK_LENGTH = 16;  // z
 const int NOISE_ZOOM = 25;
 const int NOISE_OFFSET = 15;
 
+// level at which stone blocks appear, coming from top
+const int STONE_LEVEL = 5;
+
+// level at which sand blocks appear, coming from bottom
+const int SAND_LEVEL = 5;
+
 
 // ---
 
@@ -81,6 +87,120 @@ int GRASS_TEX_COORDS[] = {
 	32, 16,
 	48, 16,
 };
+// dirt block texture coordinates
+int DIRT_TEX_COORDS[] = {
+	// front
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// back
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// left
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// right
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// bottom
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+
+	// top
+	16, 0,
+	32, 0,
+	16, 16,
+	32, 16,
+};
+// stone block texture coordinates
+int STONE_TEX_COORDS[] = {
+	// front
+	48, 0,
+	64, 0,
+	48, 16,
+	64, 16,
+
+	// back
+	48, 0,
+	64, 0,
+	48, 16,
+	64, 16,
+
+	// left
+	48, 0,
+	64, 0,
+	48, 16,
+	64, 16,
+
+	// right
+	48, 0,
+	64, 0,
+	48, 16,
+	64, 16,
+
+	// bottom
+	64, 0,
+	80, 0,
+	64, 16,
+	80, 16,
+
+	// top
+	80, 0,
+	96, 0,
+	80, 16,
+	96, 16,
+};
+// SAND block texture coordinates
+int SAND_TEX_COORDS[] = {
+	// front
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+
+	// back
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+
+	// left
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+
+	// right
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+
+	// bottom
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+
+	// top
+	96, 0,
+	112, 0,
+	96, 16,
+	112, 16,
+};
 
 
 // ---
@@ -104,6 +224,9 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 	float x3, y3, z3;
 	float x4, y4, z4;
 
+	// declare and define color values (defaults are 1.0f)
+	float r = 1.0f, g = 1.0f, b = 1.0f;
+
 	// declare texture coordinates
 	int tex_x1, tex_y1;
 	int tex_x2, tex_y2;
@@ -121,6 +244,18 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		// copy grass texture coords array to tex_coords
 		memcpy(texCoords, GRASS_TEX_COORDS, sizeof(int) * 8*6);
 	}
+	else if(strcmp(blockType, "dirt") == 0) {
+		// copy dirt texture coords array to tex_coords
+		memcpy(texCoords, DIRT_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "stone") == 0) {
+		// copy stone texture coords array to tex_coords
+		memcpy(texCoords, STONE_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "sand") == 0) {
+		// copy sand texture coords array to tex_coords
+		memcpy(texCoords, SAND_TEX_COORDS, sizeof(int) * 8*6);
+	}
 
 	// compare side string to string literals and define coordinate floats, as well as set texture offset
 	if(strcmp(side, "front") == 0) {
@@ -128,6 +263,8 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x2 = 1.0f; y2 = 1.0f; z2 = 1.0f;
 		x3 = 0.0f; y3 = 0.0f; z3 = 1.0f;
 		x4 = 1.0f; y4 = 0.0f; z4 = 1.0f;
+
+		r = 0.9f; g = 0.9f; b = 0.9f;
 
 		textureOffset = 0;
 	}
@@ -137,6 +274,8 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
 		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
 
+		r = 0.8f; g = 0.8f; b = 0.8f;
+
 		textureOffset = 8;
 	}
 	else if(strcmp(side, "left") == 0) {
@@ -145,6 +284,8 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
 		x4 = 0.0f; y4 = 0.0f; z4 = 1.0f;
 
+		r = 0.8f; g = 0.8f; b = 0.8f;
+
 		textureOffset = 16;
 	}
 	else if(strcmp(side, "right") == 0) {
@@ -152,6 +293,8 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x2 = 1.0f; y2 = 1.0f; z2 = 0.0f;
 		x3 = 1.0f; y3 = 0.0f; z3 = 1.0f;
 		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
+
+		r = 0.9f; g = 0.9f; b = 0.9f;
 
 		textureOffset = 24;
 	}
@@ -180,12 +323,12 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 
 	// generate vertices array
 	float sideVertices[] = {
-		// position                     color                texture coords
+		// position                     color       texture coords
 
-		x1+xPos,  y1+yPos,  z1+zPos,    1.0f, 0.0f, 0.0f,    calc_at_tex_x(tex_x1), calc_at_tex_y(tex_y1),  // top left
-		x2+xPos,  y2+yPos,  z2+zPos,    0.0f, 1.0f, 0.0f,    calc_at_tex_x(tex_x2), calc_at_tex_y(tex_y2),  // top right
-		x3+xPos,  y3+yPos,  z3+zPos,    0.0f, 0.0f, 1.0f,    calc_at_tex_x(tex_x3), calc_at_tex_y(tex_y3),  // bot left
-		x4+xPos,  y4+yPos,  z4+zPos,    1.0f, 0.0f, 1.0f,    calc_at_tex_x(tex_x4), calc_at_tex_y(tex_y4),  // bot right
+		x1+xPos,  y1+yPos,  z1+zPos,    r, g, b,    calc_at_tex_x(tex_x1), calc_at_tex_y(tex_y1),  // top left
+		x2+xPos,  y2+yPos,  z2+zPos,    r, g, b,    calc_at_tex_x(tex_x2), calc_at_tex_y(tex_y2),  // top right
+		x3+xPos,  y3+yPos,  z3+zPos,    r, g, b,    calc_at_tex_x(tex_x3), calc_at_tex_y(tex_y3),  // bot left
+		x4+xPos,  y4+yPos,  z4+zPos,    r, g, b,    calc_at_tex_x(tex_x4), calc_at_tex_y(tex_y4),  // bot right
 	};
 
 	// copy contents of new sideVertices array into passed in array
@@ -263,6 +406,7 @@ struct Chunk generate_chunk(vec2 position) {
 
 	// ---
 	
+
 	int noiseValue = 0;
 
 	// first iteration, load all coordinates of blocks, as this allows for later optimization
@@ -272,17 +416,32 @@ struct Chunk generate_chunk(vec2 position) {
 		noiseValue = (int)(noise2((float)(xPos + position[0]*CHUNK_WIDTH)/NOISE_ZOOM, 
 					(float)(zPos + position[1]*CHUNK_LENGTH)/NOISE_ZOOM) * CHUNK_HEIGHT) + NOISE_OFFSET;
 		
+		// cap noise value to chunk height
+		if(noiseValue >= CHUNK_HEIGHT) {
+			noiseValue = CHUNK_HEIGHT-1;
+		}
+
+
 		// based on noise value, fill with blocks or air
-		if(yPos <= noiseValue) {
-			newChunk.blockTypes[i] = 1;
+		if(yPos > CHUNK_HEIGHT-STONE_LEVEL && yPos <= noiseValue) {
+			newChunk.blockTypes[i] = 3; // stone
+		}
+		else if(yPos < 5 && yPos <= noiseValue) {
+			newChunk.blockTypes[i] = 4; // sand
+		}
+		else if(yPos == noiseValue) {
+			newChunk.blockTypes[i] = 1; // grass
+		}
+		else if(yPos < noiseValue) {
+			newChunk.blockTypes[i] = 2; // dirt
 		}
 		else {
-			newChunk.blockTypes[i] = 0;
+			newChunk.blockTypes[i] = 0; // air
 		}
 
 		// if bottom most layer, then fill it in automatically
 		if(yPos == 0) {
-			newChunk.blockTypes[i] = 1;
+			newChunk.blockTypes[i] = 4; // sand
 		}
 
 
@@ -361,6 +520,22 @@ struct Chunk generate_chunk(vec2 position) {
 			top    = false;
 		}
 
+		// declare type string
+		char* type;
+
+		// define type string based on returned block type
+		if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 1) {
+			type = "grass";
+		}
+		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 2) {
+			type = "dirt";
+		}
+		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 3) {
+			type = "stone";
+		}
+		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 4) {
+			type = "sand";
+		}
 				
 		// front
 		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) ) {
@@ -393,7 +568,7 @@ struct Chunk generate_chunk(vec2 position) {
 
 		if(front) {
 			// generate proper vertices array and load it into frontVertices
-			create_side_vertices("front", "grass", xPos, yPos, zPos, frontVertices);
+			create_side_vertices("front", type, xPos, yPos, zPos, frontVertices);
 			
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
@@ -412,7 +587,7 @@ struct Chunk generate_chunk(vec2 position) {
 		}
 		if(back) {
 			// generate proper vertices array and load it into backVertices
-			create_side_vertices("back", "grass", xPos, yPos, zPos, backVertices);
+			create_side_vertices("back", type, xPos, yPos, zPos, backVertices);
 
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
@@ -431,7 +606,7 @@ struct Chunk generate_chunk(vec2 position) {
 		}
 		if(left) {
 			// generate proper vertices array and load it into leftVertices
-			create_side_vertices("left", "grass",  xPos, yPos, zPos, leftVertices);
+			create_side_vertices("left", type,  xPos, yPos, zPos, leftVertices);
 
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
@@ -450,7 +625,7 @@ struct Chunk generate_chunk(vec2 position) {
 		}
 		if(right) {
 			// generate proper vertices array and load it into rightVertices
-			create_side_vertices("right", "grass", xPos, yPos, zPos, rightVertices);
+			create_side_vertices("right", type, xPos, yPos, zPos, rightVertices);
 
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
@@ -469,7 +644,7 @@ struct Chunk generate_chunk(vec2 position) {
 		}
 		if(bottom) {
 			// generate proper vertices array and load it into bottomVertices
-			create_side_vertices("bottom", "grass", xPos, yPos, zPos, bottomVertices);
+			create_side_vertices("bottom", type, xPos, yPos, zPos, bottomVertices);
 
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
@@ -488,7 +663,7 @@ struct Chunk generate_chunk(vec2 position) {
 		}
 		if(top) {
 			// generate proper vertices array and load it into topVertices
-			create_side_vertices("top", "grass", xPos, yPos, zPos, topVertices);
+			create_side_vertices("top", type, xPos, yPos, zPos, topVertices);
 
 			// generate proper indices array and load it into sideIndices
 			create_side_indices(indicesOffset, i, sideIndices);
