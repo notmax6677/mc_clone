@@ -13,8 +13,6 @@
 #include "headers/test_block.h"
 #include "headers/chunk.h"
 
-#include "headers/sort_chunk.h"
-
 
 // ---
 
@@ -111,9 +109,7 @@ void update_world() {
 void draw_world() {
 
 	//draw_test_block(blockShaderProgram, worldAtlas);
-	
-	//sort_chunks(chunks, WORLD_SIZE);
-	
+		
 
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < chunkCount; i++) {

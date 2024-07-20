@@ -451,30 +451,6 @@ src/shader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/shader.c.s
 .PHONY : src/shader.c.s
 
-src/sort_chunk.o: src/sort_chunk.c.o
-.PHONY : src/sort_chunk.o
-
-# target to build an object file
-src/sort_chunk.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sort_chunk.c.o
-.PHONY : src/sort_chunk.c.o
-
-src/sort_chunk.i: src/sort_chunk.c.i
-.PHONY : src/sort_chunk.i
-
-# target to preprocess a source file
-src/sort_chunk.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sort_chunk.c.i
-.PHONY : src/sort_chunk.c.i
-
-src/sort_chunk.s: src/sort_chunk.c.s
-.PHONY : src/sort_chunk.s
-
-# target to generate assembly for a file
-src/sort_chunk.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sort_chunk.c.s
-.PHONY : src/sort_chunk.c.s
-
 src/test_block.o: src/test_block.c.o
 .PHONY : src/test_block.o
 
@@ -567,9 +543,6 @@ help:
 	@echo "... src/shader.o"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"
-	@echo "... src/sort_chunk.o"
-	@echo "... src/sort_chunk.i"
-	@echo "... src/sort_chunk.s"
 	@echo "... src/test_block.o"
 	@echo "... src/test_block.i"
 	@echo "... src/test_block.s"
