@@ -40,9 +40,33 @@ bool underWaterLevel = false;
 // ---
 
 
-// getter for underwater level
-bool get_underwater_level() {
+// just returns the constant value of the water level float
+float get_water_level() {
+	return WATER_LEVEL;
+}
+
+// getter for under water-level
+bool get_under_water_level() {
 	return underWaterLevel;
+}
+
+// setter for under water-level
+void set_under_water_level(bool value) {
+	underWaterLevel = value;
+}
+
+
+// ---
+
+
+// calculates noise value as integer block y coordinate at given position, allows for offsetting with chunk coords
+int calc_chunk_noise_value(vec2 position, vec2 chunkOffset) {
+	return (int) ( 
+						noise2(
+							(float) ( position[0] + chunkOffset[0]*CHUNK_WIDTH ) / NOISE_ZOOM, 
+							(float) ( position[1] + chunkOffset[1]*CHUNK_LENGTH ) / NOISE_ZOOM
+						) * CHUNK_HEIGHT
+					 ) + NOISE_OFFSET;
 }
 
 
@@ -878,17 +902,6 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// load chunk position/offset into corresponding uniform vector
 	glUniform2f(posLoc, chunk.pos[0]*16, chunk.pos[1]*16);
-
-	// get camera position
-	vec3* camPos = get_camera_pos();
-
-	// check if camera is under water level and adjust underWaterLevel boolean accordingly
-	if((*camPos)[1] <= WATER_LEVEL) {
-		underWaterLevel = true;
-	}
-	else {
-		underWaterLevel = false;
-	}
 
 	// pass underWaterLevel boolean in the form of an integer to fragment shader
 	if(underWaterLevel) {

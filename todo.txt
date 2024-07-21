@@ -1,1 +1,13 @@
-create chunk generation as you move
+create random seeding so every instance is a randomized world
+
+create block placement
+
+create some ui for the block placement
+
+water animations???
+
+create tree generation
+
+create distance fog idk it just looks cool
+
+make it so that the world is somehow infinite

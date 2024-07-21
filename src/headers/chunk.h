@@ -5,8 +5,15 @@
 
 #include "mesh.h"
 
-// whether or not the player is under the water level
-bool get_underwater_level();
+// just returns the constant value of the water level float
+float get_water_level();
+
+// whether or not the player is under the water level - getter and setter
+bool get_under_water_level();
+void set_under_water_level(bool value);
+
+// calculates noise value as integer block y coordinate at given position, allows for offsetting with chunk coords
+int calc_chunk_noise_value(vec2 position, vec2* chunkOffset);
 
 // chunk structure
 struct Chunk {

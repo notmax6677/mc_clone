@@ -145,4 +145,5 @@ CMakeFiles/mc_clone.dir/src/world.c.o: \
  /home/max/Projects/c/mc_clone/src/headers/shader.h \
  /home/max/Projects/c/mc_clone/src/headers/test_block.h \
  /home/max/Projects/c/mc_clone/src/headers/chunk.h \
- /home/max/Projects/c/mc_clone/src/headers/mesh.h
+ /home/max/Projects/c/mc_clone/src/headers/mesh.h \
+ /home/max/Projects/c/mc_clone/./include/NOISE/noise1234.h

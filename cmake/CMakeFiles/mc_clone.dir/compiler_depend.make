@@ -1021,12 +1021,12 @@ CMakeFiles/mc_clone.dir/src/world.c.o: /home/max/Projects/c/mc_clone/src/world.c
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
+  /home/max/Projects/c/mc_clone/include/NOISE/noise1234.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
   /home/max/Projects/c/mc_clone/src/headers/shader.h \
-  /home/max/Projects/c/mc_clone/src/headers/sort_chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/test_block.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
@@ -1110,8 +1110,6 @@ CMakeFiles/mc_clone.dir/src/world.c.o: /home/max/Projects/c/mc_clone/src/world.c
 
 
 /home/max/Projects/c/mc_clone/src/headers/test_block.h:
-
-/home/max/Projects/c/mc_clone/src/headers/sort_chunk.h:
 
 /home/max/Projects/c/mc_clone/src/headers/shader.h:
 

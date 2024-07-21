@@ -15,7 +15,7 @@ uniform sampler2D inTexture;
 
 void main() {
 	if(underWater == 1) {
-		FragColor = ( texture(inTexture, texCoord) * vec4(col, 1.0) ) * vec4(0.5, 0.5, 0.5, 1.0) * vec4(0.2, 0.2, 0.6, 1.0) * 1.5;
+		FragColor = ( texture(inTexture, texCoord) * vec4(col, 1.0) ) * vec4(0.5, 0.5, 0.5, 1.0) * vec4(0.2, 0.2, 0.6, 1.0) * 2;
 	}
 	else {
 		FragColor = texture(inTexture, texCoord) * vec4(col, 1.0);

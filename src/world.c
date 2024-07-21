@@ -13,6 +13,8 @@
 #include "headers/test_block.h"
 #include "headers/chunk.h"
 
+#include <NOISE/noise1234.h>
+
 
 // ---
 
@@ -109,6 +111,23 @@ void update_world() {
 void draw_world() {
 
 	//draw_test_block(blockShaderProgram, worldAtlas);
+	
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+	// calculate noise value
+	int noiseValue = calc_chunk_noise_value( (vec2){(*camPos)[0], (*camPos)[2]}, GLM_VEC2_ZERO );
+
+	// check if camera is under water level and adjust underWaterLevel boolean accordingly
+	if((*camPos)[1] <= get_water_level() && (*camPos)[1] > noiseValue) {
+		set_under_water_level(true);
+	}
+	else {
+		set_under_water_level(false);
+	}
+
+
+	// ---
 		
 
 	// iterate thru x and z based on render distance
@@ -127,7 +146,7 @@ void draw_world() {
 
 
 	// if not underwater
-	if(!get_underwater_level()) {
+	if(!get_under_water_level()) {
 		// iterate thru x and z based on render distance
 		for(int i = 0; i < chunkCount; i++) {
 			
