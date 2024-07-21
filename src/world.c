@@ -59,6 +59,9 @@ void init_world() {
 	// create texture atlas object
 	worldAtlas = load_texture("assets/atlas.png");
 
+	// randomize noise offset for chunk generation
+	randomizeNoiseOffset();
+
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 	// and watercChunks

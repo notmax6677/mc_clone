@@ -3,6 +3,7 @@
 #include <CGLM/cglm.h>
 
 #include <stdio.h>
+#include <time.h>
 
 #include "headers/camera.h"
 #include "headers/world.h"
@@ -30,6 +31,9 @@ float lastFrameTime = 0.0f;
 
 // initiate some stuff
 void init(GLFWwindow* window) {
+	// randomize maths seed
+	srand(time(NULL));
+
 	init_camera(window);
 
 	init_world();

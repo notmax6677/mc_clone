@@ -5,6 +5,9 @@
 
 #include "mesh.h"
 
+// randomizes the noise offset
+void randomizeNoiseOffset();
+
 // just returns the constant value of the water level float
 float get_water_level();
 

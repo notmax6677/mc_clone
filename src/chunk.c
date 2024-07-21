@@ -21,20 +21,35 @@ const int CHUNK_HEIGHT = 32;  // y
 const int CHUNK_LENGTH = 16;  // z
 
 // noise settings
-const int NOISE_ZOOM = 25;
-const int NOISE_OFFSET = 15;
+const int NOISE_ZOOM = 50;
+const int NOISE_HEIGHT_OFFSET = 15;
 
 // level at which stone blocks appear, coming from top
 const int STONE_LEVEL = 5;
 
 // level at which sand blocks appear, coming from bottom
-const int SAND_LEVEL = 5;
+const int SAND_LEVEL = 10;
 
 // water level (this is purely for rendering some stuff when under the water level)
 const float WATER_LEVEL = SAND_LEVEL+0.5;
 
 // boolean that checks if camera is under water
 bool underWaterLevel = false;
+
+// random noise offset
+float randomNoiseOffset = 0.0f;
+// divide random noise offset value by this
+const float RAND_NOISE_DIVIDER = 2000;
+
+
+// ---
+
+
+// randomizes the noise offset
+void randomizeNoiseOffset() {
+	// set random noise offset
+	randomNoiseOffset = rand() / RAND_NOISE_DIVIDER;
+}
 
 
 // ---
@@ -63,10 +78,10 @@ void set_under_water_level(bool value) {
 int calc_chunk_noise_value(vec2 position, vec2 chunkOffset) {
 	return (int) ( 
 						noise2(
-							(float) ( position[0] + chunkOffset[0]*CHUNK_WIDTH ) / NOISE_ZOOM, 
-							(float) ( position[1] + chunkOffset[1]*CHUNK_LENGTH ) / NOISE_ZOOM
+							(float) ( position[0] + chunkOffset[0]*CHUNK_WIDTH + randomNoiseOffset ) / NOISE_ZOOM, 
+							(float) ( position[1] + chunkOffset[1]*CHUNK_LENGTH + randomNoiseOffset ) / NOISE_ZOOM
 						) * CHUNK_HEIGHT
-					 ) + NOISE_OFFSET;
+					 ) + NOISE_HEIGHT_OFFSET;
 }
 
 
@@ -499,8 +514,9 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 	for(int i=0; i < blockAmount; i++) {
 
 		// calculate noise value
-		noiseValue = (int)(noise2((float)(xPos + position[0]*CHUNK_WIDTH)/NOISE_ZOOM, 
-					(float)(zPos + position[1]*CHUNK_LENGTH)/NOISE_ZOOM) * CHUNK_HEIGHT) + NOISE_OFFSET;
+
+
+		noiseValue = calc_chunk_noise_value((vec2){xPos, zPos}, position);
 		
 		// cap noise value to chunk height
 		if(noiseValue >= CHUNK_HEIGHT) {

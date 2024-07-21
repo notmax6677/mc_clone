@@ -1,5 +1,3 @@
-create random seeding so every instance is a randomized world
-
 create block placement
 
 create some ui for the block placement

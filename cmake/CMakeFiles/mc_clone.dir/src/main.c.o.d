@@ -136,5 +136,10 @@ CMakeFiles/mc_clone.dir/src/main.c.o: \
  /home/max/Projects/c/mc_clone/./include/CGLM/bezier.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/ray.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/affine2d.h \
+ /usr/include/time.h /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+ /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /home/max/Projects/c/mc_clone/src/headers/camera.h \
  /home/max/Projects/c/mc_clone/src/headers/world.h
