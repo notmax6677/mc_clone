@@ -617,7 +617,7 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 
 
 		// ---
-
+		
 
 		// booleans to tell whether to add those sides or not
 		bool front  = true;
@@ -638,27 +638,27 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 		}
 				
 		// front
-		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) > 0) {
 			front = false;
 		}
 		// back
-		if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) > 0) {
 			back = false;
 		}
 		// left
-		if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) > 0 ) {
 			left = false;
 		}
 		// right
-		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
 			right = false;
 		}
 		// bottom
-		if( yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0 ) {
 			bottom = false;
 		}
 		// top
-		if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) > 0 ) {
+		if( get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) > 0 ) {
 			top = false;
 		}
 
