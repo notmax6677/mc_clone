@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
 
+#include <NOISE/noise1234.h>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -11,9 +13,9 @@
 #include "headers/shader.h"
 
 #include "headers/test_block.h"
-#include "headers/chunk.h"
 
-#include <NOISE/noise1234.h>
+#include "headers/pointer.h"
+#include "headers/chunk.h"
 
 
 // ---
@@ -23,7 +25,7 @@
 bool wireframeMode = false;
 
 // render distance of chunks
-const int RENDER_DISTANCE = 8;
+const int RENDER_DISTANCE = 6;
 const int WORLD_SIZE = 20;
 
 // keep track of last chunk position of player
@@ -58,6 +60,12 @@ void init_world() {
 
 	// create texture atlas object
 	worldAtlas = load_texture("assets/atlas.png");
+
+	// initiate select block
+	init_select_block();
+
+	// initiate crosshair
+	init_crosshair();
 
 	// randomize noise offset for chunk generation
 	randomizeNoiseOffset();
@@ -164,6 +172,14 @@ void draw_world() {
 			}
 		}
 	}
+
+
+	// ---
+	
+
+	draw_select_block(worldAtlas);
+
+	draw_crosshair(worldAtlas);
 
 
 

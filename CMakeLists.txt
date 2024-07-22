@@ -40,6 +40,7 @@ add_executable(${PROJECT_NAME}
 
 	./src/chunk.c
 	./src/test_block.c
+	./src/pointer.c
 	./src/world.c
 
 	./src/shader.c
@@ -52,6 +53,7 @@ add_executable(${PROJECT_NAME}
 	./src/headers/camera.h
 
 	./src/headers/test_block.h
+	./src/headers/pointer.h
 	./src/headers/chunk.h
 	./src/headers/world.h
 

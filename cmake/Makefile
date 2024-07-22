@@ -427,6 +427,30 @@ src/main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/main.c.s
 .PHONY : src/main.c.s
 
+src/pointer.o: src/pointer.c.o
+.PHONY : src/pointer.o
+
+# target to build an object file
+src/pointer.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/pointer.c.o
+.PHONY : src/pointer.c.o
+
+src/pointer.i: src/pointer.c.i
+.PHONY : src/pointer.i
+
+# target to preprocess a source file
+src/pointer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/pointer.c.i
+.PHONY : src/pointer.c.i
+
+src/pointer.s: src/pointer.c.s
+.PHONY : src/pointer.s
+
+# target to generate assembly for a file
+src/pointer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/pointer.c.s
+.PHONY : src/pointer.c.s
+
 src/shader.o: src/shader.c.o
 .PHONY : src/shader.o
 
@@ -540,6 +564,9 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/pointer.o"
+	@echo "... src/pointer.i"
+	@echo "... src/pointer.s"
 	@echo "... src/shader.o"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"
