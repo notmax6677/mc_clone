@@ -55,6 +55,21 @@ void randomizeNoiseOffset() {
 // ---
 
 
+// getters for chunk sizes
+int get_chunk_width() { 
+	return CHUNK_WIDTH;
+}
+int get_chunk_length() {
+	return CHUNK_LENGTH;
+}
+int get_chunk_height() {
+	return CHUNK_HEIGHT;
+}
+
+
+// ---
+
+
 // just returns the constant value of the water level float
 float get_water_level() {
 	return WATER_LEVEL;
@@ -617,7 +632,7 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 
 
 		// ---
-
+	
 
 		// booleans to tell whether to add those sides or not
 		bool front  = true;

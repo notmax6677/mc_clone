@@ -2,6 +2,10 @@ create block placement
 
 create some ui for the block placement
 
+TRY to fix the small bug with select block that sometimes happens along the border of a chunk with another chunk
+
+fix the grainy stuff in the water
+
 water animations???
 
 create tree generation

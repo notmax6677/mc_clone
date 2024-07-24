@@ -8,6 +8,11 @@
 // randomizes the noise offset
 void randomizeNoiseOffset();
 
+// getters for chunk sizes
+int get_chunk_width();
+int get_chunk_length();
+int get_chunk_height();
+
 // just returns the constant value of the water level float
 float get_water_level();
 
@@ -17,6 +22,9 @@ void set_under_water_level(bool value);
 
 // calculates noise value as integer block y coordinate at given position, allows for offsetting with chunk coords
 int calc_chunk_noise_value(vec2 position, vec2* chunkOffset);
+
+// gets the block type of a block within a chunk
+int get_block_type(int* blockTypes, int xPos, int yPos, int zPos);
 
 // chunk structure
 struct Chunk {

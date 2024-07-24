@@ -1,6 +1,10 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include "chunk.h"
+
+struct Chunk get_chunk(int xPos, int yPos);
+
 // initiate world
 void init_world();
 

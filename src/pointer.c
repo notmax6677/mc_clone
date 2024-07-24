@@ -1,10 +1,13 @@
+#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
+#include <math.h>
 
+#include "headers/chunk.h"
+#include "headers/world.h"
 #include "headers/camera.h"
 #include "headers/image.h"
-#include "headers/mesh.h"
 #include "headers/shader.h"
 
 
@@ -24,7 +27,10 @@ unsigned int selectShaderProgram;
 unsigned int crosshairShaderProgram;
 
 // how many blocks ahead can the pointer reach
-const int POINTER_REACH = 6;
+const int POINTER_REACH = 10;
+
+// select block position
+vec3 selectPos = GLM_VEC3_ZERO_INIT;
 
 
 // ---
@@ -158,6 +164,84 @@ void init_select_block() {
 // ---
 
 
+void update_select_block() {
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+	// get camera front
+	vec3* camFront = get_camera_front();
+
+	// adjust camera position to recenter for ray to be emitted from middle of window
+	vec3 adjustedCamPos;
+	glm_vec3_copy( (vec3){
+		(*camPos)[0]-0.5,
+		(*camPos)[1]-0.5,
+		(*camPos)[2]-0.5
+	}, adjustedCamPos );
+
+	// iterations to move pointer along a line
+	int iterations = 0;
+
+	// the type of the block being looked at
+	int blockType = 0;
+
+	// position of chunk that camera is in
+	vec2 playerChunkPos;
+
+	// select position relative to chunk
+	vec3 relativeSelectPos;
+
+	// initiate by copying over current camera position to select position
+	glm_vec3_copy(adjustedCamPos, selectPos);
+
+	while(iterations < POINTER_REACH) {
+		// get player chunk position
+		playerChunkPos[0] = floor( round(selectPos[0]) / get_chunk_width() );
+		playerChunkPos[1] = floor( round(selectPos[2]) / get_chunk_length() );
+
+		// get the current chunk
+		struct Chunk currentChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+
+		// copy over selectPos to relativeSelectPos
+		glm_vec3_copy(selectPos, relativeSelectPos);
+
+		// remove chunk position 
+		relativeSelectPos[0] -= currentChunk.pos[0]*get_chunk_width();
+		relativeSelectPos[2] -= currentChunk.pos[1]*get_chunk_length();
+
+		// round the x y z values
+		relativeSelectPos[0] = round(relativeSelectPos[0]);
+		relativeSelectPos[1] = round(relativeSelectPos[1]);
+		relativeSelectPos[2] = round(relativeSelectPos[2]);
+
+		// if not out of y bounds (ABOVE OR BELOW CHUNK)
+		if(selectPos[1] > get_chunk_height() || selectPos[1] < 0) {
+			blockType = 0;
+		}
+		else {
+			// get the block type of the block at that position
+			blockType = get_block_type(currentChunk.blockTypes, relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2]);
+		}
+
+		// if block type is air, then move further along the path
+		if(blockType == 0) {
+			glm_vec3_add(selectPos, *camFront, selectPos);
+		}
+
+		// increment interations
+		iterations++;
+	}
+
+	// if blocktype is still air by the end, then just move the select position to 0, 0, 0 to avoid it being shown
+	if(blockType == 0) {
+		glm_vec3_copy(GLM_VEC3_ZERO, selectPos);
+	}
+}
+
+
+// ---
+
+
 void draw_select_block(unsigned int worldAtlas) {
 
 
@@ -192,19 +276,8 @@ void draw_select_block(unsigned int worldAtlas) {
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
 
-
-	// ---
-	
-
-	// get camera position
-	vec3* camPos = get_camera_pos();
-
-	// position for select block to render
-	vec3 selectPos = GLM_VEC3_ZERO_INIT;
-
-	selectPos[0] = round((*camPos)[0] + ( (*camFront)[0]*POINTER_REACH ));
-	selectPos[1] = round((*camPos)[1] + ( (*camFront)[1]*POINTER_REACH ));
-	selectPos[2] = round((*camPos)[2] + ( (*camFront)[2]*POINTER_REACH ));
+	// load position uniform
+	glUniform3f(posLoc, round(selectPos[0]), round(selectPos[1]), round(selectPos[2]));
 
 	
 	// ---
@@ -310,13 +383,6 @@ void draw_select_block(unsigned int worldAtlas) {
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(12 * sizeof(int)));
 	}
 
-
-	// ---
-	
-	
-	// load position uniform
-	glUniform3f(posLoc, selectPos[0], selectPos[1], selectPos[2]);
-
 }
 
 
@@ -330,9 +396,9 @@ void init_crosshair() {
 		// position               color                texture coords
 
 		// front
-	   -0.04f,  0.04f,  0.0f,    1.0f, 1.0f, 1.0f,    calc_at_tex_x(0),  calc_at_tex_y(48),   // top left
-		0.04f,  0.04f,  0.0f,    1.0f, 1.0f, 1.0f,    calc_at_tex_x(4),  calc_at_tex_y(48),   // top right
-	   -0.04f, -0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(0),  calc_at_tex_y(52),   // bot left
+	  -0.04f,  0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(0),  calc_at_tex_y(48),   // top left
+		0.04f,  0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(4),  calc_at_tex_y(48),   // top right
+	  -0.04f, -0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(0),  calc_at_tex_y(52),   // bot left
 		0.04f, -0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(4),  calc_at_tex_y(52),   // bot right
 	};
 	// indices array
@@ -446,3 +512,20 @@ void draw_crosshair(unsigned int worldAtlas) {
 
 }
 
+
+// ---
+
+
+void init_pointer() {
+	init_select_block();
+	init_crosshair();
+}
+
+void update_pointer() {
+	update_select_block();
+}
+
+void draw_pointer(unsigned int worldAtlas) {
+	draw_select_block(worldAtlas);
+	draw_crosshair(worldAtlas);
+}

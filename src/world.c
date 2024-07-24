@@ -54,6 +54,20 @@ int chunkCount = 0;
 // ---
 
 
+// gets a chunk based on the snapped chunks position
+struct Chunk get_chunk(int xPos, int yPos) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
+			return chunks[i];
+		}
+	}
+	return chunks[0]; // by default return first chunk
+}
+
+
+// ---
+
+
 void init_world() {
 	// create shaderprogram
 	blockShaderProgram = create_shader_program("shaders/block_shader.vert", "shaders/block_shader.frag");
@@ -61,11 +75,8 @@ void init_world() {
 	// create texture atlas object
 	worldAtlas = load_texture("assets/atlas.png");
 
-	// initiate select block
-	init_select_block();
-
-	// initiate crosshair
-	init_crosshair();
+	// initiate pointer related stuff
+	init_pointer();
 
 	// randomize noise offset for chunk generation
 	randomizeNoiseOffset();
@@ -117,6 +128,8 @@ void update_world() {
 
 	// at end of function, copy over player chunk position to lastChunkPos for next frame
 	glm_vec2_copy(playerChunkPos, lastChunkPos);
+
+	update_pointer();
 }
 
 void draw_world() {
@@ -177,9 +190,7 @@ void draw_world() {
 	// ---
 	
 
-	draw_select_block(worldAtlas);
-
-	draw_crosshair(worldAtlas);
+	draw_pointer(worldAtlas);
 
 
 
