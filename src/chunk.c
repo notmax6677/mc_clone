@@ -474,7 +474,7 @@ void create_side_indices(int indicesOffset, int index, int* array) {
 // ---
 
 
-struct Chunk generate_chunk(vec2 position, bool water) {
+struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 
 	// create new chunk structure instance
 	struct Chunk newChunk;

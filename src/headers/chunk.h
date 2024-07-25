@@ -38,7 +38,7 @@ struct Chunk {
 };
 
 // generates a chunk
-struct Chunk generate_chunk(vec2 position, bool water);
+struct Chunk generate_chunk(vec2 position, bool water, vec4 block);
 
 // draw a chunk
 void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas);

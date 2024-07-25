@@ -7,6 +7,7 @@
 
 #include "headers/camera.h"
 #include "headers/world.h"
+#include "headers/pointer.h"
 
 
 // ---
@@ -48,7 +49,7 @@ void update(GLFWwindow* window) {
 
 	update_camera(window, deltaTime);
 
-	update_world();
+	update_world(window);
 }
 
 // frame draw
@@ -120,6 +121,11 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	camera_mouse_callback(window, xpos, ypos);
 }
 
+// mouse button/input callback
+void mouse_input_callback(GLFWwindow* window, int button, int action, int mods) {
+	pointer_mouse_input_callback(window, button, action, mods);
+}
+
 // callback called upon window resize
 void resize_callback(GLFWwindow* window, int width, int height) {
 	// set viewport
@@ -168,6 +174,9 @@ int main() {
 
 	// set mouse callback
 	glfwSetCursorPosCallback(window, mouse_callback);
+
+	// set mouse INPUT callback
+	glfwSetMouseButtonCallback(window, mouse_input_callback);
 
 	// set resize window callack
 	glfwSetFramebufferSizeCallback(window, resize_callback);

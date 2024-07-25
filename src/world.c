@@ -1,4 +1,4 @@
-#include <CGLM/vec2.h>
+#include <CGLM/vec4.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -93,10 +93,10 @@ void init_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false);
+		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false, GLM_VEC4_ZERO);
 
 		// generate indexed chunk, but now for water part of the chunk
-		waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true);
+		waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true, GLM_VEC4_ZERO);
 
 		chunkCount++;
 
@@ -115,7 +115,7 @@ void init_world() {
 	init_test_block();
 }
 
-void update_world() {
+void update_world(GLFWwindow* window) {
 	// fetch camera position
 	vec3* camPos = get_camera_pos();
 
@@ -129,7 +129,7 @@ void update_world() {
 	// at end of function, copy over player chunk position to lastChunkPos for next frame
 	glm_vec2_copy(playerChunkPos, lastChunkPos);
 
-	update_pointer();
+	update_pointer(window);
 }
 
 void draw_world() {

@@ -1,6 +1,9 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <GLAD33/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "chunk.h"
 
 struct Chunk get_chunk(int xPos, int yPos);
@@ -9,7 +12,7 @@ struct Chunk get_chunk(int xPos, int yPos);
 void init_world();
 
 // update world
-void update_world();
+void update_world(GLFWwindow* window);
 
 // draw world
 void draw_world();

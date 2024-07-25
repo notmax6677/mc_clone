@@ -1,8 +1,6 @@
-#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
-#include <math.h>
 
 #include "headers/chunk.h"
 #include "headers/world.h"
@@ -31,6 +29,15 @@ const int POINTER_REACH = 10;
 
 // select block position
 vec3 selectPos = GLM_VEC3_ZERO_INIT;
+
+// whether or not currently selecting something
+bool selectingSomething = false;
+
+// type of currently selected block
+int selectBlockType = 0;
+
+// pointer to currently selected chunk
+struct Chunk* selectChunk;
 
 
 // ---
@@ -158,6 +165,13 @@ void init_select_block() {
 	selectedBlockMesh.vao = VAO;
 	selectedBlockMesh.vbo = VBO;
 	selectedBlockMesh.ebo = EBO;
+
+
+	// ---
+	
+
+	// also allocate space for selectChunk on heap
+	selectChunk = malloc( sizeof(struct Chunk) );
 }
 
 
@@ -183,7 +197,7 @@ void update_select_block() {
 	int iterations = 0;
 
 	// the type of the block being looked at
-	int blockType = 0;
+	selectBlockType = 0;
 
 	// position of chunk that camera is in
 	vec2 playerChunkPos;
@@ -200,14 +214,14 @@ void update_select_block() {
 		playerChunkPos[1] = floor( round(selectPos[2]) / get_chunk_length() );
 
 		// get the current chunk
-		struct Chunk currentChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+		*selectChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
 
 		// copy over selectPos to relativeSelectPos
 		glm_vec3_copy(selectPos, relativeSelectPos);
 
 		// remove chunk position 
-		relativeSelectPos[0] -= currentChunk.pos[0]*get_chunk_width();
-		relativeSelectPos[2] -= currentChunk.pos[1]*get_chunk_length();
+		relativeSelectPos[0] -= (*selectChunk).pos[0]*get_chunk_width();
+		relativeSelectPos[2] -= (*selectChunk).pos[1]*get_chunk_length();
 
 		// round the x y z values
 		relativeSelectPos[0] = round(relativeSelectPos[0]);
@@ -216,15 +230,15 @@ void update_select_block() {
 
 		// if not out of y bounds (ABOVE OR BELOW CHUNK)
 		if(selectPos[1] > get_chunk_height() || selectPos[1] < 0) {
-			blockType = 0;
+			selectBlockType = 0;
 		}
 		else {
 			// get the block type of the block at that position
-			blockType = get_block_type(currentChunk.blockTypes, relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2]);
+			selectBlockType = get_block_type((*selectChunk).blockTypes, relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2]);
 		}
 
 		// if block type is air, then move further along the path
-		if(blockType == 0) {
+		if(selectBlockType == 0) {
 			glm_vec3_add(selectPos, *camFront, selectPos);
 		}
 
@@ -233,8 +247,14 @@ void update_select_block() {
 	}
 
 	// if blocktype is still air by the end, then just move the select position to 0, 0, 0 to avoid it being shown
-	if(blockType == 0) {
+	if(selectBlockType == 0) {
 		glm_vec3_copy(GLM_VEC3_ZERO, selectPos);
+		// set selectingSomething to false
+		selectingSomething = false;
+	}
+	else {
+		// enable selectingSomething
+		selectingSomething = true;
 	}
 }
 
@@ -243,8 +263,6 @@ void update_select_block() {
 
 
 void draw_select_block(unsigned int worldAtlas) {
-
-
 
 	// bind vao
 	glBindVertexArray(selectedBlockMesh.vao);
@@ -521,11 +539,76 @@ void init_pointer() {
 	init_crosshair();
 }
 
-void update_pointer() {
+void update_pointer(GLFWwindow* window) {
 	update_select_block();
 }
 
 void draw_pointer(unsigned int worldAtlas) {
 	draw_select_block(worldAtlas);
 	draw_crosshair(worldAtlas);
+}
+
+
+// ---
+
+
+void place_block() {
+
+}
+
+void delete_block() {
+
+	// if even selecting something in the first place
+	if(selectingSomething) {
+
+		// vector to store player chunk position
+		vec2 playerChunkPos = GLM_VEC2_ZERO_INIT;
+
+		// get player chunk position
+		playerChunkPos[0] = floor( round(selectPos[0]) / get_chunk_width() );
+		playerChunkPos[1] = floor( round(selectPos[2]) / get_chunk_length() );
+
+
+		// ---
+
+
+		// vector for relative position
+		vec3 relativeSelectPos;
+
+		// copy over selectPos to relativeSelectPos
+		glm_vec3_copy(selectPos, relativeSelectPos);
+
+		// remove chunk position 
+		relativeSelectPos[0] -= (*selectChunk).pos[0]*get_chunk_width();
+		relativeSelectPos[2] -= (*selectChunk).pos[1]*get_chunk_length();
+
+		// round the x y z values
+		relativeSelectPos[0] = round(relativeSelectPos[0]);
+		relativeSelectPos[1] = round(relativeSelectPos[1]);
+		relativeSelectPos[2] = round(relativeSelectPos[2]);
+
+
+		// ---
+
+
+		printf("%i, %i\n", playerChunkPos[0], playerChunkPos[1]);
+		struct Chunk newChunk;
+
+		newChunk = generate_chunk((vec2){0, 0}, false, (vec4){0, 0, 0, 0});
+
+
+	}
+
+}
+
+
+// ---
+
+
+// callback for mouse input, but dedicated to pointer related functionality
+void pointer_mouse_input_callback(GLFWwindow* window, int button, int action, int mods) {
+	// if left click
+	if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		delete_block(); // delete block
+	}
 }
