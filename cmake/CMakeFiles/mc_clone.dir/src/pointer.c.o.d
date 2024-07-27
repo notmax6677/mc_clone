@@ -1,7 +1,7 @@
 CMakeFiles/mc_clone.dir/src/pointer.c.o: \
  /home/max/Projects/c/mc_clone/src/pointer.c /usr/include/stdc-predef.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/vec3.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/common.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -18,11 +18,8 @@ CMakeFiles/mc_clone.dir/src/pointer.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /home/max/Projects/c/mc_clone/./include/GLFW/glfw3.h \
- /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/common.h \
- /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
@@ -66,13 +63,17 @@ CMakeFiles/mc_clone.dir/src/pointer.c.o: \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/emmintrin.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/simd/x86.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/simd/intrin.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/util.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec2-ext.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec3.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/vec4.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/vec4-ext.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/vec3-ext.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/util.h \
+ /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
+ /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
+ /home/max/Projects/c/mc_clone/./include/GLFW/glfw3.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/vec2.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/vec2-ext.h \
+ /home/max/Projects/c/mc_clone/./include/CGLM/vec3.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/ivec2.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/ivec3.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/ivec4.h \
