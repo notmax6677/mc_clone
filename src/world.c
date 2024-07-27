@@ -1,4 +1,3 @@
-#include <CGLM/vec4.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -62,6 +61,21 @@ struct Chunk get_chunk(int xPos, int yPos) {
 		}
 	}
 	return chunks[0]; // by default return first chunk
+}
+
+// gets the index of a chunk based on the snapped chunks position
+int get_chunk_index(int xPos, int yPos) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
+			return i;
+		}
+	}
+	return 0; // by default return first chunk
+}
+
+// sets an indexed chunk to an inserted chunk object
+void set_chunk(int index, struct Chunk* chunk) {
+	chunks[index] = *chunk;
 }
 
 

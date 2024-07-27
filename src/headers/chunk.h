@@ -37,6 +37,9 @@ struct Chunk {
 	struct Mesh mesh; // mesh of chunk
 };
 
+// inserts a block into a chunk
+struct Chunk insert_block(struct Chunk* chunk, vec4 block);
+
 // generates a chunk
 struct Chunk generate_chunk(vec2 position, bool water, vec4 block);
 

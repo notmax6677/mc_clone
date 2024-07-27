@@ -317,6 +317,14 @@ int WATER_TEX_COORDS[] = {
 int get_block_type(int* blockTypes, int xPos, int yPos, int zPos) {
 	return blockTypes[yPos*16*16 + zPos*16 + xPos];
 }
+// returns the actual index of a block at given relative coordinates to chunk
+int get_block_index(int* blockTypes, int xPos, int yPos, int zPos) {
+	return yPos*16*16 + zPos*16 + xPos;
+}
+// sets the block type at a position relative to the chunk based on coordinates
+void set_block_type(int* blockTypes, int xPos, int yPos, int zPos, int type) {
+	blockTypes[yPos*16*16 + zPos*16 + xPos] = type;
+}
 
 
 // ---
@@ -467,6 +475,556 @@ void create_side_indices(int indicesOffset, int index, int* array) {
 
 	// copy contents of new sideIndices array into passed in array
 	memcpy(array, sideIndices, sizeof(int) * 6);
+
+}
+
+
+// ---
+
+
+struct Chunk insert_block(struct Chunk* chunk, vec4 block) {
+
+	// create dereferenced copy of chunk parameter
+	struct Chunk newChunk = *chunk;
+
+	// set the block type in the new chunk
+	set_block_type(newChunk.blockTypes, block[0], block[1], block[2], block[3]);
+
+	// bind vao
+	glBindVertexArray(newChunk.mesh.vao);
+
+	// bind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, newChunk.mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newChunk.mesh.ebo);
+
+	// define side vertices arrays for each side of a block
+	float sideVertices[4*8];
+
+	// create single side indices array
+	int sideIndices[6];
+
+	// declare type string
+	const char* type;
+
+	// define type string based on returned block type
+	if(block[3] == 1) {
+		type = "grass";
+	}
+	else if(block[3] == 2) {
+		type = "dirt";
+	}
+	else if(block[3] == 3) {
+		type = "stone";
+	}
+	else if(block[3] == 4) {
+		type = "sand";
+	}
+	else if(block[3] == 0) {
+		type = "air";
+	}
+
+
+	int verticesIndex = 0;
+	int indicesIndex = 0;
+	int indicesOffset = 0;
+
+	// get index of block
+	int i = get_block_index(newChunk.blockTypes, block[0], block[1], block[2]);
+
+
+	// ---
+
+
+	// front
+
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("front", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment vertices and indices index, as well as indices offset
+	verticesIndex += 4*8 * sizeof(float);
+	indicesIndex += 6 * sizeof(int);
+	indicesOffset += 4;
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// back
+	
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("back", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment vertices and indices index, as well as indices offset
+	verticesIndex += 4*8 * sizeof(float);
+	indicesIndex += 6 * sizeof(int);
+	indicesOffset += 4;
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// left
+
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("left", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment vertices and indices index, as well as indices offset
+	verticesIndex += 4*8 * sizeof(float);
+	indicesIndex += 6 * sizeof(int);
+	indicesOffset += 4;
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// right
+
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("right", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment vertices and indices index, as well as indices offset
+	verticesIndex += 4*8 * sizeof(float);
+	indicesIndex += 6 * sizeof(int);
+	indicesOffset += 4;
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// bottom
+
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("bottom", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment vertices and indices index, as well as indices offset
+	verticesIndex += 4*8 * sizeof(float);
+	indicesIndex += 6 * sizeof(int);
+	indicesOffset += 4;
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// top
+
+	// if not air block
+	if(block[3] != 0) {
+		// generate proper vertices array and load it into frontVertices
+		create_side_vertices("top", type, block[0], block[1], block[2], sideVertices);
+		
+		// generate proper indices array and load it into sideIndices
+		create_side_indices(indicesOffset, i, sideIndices);
+	}
+
+	// load proper vertices and indices array into VBO via glBufferSubData
+	glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(sideVertices), sideVertices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+
+	// increment amount of sides
+	newChunk.sides += 6;
+
+
+	// ---
+	
+
+	// now we need to get adjacent blocks and fill in their sides, if new block is air
+	if(block[3] == 0) {
+
+		// the blocks are actually done kinda in reverse so the front block is actually the back block of
+		// the main block being edited, and the right block is actually left to the main block, but its right side is being edited
+		// which is why its being called the right block, i know its a bit confusing
+
+		// front block
+
+		// front position vector
+		vec3 frontPos;
+		glm_vec3_copy((vec3){block[0], block[1], block[2]-1}, frontPos);
+		
+		// if front block isnt air
+		if(get_block_type(newChunk.blockTypes, frontPos[0], frontPos[1], frontPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, frontPos[0], frontPos[1], frontPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, frontPos[0], frontPos[1], frontPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("front", type, frontPos[0], frontPos[1], frontPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 0*(6*sizeof(int)) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 0*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+		// back block
+
+		// back position vector
+		vec3 backPos;
+		glm_vec3_copy((vec3){block[0], block[1], block[2]+1}, backPos);
+		
+		// if back block isnt air
+		if(get_block_type(newChunk.blockTypes, backPos[0], backPos[1], backPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, backPos[0], backPos[1], backPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, backPos[0], backPos[1], backPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("back", type, backPos[0], backPos[1], backPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 1*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 1*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 1*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+		// left block
+
+		// left position vector
+		vec3 leftPos;
+		glm_vec3_copy((vec3){block[0]+1, block[1], block[2]}, leftPos);
+		
+		// if left block isnt air
+		if(get_block_type(newChunk.blockTypes, leftPos[0], leftPos[1], leftPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, leftPos[0], leftPos[1], leftPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, leftPos[0], leftPos[1], leftPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("left", type, leftPos[0], leftPos[1], leftPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 2*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 2*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 2*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+		// right block
+
+		// right position vector
+		vec3 rightPos;
+		glm_vec3_copy((vec3){block[0]-1, block[1], block[2]}, rightPos);
+		
+		// if right block isnt air
+		if(get_block_type(newChunk.blockTypes, rightPos[0], rightPos[1], rightPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, rightPos[0], rightPos[1], rightPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, rightPos[0], rightPos[1], rightPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("right", type, rightPos[0], rightPos[1], rightPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 3*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 3*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 3*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+		// bottom block
+
+		// bottom position vector
+		vec3 bottomPos;
+		glm_vec3_copy((vec3){block[0], block[1]+1, block[2]}, bottomPos);
+		
+		// if bottom block isnt air
+		if(get_block_type(newChunk.blockTypes, bottomPos[0], bottomPos[1], bottomPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, bottomPos[0], bottomPos[1], bottomPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, bottomPos[0], bottomPos[1], bottomPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("bottom", type, bottomPos[0], bottomPos[1], bottomPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 4*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 4*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 4*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+		// top block
+
+		// top position vector
+		vec3 topPos;
+		glm_vec3_copy((vec3){block[0], block[1]-1, block[2]}, topPos);
+		
+		// if top block isnt air
+		if(get_block_type(newChunk.blockTypes, topPos[0], topPos[1], topPos[2]) != 0) {
+
+			// get block type in the form of integer
+			int blockType = get_block_type(newChunk.blockTypes, topPos[0], topPos[1], topPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index(newChunk.blockTypes, topPos[0], topPos[1], topPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("top", type, topPos[0], topPos[1], topPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 5*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 5*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 5*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+		}
+
+	}
+
+	// unbind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+
+	// ---
+	
+
+	// bind vao
+	glBindVertexArray(newChunk.mesh.vao);
+
+	// bind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, newChunk.mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newChunk.mesh.ebo);
+
+	// vertex attributes
+	
+	// position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// texture coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	// now unbind everything
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	return newChunk;
 
 }
 
@@ -712,14 +1270,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(frontVertices), frontVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
-			// increment vertices and indices index, as well as indices offset
-			verticesIndex += 4*8 * sizeof(float);
-			indicesIndex += 6 * sizeof(int);
-			indicesOffset += 4;
-
 			// increment amount of sides
 			newChunk.sides += 6;
 		}
+		// increment vertices and indices index, as well as indices offset
+		verticesIndex += 4*8 * sizeof(float);
+		indicesIndex += 6 * sizeof(int);
+		indicesOffset += 4;
+
 		if(back) {
 			// generate proper vertices array and load it into backVertices
 			create_side_vertices("back", type, xPos, yPos, zPos, backVertices);
@@ -731,14 +1289,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(backVertices), backVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
-			// increment vertices and indices index, as well as indices offset
-			verticesIndex += 4*8 * sizeof(float);
-			indicesIndex += 6 * sizeof(int);
-			indicesOffset += 4;
-
 			// increment amount of sides
 			newChunk.sides += 6;
 		}
+		// increment vertices and indices index, as well as indices offset
+		verticesIndex += 4*8 * sizeof(float);
+		indicesIndex += 6 * sizeof(int);
+		indicesOffset += 4;
+
 		if(left) {
 			// generate proper vertices array and load it into leftVertices
 			create_side_vertices("left", type,  xPos, yPos, zPos, leftVertices);
@@ -750,14 +1308,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(leftVertices), leftVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
-			// increment vertices and indices index, as well as indices offset
-			verticesIndex += 4*8 * sizeof(float);
-			indicesIndex += 6 * sizeof(int);
-			indicesOffset += 4;
-
 			// increment amount of sides
 			newChunk.sides += 6;
 		}
+		// increment vertices and indices index, as well as indices offset
+		verticesIndex += 4*8 * sizeof(float);
+		indicesIndex += 6 * sizeof(int);
+		indicesOffset += 4;
+
 		if(right) {
 			// generate proper vertices array and load it into rightVertices
 			create_side_vertices("right", type, xPos, yPos, zPos, rightVertices);
@@ -769,14 +1327,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(rightVertices), rightVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
-			// increment vertices and indices index, as well as indices offset
-			verticesIndex += 4*8 * sizeof(float);
-			indicesIndex += 6 * sizeof(int);
-			indicesOffset += 4;
-
 			// increment amount of sides
 			newChunk.sides += 6;
 		}
+		// increment vertices and indices index, as well as indices offset
+		verticesIndex += 4*8 * sizeof(float);
+		indicesIndex += 6 * sizeof(int);
+		indicesOffset += 4;
+
 		if(bottom) {
 			// generate proper vertices array and load it into bottomVertices
 			create_side_vertices("bottom", type, xPos, yPos, zPos, bottomVertices);
@@ -788,14 +1346,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(bottomVertices), bottomVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
 
-			// increment vertices and indices index, as well as indices offset
-			verticesIndex += 4*8 * sizeof(float);
-			indicesIndex += 6 * sizeof(int);
-			indicesOffset += 4;
-
 			// increment amount of sides
 			newChunk.sides += 6;
 		}
+		// increment vertices and indices index, as well as indices offset
+		verticesIndex += 4*8 * sizeof(float);
+		indicesIndex += 6 * sizeof(int);
+		indicesOffset += 4;
+
 		if(top) {
 			// generate proper vertices array and load it into topVertices
 			create_side_vertices("top", type, xPos, yPos, zPos, topVertices);

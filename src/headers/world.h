@@ -6,7 +6,14 @@
 
 #include "chunk.h"
 
+// gets the chunk object based on the snapped chunks position
 struct Chunk get_chunk(int xPos, int yPos);
+
+// gets the index of a chunk based on the snapped chunks position
+int get_chunk_index(int xPos, int yPos);
+
+// sets an indexed chunk to an inserted chunk object
+void set_chunk(int index, struct Chunk* chunk);
 
 // initiate world
 void init_world();

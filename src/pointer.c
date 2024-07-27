@@ -591,10 +591,18 @@ void delete_block() {
 		// ---
 
 
-		printf("%i, %i\n", playerChunkPos[0], playerChunkPos[1]);
-		struct Chunk newChunk;
+		struct Chunk* newChunk;
+		newChunk = malloc( sizeof(struct Chunk) );
 
-		newChunk = generate_chunk((vec2){0, 0}, false, (vec4){0, 0, 0, 0});
+		*newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
+
+		*newChunk = insert_block(newChunk, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 0});
+
+		set_chunk(index, newChunk);
+
+
+		free(newChunk);
 
 
 	}
