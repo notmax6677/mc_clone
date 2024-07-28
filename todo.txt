@@ -1,4 +1,4 @@
-create system to order chunk draws correctly from back to front, sorted by distance
+create block placement
 
 create some ui for the block placement
 
