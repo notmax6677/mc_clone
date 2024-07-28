@@ -1,3 +1,4 @@
+#include <CGLM/vec2.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -44,10 +45,118 @@ unsigned int blockShaderProgram;
 
 
 struct Chunk* chunks;
+struct Chunk* drawChunks;
 
 struct Chunk* waterChunks;
 
 int chunkCount = 0;
+
+
+// ---
+
+
+// sorts a chunks array based on distance from camera, back to front
+struct Chunk* sortChunks(struct Chunk* inputChunks) {
+	// create new chunks object
+	struct Chunk* newChunks = malloc( sizeof(struct Chunk) * WORLD_SIZE*WORLD_SIZE );
+
+	// create new vec2 array, x for chunk index, y for distance from player
+	vec2 chunksData[WORLD_SIZE*WORLD_SIZE];
+
+
+	// ---
+	
+
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+	// create vector2 and load camera position but snapped to chunk position
+	vec2 snappedCamPos;
+	glm_vec2_copy((vec2){
+		round( (*camPos)[0] / get_chunk_width() ),
+		round( (*camPos)[2] / get_chunk_length() )
+	}, snappedCamPos);
+
+	// iterate and store array vector2s of index and distance from player into chunksData
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+	
+		// get distance of chunk from camera (pythagoras theorem)
+		float dist = sqrt( 
+				abs( snappedCamPos[0] - inputChunks[i].pos[0] )
+				+
+				abs( snappedCamPos[1] - inputChunks[i].pos[1] )
+		);
+
+		// load index and distance into correspondingly indexed vector
+		glm_vec2_copy((vec2){i, dist}, chunksData[i]);
+
+	}
+
+	// now actually sort the vectors from lowest to highest distance
+	
+	// boolean to recognize when bubble sort has fully completed
+	bool sorted = false;
+
+	// amount of swaps per iteration
+	int swaps = 0;
+
+	// while unsorted
+	while(!sorted) {
+
+		// reset swaps to 0
+		swaps = 0;
+
+		// iterate thru chunksData array
+		for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+		
+			// if not the last element
+			if(i != WORLD_SIZE*WORLD_SIZE-1) {
+				
+				// get and store copies of first and second vectors
+				vec2 firstVec;
+				glm_vec2_copy(chunksData[i], firstVec);
+				vec2 secondVec;
+				glm_vec2_copy(chunksData[i+1], secondVec); // next one
+				
+				// if chunk in front has lower distance value
+				if(firstVec[1] > secondVec[1]) {
+
+					// swap the vectors in position within the chunksData array
+					glm_vec2_copy(firstVec, chunksData[i+1]);
+					glm_vec2_copy(secondVec, chunksData[i]);
+
+					// increment swaps
+					swaps++;
+
+				}
+
+			}
+
+		}
+
+		// if no swaps were made then array is sorted
+		if(swaps == 0) {
+			sorted = true;
+		}
+
+	}
+
+	// now fill newChunks array with chunks from inputChunks, but in backwards order based on chunksData
+	
+	// iterate thru chunksData
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+
+		// load chunk into new chunk (going from back to front)
+		newChunks[i] = inputChunks[ (int)chunksData[i][0] ];
+
+	}
+
+
+	// ---
+	
+
+	return newChunks;
+}
 
 
 // ---
@@ -97,7 +206,10 @@ void init_world() {
 
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
-	// and watercChunks
+	// as well as drawChunks
+	drawChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
+
+	// and waterChunks
 	waterChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 
 	// coordinates for drawing chunks (from a 2D top-down perspective)
@@ -126,6 +238,9 @@ void init_world() {
 		}
 	}
 
+	// copy over chunks array to initial drawChunks
+	drawChunks = chunks;
+
 	init_test_block();
 }
 
@@ -136,8 +251,17 @@ void update_world(GLFWwindow* window) {
 	// snap player position to chunk grid and assign data to vec2 object
 	vec2 playerChunkPos;
 	glm_vec2_copy(
-			(vec2) { floor((*camPos)[0] / 16), floor((*camPos)[2] / 16)}, 
+			(vec2) { 
+				floor((*camPos)[0] / get_chunk_width()), 
+				floor((*camPos)[2] / get_chunk_length())
+			}, 
 			playerChunkPos);
+
+	// if moved to another chunk
+	if(playerChunkPos[0] != lastChunkPos[0] || playerChunkPos[1] != lastChunkPos[1]) {
+		//free(drawChunks);
+		//drawChunks = sortChunks(chunks);
+	}
 
 
 	// at end of function, copy over player chunk position to lastChunkPos for next frame

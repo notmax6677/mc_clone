@@ -30,7 +30,7 @@ int get_block_type(int* blockTypes, int xPos, int yPos, int zPos);
 struct Chunk {
 	vec2 pos; // multiplied by 16
 	
-	int sides; // how many sides do render (used when drawing it)
+	int sides; // how many sides to render (used when drawing it)
 	
 	int* blockTypes; // array of block types
 	
