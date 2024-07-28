@@ -43,9 +43,9 @@ unsigned int blockShaderProgram;
 // ---
 
 
-struct Chunk* chunks;
+struct Chunk** chunks;
 
-struct Chunk* waterChunks;
+struct Chunk** waterChunks;
 
 int chunkCount = 0;
 
@@ -56,17 +56,17 @@ int chunkCount = 0;
 // gets a chunk based on the snapped chunks position
 struct Chunk get_chunk(int xPos, int yPos) {
 	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
-		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
-			return chunks[i];
+		if((*chunks[i]).pos[0] == xPos && (*chunks[i]).pos[1] == yPos) {
+			return *chunks[i];
 		}
 	}
-	return chunks[0]; // by default return first chunk
+	return *chunks[0]; // by default return first chunk
 }
 
 // gets the index of a chunk based on the snapped chunks position
 int get_chunk_index(int xPos, int yPos) {
 	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
-		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
+		if((*chunks[i]).pos[0] == xPos && (*chunks[i]).pos[1] == yPos) {
 			return i;
 		}
 	}
@@ -75,7 +75,7 @@ int get_chunk_index(int xPos, int yPos) {
 
 // sets an indexed chunk to an inserted chunk object
 void set_chunk(int index, struct Chunk* chunk) {
-	chunks[index] = *chunk;
+	chunks[index] = chunk;
 }
 
 
@@ -107,10 +107,10 @@ void init_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false, GLM_VEC4_ZERO);
+		*chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false, GLM_VEC4_ZERO);
 
 		// generate indexed chunk, but now for water part of the chunk
-		waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true, GLM_VEC4_ZERO);
+		*waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true, GLM_VEC4_ZERO);
 
 		chunkCount++;
 
@@ -171,12 +171,12 @@ void draw_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < chunkCount; i++) {
 		
-		if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-			&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
-			&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-			&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+		if(((*chunks[i]).pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+			&& (*chunks[i]).pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+			&& (*chunks[i]).pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+			&& (*chunks[i]).pos[1] > lastChunkPos[1]-RENDER_DISTANCE) {
 
-			draw_chunk(chunks[i], blockShaderProgram, worldAtlas);
+			draw_chunk(*chunks[i], blockShaderProgram, worldAtlas);
 
 
 		}
@@ -188,13 +188,13 @@ void draw_world() {
 		// iterate thru x and z based on render distance
 		for(int i = 0; i < chunkCount; i++) {
 			
-			if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-				&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
-				&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-				&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+		if(((*chunks[i]).pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+			&& (*chunks[i]).pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+			&& (*chunks[i]).pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+			&& (*chunks[i]).pos[1] > lastChunkPos[1]-RENDER_DISTANCE) {
 
 
-				draw_chunk(waterChunks[i], blockShaderProgram, worldAtlas);
+				draw_chunk(*waterChunks[i], blockShaderProgram, worldAtlas);
 
 			}
 		}
