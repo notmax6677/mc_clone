@@ -44,22 +44,23 @@ unsigned int blockShaderProgram;
 // ---
 
 
+// array of chunks with land blocks
 struct Chunk* chunks;
-struct Chunk* drawChunks;
 
+// array of chunks with water blocks
 struct Chunk* waterChunks;
 
 int chunkCount = 0;
+
+// array that holds the indexes of chunks in the order that they should be drawn
+int* chunksDrawOrder;
 
 
 // ---
 
 
 // sorts a chunks array based on distance from camera, back to front
-struct Chunk* sortChunks(struct Chunk* inputChunks) {
-	// create new chunks object
-	struct Chunk* newChunks = malloc( sizeof(struct Chunk) * WORLD_SIZE*WORLD_SIZE );
-
+void sortChunks() {
 	// create new vec2 array, x for chunk index, y for distance from player
 	vec2 chunksData[WORLD_SIZE*WORLD_SIZE];
 
@@ -82,9 +83,9 @@ struct Chunk* sortChunks(struct Chunk* inputChunks) {
 	
 		// get distance of chunk from camera (pythagoras theorem)
 		float dist = sqrt( 
-				abs( snappedCamPos[0] - inputChunks[i].pos[0] )
+				snappedCamPos[0] - chunks[i].pos[0]
 				+
-				abs( snappedCamPos[1] - inputChunks[i].pos[1] )
+				snappedCamPos[1] - chunks[i].pos[1]
 		);
 
 		// load index and distance into correspondingly indexed vector
@@ -118,8 +119,8 @@ struct Chunk* sortChunks(struct Chunk* inputChunks) {
 				vec2 secondVec;
 				glm_vec2_copy(chunksData[i+1], secondVec); // next one
 				
-				// if chunk in front has lower distance value
-				if(firstVec[1] > secondVec[1]) {
+				// if chunk in front has higher distance value
+				if(firstVec[1] < secondVec[1]) {
 
 					// swap the vectors in position within the chunksData array
 					glm_vec2_copy(firstVec, chunksData[i+1]);
@@ -146,16 +147,11 @@ struct Chunk* sortChunks(struct Chunk* inputChunks) {
 	// iterate thru chunksData
 	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
 
-		// load chunk into new chunk (going from back to front)
-		newChunks[i] = inputChunks[ (int)chunksData[i][0] ];
+		// set index of chunksDrawOrder integer
+		chunksDrawOrder[i] = chunksData[i][0];
 
 	}
 
-
-	// ---
-	
-
-	return newChunks;
 }
 
 
@@ -206,11 +202,12 @@ void init_world() {
 
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
-	// as well as drawChunks
-	drawChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 
 	// and waterChunks
 	waterChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
+
+	// allocate for chunksDrawOrder
+	chunksDrawOrder = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(int));
 
 	// coordinates for drawing chunks (from a 2D top-down perspective)
 	int xPos = 0;
@@ -238,10 +235,14 @@ void init_world() {
 		}
 	}
 
-	// copy over chunks array to initial drawChunks
-	drawChunks = chunks;
-
 	init_test_block();
+
+	
+	// ---
+	
+
+	// sort chunk draw order
+	sortChunks();
 }
 
 void update_world(GLFWwindow* window) {
@@ -259,8 +260,7 @@ void update_world(GLFWwindow* window) {
 
 	// if moved to another chunk
 	if(playerChunkPos[0] != lastChunkPos[0] || playerChunkPos[1] != lastChunkPos[1]) {
-		//free(drawChunks);
-		//drawChunks = sortChunks(chunks);
+		sortChunks();
 	}
 
 
@@ -294,13 +294,15 @@ void draw_world() {
 
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < chunkCount; i++) {
-		
-		if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-			&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
-			&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-			&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
-			draw_chunk(chunks[i], blockShaderProgram, worldAtlas);
+		int index = (int)chunksDrawOrder[i];
+		
+		if((chunks[index].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+			&& chunks[index].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+			&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+			&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+
+			draw_chunk(chunks[index], blockShaderProgram, worldAtlas);
 
 
 		}
@@ -311,14 +313,16 @@ void draw_world() {
 	if(!get_under_water_level()) {
 		// iterate thru x and z based on render distance
 		for(int i = 0; i < chunkCount; i++) {
+
+			int index = (int)chunksDrawOrder[i];
 			
-			if((chunks[i].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-				&& chunks[i].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
-				&& (chunks[i].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-				&& chunks[i].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+			if((chunks[index].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
+				&& chunks[index].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+				&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
+				&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
 
-				draw_chunk(waterChunks[i], blockShaderProgram, worldAtlas);
+				draw_chunk(waterChunks[index], blockShaderProgram, worldAtlas);
 
 			}
 		}

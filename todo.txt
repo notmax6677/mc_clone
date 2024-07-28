@@ -1,4 +1,9 @@
-create block placement
+SOME FIXES TO DO:
+ - select block placement in empty spots sometimes
+ - figure out and fix the walls between chunks
+ - when inserting block, make sure to not do certain things for blocks on side of chunk
+ - actually i think the chunk side wall thing is because its not getting the right block when trying to clear or place on edge cus of indexing idk
+
 
 create some ui for the block placement
 
