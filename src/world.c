@@ -1,4 +1,3 @@
-#include <CGLM/vec2.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -79,7 +78,7 @@ void sortChunks() {
 	}, snappedCamPos);
 
 	// iterate and store array vector2s of index and distance from player into chunksData
-	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 	
 		// get distance of chunk from camera (pythagoras theorem)
 		float dist = sqrt( 
@@ -108,7 +107,7 @@ void sortChunks() {
 		swaps = 0;
 
 		// iterate thru chunksData array
-		for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+		for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		
 			// if not the last element
 			if(i != WORLD_SIZE*WORLD_SIZE-1) {
@@ -145,7 +144,7 @@ void sortChunks() {
 	// now fill newChunks array with chunks from inputChunks, but in backwards order based on chunksData
 	
 	// iterate thru chunksData
-	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 
 		// set index of chunksDrawOrder integer
 		chunksDrawOrder[i] = chunksData[i][0];
@@ -160,7 +159,7 @@ void sortChunks() {
 
 // gets a chunk based on the snapped chunks position
 struct Chunk get_chunk(int xPos, int yPos) {
-	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
 			return chunks[i];
 		}
@@ -170,7 +169,7 @@ struct Chunk get_chunk(int xPos, int yPos) {
 
 // gets the index of a chunk based on the snapped chunks position
 int get_chunk_index(int xPos, int yPos) {
-	for(int i=0; i < WORLD_SIZE*WORLD_SIZE-1; i++) {
+	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
 			return i;
 		}
@@ -216,11 +215,12 @@ void init_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, false, GLM_VEC4_ZERO);
+		chunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, false, GLM_VEC4_ZERO);
 
 		// generate indexed chunk, but now for water part of the chunk
-		waterChunks[chunkCount] = generate_chunk((vec2){xPos - floor(WORLD_SIZE/2), yPos - floor(WORLD_SIZE/2)}, true, GLM_VEC4_ZERO);
+		waterChunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, true, GLM_VEC4_ZERO);
 
+		// increment chunk count
 		chunkCount++;
 
 
@@ -235,6 +235,135 @@ void init_world() {
 		}
 	}
 
+	// iterate thru the new chunks again
+	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
+
+		// declare necessary chunks for side handling
+		struct Chunk chunk;
+		struct Chunk leftChunk;
+		struct Chunk rightChunk;
+		struct Chunk topChunk;
+		struct Chunk bottomChunk;
+
+		// if not on the edges
+		if( chunks[i].pos[0] != 0 && chunks[i].pos[0] != WORLD_SIZE-1
+			&& chunks[i].pos[1] != 0 && chunks[i].pos[1] != WORLD_SIZE-1) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk
+			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, &topChunk, &bottomChunk);	
+
+		}
+		// bottom left corner
+		else if(chunks[i].pos[0] == 0 && chunks[i].pos[1] == 0) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+		
+			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
+			handle_chunk_sides(&chunk, NULL, &rightChunk, &topChunk, NULL);	
+
+		}
+		// bottom right corner
+		else if(chunks[i].pos[0] == WORLD_SIZE-1 && chunks[i].pos[1] == 0) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+		
+			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
+			handle_chunk_sides(&chunk, &leftChunk, NULL, &topChunk, NULL);	
+
+		}
+		// top left corner
+		else if(chunks[i].pos[0] == 0 && chunks[i].pos[1] == WORLD_SIZE-1) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
+			handle_chunk_sides(&chunk, NULL, &rightChunk, NULL, &bottomChunk);	
+
+		}
+		// top right corner
+		else if(chunks[i].pos[0] == WORLD_SIZE-1 && chunks[i].pos[1] == WORLD_SIZE-1) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
+			handle_chunk_sides(&chunk, &leftChunk, NULL, NULL, &bottomChunk);	
+
+		}
+		// left side
+		else if(chunks[i].pos[0] == 0) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
+			handle_chunk_sides(&chunk, NULL, &rightChunk, &topChunk, &bottomChunk);	
+
+		}
+		// right side
+		else if(chunks[i].pos[0] == WORLD_SIZE-1) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
+			handle_chunk_sides(&chunk, &leftChunk, NULL, &topChunk, &bottomChunk);	
+
+		}
+		// top side
+		else if(chunks[i].pos[1] == WORLD_SIZE-1) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
+		
+			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
+			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, NULL, &bottomChunk);	
+
+		}
+		// bottom side
+		else if(chunks[i].pos[1] == 0) {
+
+			// get and define main chunk and surrounding chunks
+			chunk       = chunks[i];
+			leftChunk   = get_chunk(chunks[i].pos[0]-1, chunks[i].pos[1]);
+			rightChunk  = get_chunk(chunks[i].pos[0]+1, chunks[i].pos[1]);
+			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
+		
+			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
+			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, &topChunk, NULL);	
+
+		}
+
+	}
+
+	// initiate test block related stuff
 	init_test_block();
 
 	
@@ -257,6 +386,20 @@ void update_world(GLFWwindow* window) {
 				floor((*camPos)[2] / get_chunk_length())
 			}, 
 			playerChunkPos);
+
+	// snap chunk positions to world edges
+	if(playerChunkPos[0] <= 0) {
+		playerChunkPos[0] = 0;
+	}
+	if(playerChunkPos[0] >= WORLD_SIZE-1) {
+		playerChunkPos[0] = WORLD_SIZE-1;
+	}
+	if(playerChunkPos[1] <= 0) {
+		playerChunkPos[1] = 0;
+	}
+	if(playerChunkPos[1] >= WORLD_SIZE-1) {
+		playerChunkPos[1] = WORLD_SIZE-1;
+	}
 
 	// if moved to another chunk
 	if(playerChunkPos[0] != lastChunkPos[0] || playerChunkPos[1] != lastChunkPos[1]) {

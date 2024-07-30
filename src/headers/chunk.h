@@ -28,7 +28,7 @@ int get_block_type(int* blockTypes, int xPos, int yPos, int zPos);
 
 // chunk structure
 struct Chunk {
-	vec2 pos; // multiplied by 16
+	vec2 pos; // multiplied by CHUNK_WIDTH and CHUNK_HEIGHT
 	
 	int sides; // how many sides to render (used when drawing it)
 	
@@ -42,6 +42,9 @@ struct Chunk insert_block(struct Chunk* chunk, vec4 block);
 
 // generates a chunk
 struct Chunk generate_chunk(vec2 position, bool water, vec4 block);
+
+// optimize the chunks to remove internal faces
+void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk);
 
 // draw a chunk
 void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas);

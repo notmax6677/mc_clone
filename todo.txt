@@ -1,6 +1,11 @@
+WHAT THE FUK IS THAT BLACK VOID THING WHEN U GO TO THE OTHER SIDE OF THE MAP (it might have been a one time thing because i tested again and it didnt appear)
+
+get block deletion properly working between chunks
+
+fix the select block bug that happens
+
 SOME FIXES TO DO:
  - select block placement in empty spots sometimes
- - figure out and fix the walls between chunks
  - when inserting block, make sure to not do certain things for blocks on side of chunk
  - actually i think the chunk side wall thing is because its not getting the right block when trying to clear or place on edge cus of indexing idk
 

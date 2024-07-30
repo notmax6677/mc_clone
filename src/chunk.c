@@ -1226,8 +1226,9 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
 			right = false;
 		}
-		// bottom
-		if( yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0 ) {
+		// bottom (remove bottom face if it is the bottom-most block too)
+		if( (yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0)
+				|| yPos == 0) {
 			bottom = false;
 		}
 		// top
@@ -1450,6 +1451,285 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 
 	// return newly generated chunk object
 	return newChunk;
+
+}
+
+
+// ---
+
+
+// optimize the chunks to remove internal faces
+void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk) {
+
+	// bind vao
+	glBindVertexArray((*chunk).mesh.vao);
+
+	// bind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, (*chunk).mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*chunk).mesh.ebo);
+
+	// create empty vertices array for that side
+	float sideVertices[4*8];
+
+	// create empty indices array for that side
+	float sideIndices[6];
+
+	// check left chunk, main chunk x = 0, left chunk x = CHUNK_WIDTH-1
+
+	// if passed left chunk is not NULL
+	if(leftChunk != NULL) {
+		// iterate thru z and y
+		for(int z = 0; z < CHUNK_LENGTH; z++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+			
+				// get type of corresponding block in main chunk on its left side
+				int mainBlockType = get_block_type((*chunk).blockTypes, 0, y, z);
+
+				// get type of corresponding block in left chunk on its right side (so to the left of the indexed main block)
+				int leftBlockType = get_block_type((*leftChunk).blockTypes, CHUNK_WIDTH-1, y, z);
+
+				// if the block on the left isn't air and main block also isn't air
+				if(leftBlockType != 0 && mainBlockType != 0) {
+
+					// we want to remove that side from the buffer for now
+					
+					// get the index of that block
+					int i = get_block_index((*chunk).blockTypes, 0, y, z);
+
+					// load proper vertices and indices array into VBO via glBufferSubData
+					glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 2*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 2*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+				}
+
+			}
+
+		}
+	}
+	// otherwise just remove the whole side facing edge of world
+	else {
+		// iterate thru z and y
+		for(int z = 0; z < CHUNK_LENGTH; z++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+				
+				// get the index of that block
+				int i = get_block_index((*chunk).blockTypes, 0, y, z);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 2*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 2*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			}
+
+		}
+	}
+
+
+	// ---
+	
+
+	// check right chunk, main chunk x = CHUNK_WIDTH-1, right chunk x = 0
+	
+	// if passed right chunk is not NULL
+	if(rightChunk != NULL) {
+		// iterate thru z and y
+		for(int z = 0; z < CHUNK_LENGTH; z++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+			
+				// get type of corresponding block in main chunk on its right side
+				int mainBlockType = get_block_type((*chunk).blockTypes, CHUNK_WIDTH-1, y, z);
+
+				// get type of corresponding block in right chunk on its left side (so to the right of the indexed main block)
+				int rightBlockType = get_block_type((*rightChunk).blockTypes, 0, y, z);
+
+				// if the block on the right isn't air and main block also isn't air
+				if(rightBlockType != 0 && mainBlockType != 0) {
+
+					// we want to remove that side from the buffer for now
+					
+					// get the index of that block
+					int i = get_block_index((*chunk).blockTypes, CHUNK_WIDTH-1, y, z);
+
+					// load proper vertices and indices array into VBO via glBufferSubData
+					glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 3*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 3*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				}
+
+			}
+
+		}
+	}
+	// otherwise just remove the whole side facing edge of world
+	else {
+		// iterate thru z and y
+		for(int z = 0; z < CHUNK_LENGTH; z++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+				
+				// get the index of that block
+				int i = get_block_index((*chunk).blockTypes, CHUNK_WIDTH-1, y, z);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 3*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 3*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			}
+
+		}
+	}
+
+
+	// ---
+	
+
+	// check top chunk, main chunk z = 0, top chunk z = CHUNK_LENGTH-1
+
+	// if passed top chunk is not NULL
+	if(topChunk != NULL) {
+		// iterate thru z and y
+		for(int x = 0; x < CHUNK_WIDTH; x++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+			
+				// get type of corresponding block in main chunk on its top side
+				int mainBlockType = get_block_type((*chunk).blockTypes, x, y, CHUNK_LENGTH-1);
+
+				// get type of corresponding block in top chunk on its bottom (front) side (so behind the indexed main block)
+				int topBlockType = get_block_type((*topChunk).blockTypes, x, y, 0);
+
+				// if the block at top (back) isn't air and main block also isn't air
+				if(topBlockType != 0 && mainBlockType != 0) {
+
+					// we want to remove that side from the buffer for now
+					
+					// get the index of that block
+					int i = get_block_index((*chunk).blockTypes, x, y, CHUNK_LENGTH-1);
+
+					// load proper vertices and indices array into VBO via glBufferSubData
+					glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				}
+
+			}
+
+		}
+	}
+	// otherwise just remove the whole side facing edge of world
+	else {
+		// iterate thru z and y
+		for(int x = 0; x < CHUNK_WIDTH; x++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+				
+				// get the index of that block
+				int i = get_block_index((*chunk).blockTypes, x, y, CHUNK_LENGTH-1);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			}
+
+		}
+	}
+
+
+	// ---
+	
+	
+	// check bottom chunk, main chunk z = CHUNK_LENGTH-1, bottom chunk z = 0
+
+	// if passed bottom chunk is not NULL
+	if(bottomChunk != NULL) {
+		// iterate thru z and y
+		for(int x = 0; x < CHUNK_WIDTH; x++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+			
+				// get type of corresponding block in main chunk on its bottom side
+				int mainBlockType = get_block_type((*chunk).blockTypes, x, y, 0);
+
+				// get type of corresponding block in bottom chunk on its top (back) side (so in front of the indexed main block)
+				int bottomBlockType = get_block_type((*bottomChunk).blockTypes, x, y, CHUNK_LENGTH-1);
+
+				// if the block at bottom (front) isn't air and main block also isn't air
+				if(bottomBlockType != 0 && mainBlockType != 0) {
+
+					// we want to remove that side from the buffer for now
+					
+					// get the index of that block
+					int i = get_block_index((*chunk).blockTypes, x, y, 0);
+
+					// load proper vertices and indices array into VBO via glBufferSubData
+					glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 1*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+					glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 1*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				}
+
+			}
+
+		}
+	}
+	// otherwise just remove the whole side facing edge of world
+	else {
+		// iterate thru z and y
+		for(int x = 0; x < CHUNK_WIDTH; x++) {
+
+			for(int y = 0; y < CHUNK_HEIGHT; y++) {
+				
+				// get the index of that block
+				int i = get_block_index((*chunk).blockTypes, x, y, 0);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 1*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 1*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			}
+
+		}
+	}
+
+
+	// ---
+
+
+	// unbind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	// ---
+	
+
+	// bind vao
+	glBindVertexArray((*chunk).mesh.vao);
+
+	// bind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, (*chunk).mesh.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*chunk).mesh.ebo);
+
+	// vertex attributes
+	
+	// position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// color
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// texture coords
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	// now unbind everything
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 }
 
