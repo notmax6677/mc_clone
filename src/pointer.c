@@ -223,7 +223,7 @@ void update_select_block() {
 		playerChunkPos[1] = floor( round(selectPos[2]) / get_chunk_length() );
 
 		// get the current chunk
-		*selectChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+		selectChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
 
 		// copy over selectPos to relativeSelectPos
 		glm_vec3_copy(selectPos, relativeSelectPos);
@@ -603,19 +603,22 @@ void place_block() {
 		// ---
 
 
-		struct Chunk* newChunk;
+		// declare pointer to main chunk
+		struct Chunk* newChunk; 
+
+		// allocate space for new chunk pointer
 		newChunk = malloc( sizeof(struct Chunk) );
 
-		*newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+		// load main chunk to where newChunk pointer points
+		newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+
+		// get index of that chunk
 		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
 
-		*newChunk = insert_block(newChunk, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 1});
+		// insert block and process main main, surrounding chunks can be passed as NULL as when placing a block it wont matter
+		insert_block(newChunk, NULL, NULL, NULL, NULL, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 1});
 
 		set_chunk(index, newChunk);
-
-
-		free(newChunk);
-
 
 	}
 
@@ -656,18 +659,73 @@ void delete_block() {
 		// ---
 
 
-		struct Chunk* newChunk;
+		// declare necessary chunks for side handling
+		struct Chunk* newChunk; // main chunk, therefore created as a pointer because some stuff will be edited within it idk
+
+		// side chunks (default to NULL)
+		struct Chunk* leftChunk   = NULL;
+		struct Chunk* rightChunk  = NULL;
+		struct Chunk* topChunk    = NULL;
+		struct Chunk* bottomChunk = NULL;
+
+		// indices for surrounding chunks
+		int topIndex;
+
+		// allocate space for new chunk pointer
 		newChunk = malloc( sizeof(struct Chunk) );
 
-		*newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+		// if left chunk isnt out of world bounds
+		if( playerChunkPos[0]-1 >= 0 ) {
+			// allocate space for left chunk pointer
+			leftChunk = malloc( sizeof(struct Chunk) );
+			// load relevant chunk
+			leftChunk = get_chunk(playerChunkPos[0]-1, playerChunkPos[1]);
+		}
+
+		// if right chunk isnt out of world bounds
+		if( playerChunkPos[0]+1 <= get_world_size()-1 ) {
+			// allocate space for right chunk pointer
+			rightChunk = malloc( sizeof(struct Chunk) );
+			// load relevant chunk
+			rightChunk = get_chunk(playerChunkPos[0]+1, playerChunkPos[1]);
+		}
+
+		// if top chunk isnt out of world bounds
+		if( playerChunkPos[1]-1 >= 0 ) {
+			// allocate space for top chunk pointer
+			topChunk = malloc( sizeof(struct Chunk) );
+			// load relevant chunk
+			topChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]-1);
+			// set index to top chunk
+			topIndex = get_chunk_index(playerChunkPos[0], playerChunkPos[0]-1);
+		}
+
+		// if bottom chunk isnt out of world bounds
+		if( playerChunkPos[1]+1 <= get_world_size()-1 ) {
+			// allocate space for bottom chunk pointer
+			bottomChunk = malloc( sizeof(struct Chunk) );
+			// load relevant chunk
+			bottomChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]+1);
+		}
+
+		// load main chunk to where newChunk pointer points
+		newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
+
+		// get index of that chunk
 		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
 
-		*newChunk = insert_block(newChunk, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 0});
+		if(topChunk != NULL) {
+			printf("%i\n", (*topChunk).sides);
+		}
 
-		set_chunk(index, newChunk);
 
+		// insert block and process main+surrounding chunks to reflect the action
+		insert_block(newChunk, leftChunk, rightChunk, topChunk, bottomChunk, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 0});
 
-		free(newChunk);
+		if(topChunk != NULL) {
+			set_chunk(topIndex, topChunk);
+			printf("%i\n", (*topChunk).sides);
+		}
 
 
 	}

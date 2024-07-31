@@ -38,7 +38,7 @@ struct Chunk {
 };
 
 // inserts a block into a chunk
-struct Chunk insert_block(struct Chunk* chunk, vec4 block);
+void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk, vec4 block);
 
 // generates a chunk
 struct Chunk generate_chunk(vec2 position, bool water, vec4 block);

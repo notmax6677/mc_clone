@@ -58,6 +58,15 @@ int* chunksDrawOrder;
 // ---
 
 
+// getter for world size
+int get_world_size() {
+	return WORLD_SIZE;
+}
+
+
+// ---
+
+
 // sorts a chunks array based on distance from camera, back to front
 void sortChunks() {
 	// create new vec2 array, x for chunk index, y for distance from player
@@ -118,8 +127,8 @@ void sortChunks() {
 				vec2 secondVec;
 				glm_vec2_copy(chunksData[i+1], secondVec); // next one
 				
-				// if chunk in front has higher distance value
-				if(firstVec[1] < secondVec[1]) {
+				// if chunk in front has lower distance value
+				if(firstVec[1] > secondVec[1]) {
 
 					// swap the vectors in position within the chunksData array
 					glm_vec2_copy(firstVec, chunksData[i+1]);
@@ -158,13 +167,13 @@ void sortChunks() {
 
 
 // gets a chunk based on the snapped chunks position
-struct Chunk get_chunk(int xPos, int yPos) {
+struct Chunk* get_chunk(int xPos, int yPos) {
 	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
-			return chunks[i];
+			return &chunks[i];
 		}
 	}
-	return chunks[0]; // by default return first chunk
+	return &chunks[0]; // by default return first chunk
 }
 
 // gets the index of a chunk based on the snapped chunks position
@@ -240,10 +249,10 @@ void init_world() {
 
 		// declare necessary chunks for side handling
 		struct Chunk chunk;
-		struct Chunk leftChunk;
-		struct Chunk rightChunk;
-		struct Chunk topChunk;
-		struct Chunk bottomChunk;
+		struct Chunk* leftChunk;
+		struct Chunk* rightChunk;
+		struct Chunk* topChunk;
+		struct Chunk* bottomChunk;
 
 		// if not on the edges
 		if( chunks[i].pos[0] != 0 && chunks[i].pos[0] != WORLD_SIZE-1
@@ -257,7 +266,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk
-			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, &topChunk, &bottomChunk);	
+			handle_chunk_sides(&chunk, leftChunk, rightChunk, topChunk, bottomChunk);	
 
 		}
 		// bottom left corner
@@ -269,7 +278,7 @@ void init_world() {
 			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
 		
 			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
-			handle_chunk_sides(&chunk, NULL, &rightChunk, &topChunk, NULL);	
+			handle_chunk_sides(&chunk, NULL, rightChunk, topChunk, NULL);	
 
 		}
 		// bottom right corner
@@ -281,7 +290,7 @@ void init_world() {
 			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
 		
 			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
-			handle_chunk_sides(&chunk, &leftChunk, NULL, &topChunk, NULL);	
+			handle_chunk_sides(&chunk, leftChunk, NULL, topChunk, NULL);	
 
 		}
 		// top left corner
@@ -293,7 +302,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
-			handle_chunk_sides(&chunk, NULL, &rightChunk, NULL, &bottomChunk);	
+			handle_chunk_sides(&chunk, NULL, rightChunk, NULL, bottomChunk);	
 
 		}
 		// top right corner
@@ -305,7 +314,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk (pass NULL for nonexistent surrounding chunks)
-			handle_chunk_sides(&chunk, &leftChunk, NULL, NULL, &bottomChunk);	
+			handle_chunk_sides(&chunk, leftChunk, NULL, NULL, bottomChunk);	
 
 		}
 		// left side
@@ -318,7 +327,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
-			handle_chunk_sides(&chunk, NULL, &rightChunk, &topChunk, &bottomChunk);	
+			handle_chunk_sides(&chunk, NULL, rightChunk, topChunk, bottomChunk);	
 
 		}
 		// right side
@@ -331,7 +340,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
-			handle_chunk_sides(&chunk, &leftChunk, NULL, &topChunk, &bottomChunk);	
+			handle_chunk_sides(&chunk, leftChunk, NULL, topChunk, bottomChunk);	
 
 		}
 		// top side
@@ -344,7 +353,7 @@ void init_world() {
 			bottomChunk = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]-1);
 		
 			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
-			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, NULL, &bottomChunk);	
+			handle_chunk_sides(&chunk, leftChunk, rightChunk, NULL, bottomChunk);	
 
 		}
 		// bottom side
@@ -357,7 +366,7 @@ void init_world() {
 			topChunk    = get_chunk(chunks[i].pos[0],   chunks[i].pos[1]+1);
 		
 			// handle chunk sides for the indexed chunk (pass corresponding nonexistent side chunk as NULL)
-			handle_chunk_sides(&chunk, &leftChunk, &rightChunk, &topChunk, NULL);	
+			handle_chunk_sides(&chunk, leftChunk, rightChunk, topChunk, NULL);	
 
 		}
 

@@ -6,8 +6,11 @@
 
 #include "chunk.h"
 
+// getter for world size
+int get_world_size();
+
 // gets the chunk object based on the snapped chunks position
-struct Chunk get_chunk(int xPos, int yPos);
+struct Chunk* get_chunk(int xPos, int yPos);
 
 // gets the index of a chunk based on the snapped chunks position
 int get_chunk_index(int xPos, int yPos);

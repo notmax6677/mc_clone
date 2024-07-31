@@ -16,6 +16,12 @@ TRY to fix the small bug with select block that sometimes happens along the bord
 
 fix the grainy stuff in the water
 
+make the water generation work properly bec theres a lot of it thats generated underground where it shouldnt be
+
+remove the invisible faces that are drawn when rendering water blocks (if its not too much effort, otherwise its ok)
+
+dynamic water movement???
+
 water animations???
 
 create tree generation
