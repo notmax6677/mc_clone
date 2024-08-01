@@ -461,6 +461,16 @@ void draw_world() {
 	}
 
 
+	// ---
+
+
+	// draw select block
+	draw_select_block(worldAtlas);
+
+
+	// ---
+	
+
 	// if not underwater
 	if(!get_under_water_level()) {
 		// iterate thru x and z based on render distance
@@ -484,9 +494,7 @@ void draw_world() {
 	// ---
 	
 
-	draw_pointer(worldAtlas);
-
-
+	draw_crosshair(worldAtlas);
 
 }
 
