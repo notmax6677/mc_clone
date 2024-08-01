@@ -314,6 +314,17 @@ void draw_select_block(unsigned int worldAtlas) {
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
 
+	// get location of underwater uniform
+	int uwLoc = glGetUniformLocation(selectShaderProgram, "underWater");
+
+	// pass underWaterLevel boolean in the form of an integer to fragment shader
+	if(get_under_water_level()) {
+		glUniform1i(uwLoc, 1);
+	}
+	else {
+		glUniform1i(uwLoc, 0);
+	}
+
 	// load position uniform
 	glUniform3f(posLoc, round(selectPos[0]), round(selectPos[1]), round(selectPos[2]));
 
