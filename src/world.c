@@ -170,10 +170,10 @@ void sortChunks() {
 struct Chunk* get_chunk(int xPos, int yPos) {
 	for(int i=0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		if(chunks[i].pos[0] == xPos && chunks[i].pos[1] == yPos) {
-			return &chunks[i];
+			return &(chunks[i]);
 		}
 	}
-	return &chunks[0]; // by default return first chunk
+	return NULL; // by default return NULL
 }
 
 // gets the index of a chunk based on the snapped chunks position

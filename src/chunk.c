@@ -702,122 +702,8 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 		vec3 frontPos;
 		glm_vec3_copy((vec3){block[0], block[1], block[2]-1}, frontPos);
 
-		// if front position is out of bounds (below 0 z), this means that we need to get the other chunk instead
-		if(frontPos[2] == -1 && topChunk != NULL) {
-			printf("front\n");
-
-			// unbind the main chunk's buffers
-		
-			// unbind the vao
-			glBindVertexArray(0);
-
-			// unbind the vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-			// ---
-
-
-			// bind the top chunk's buffers as it is the chunk "behind the main chunk"
-			
-			// bind vao
-			glBindVertexArray((*topChunk).mesh.vao);
-
-			// bind vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, (*topChunk).mesh.vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*topChunk).mesh.ebo);
-
-
-			// ---
-
-
-			// now we add the side as usual
-
-			// get block type in the form of integer
-			int blockType = get_block_type((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1);
-
-			// get index of block
-			int blockIndex = get_block_index((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1);
-
-			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
-
-
-			// generate proper vertices array and load it into sideVertices
-			create_side_vertices("front", type, frontPos[0], frontPos[1], CHUNK_LENGTH-1, sideVertices);
-			
-			// generate proper indices array and load it into sideIndices
-			create_side_indices( 0*(6*sizeof(int)) , blockIndex, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 0*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			(*topChunk).sides += 6;
-
-
-			// ---
-
-
-			// vertex attributes
-			
-			// position
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-
-			// color
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-			glEnableVertexAttribArray(1);
-
-			// texture coords
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-			glEnableVertexAttribArray(2);
-
-
-			// ---
-			
-
-			// unbind the top chunk's buffers
-		
-			// unbind the vao
-			glBindVertexArray(0);
-
-			// unbind the vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-			
-			// ---
-
-
-			// now bind back the main chunk's buffers
-
-			// bind vao
-			glBindVertexArray((*chunk).mesh.vao);
-
-			// bind vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, (*chunk).mesh.vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*chunk).mesh.ebo);
-
-		}	
-		// otherwise, if front block isnt air
-		else if(get_block_type((*chunk).blockTypes, frontPos[0], frontPos[1], frontPos[2]) != 0) {
+		// if front block isnt air and position is within chunk
+		if(get_block_type((*chunk).blockTypes, frontPos[0], frontPos[1], frontPos[2]) != 0 && frontPos[2] >= 0) {
 
 			// get block type in the form of integer
 			int blockType = get_block_type((*chunk).blockTypes, frontPos[0], frontPos[1], frontPos[2]);
@@ -847,7 +733,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			create_side_vertices("front", type, frontPos[0], frontPos[1], frontPos[2], sideVertices);
 			
 			// generate proper indices array and load it into sideIndices
-			create_side_indices( 0*(6*sizeof(int)) , blockIndex, sideIndices);
+			create_side_indices( 0*(4) , blockIndex, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
@@ -864,122 +750,8 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 		vec3 backPos;
 		glm_vec3_copy((vec3){block[0], block[1], block[2]+1}, backPos);
 		
-		// if back position is out of bounds (above CHUNK_LENGTH-1), this means that we need to get the other chunk instead
-		if(backPos[2] == CHUNK_LENGTH && bottomChunk != NULL) {
-			printf("front\n");
-
-			// unbind the main chunk's buffers
-		
-			// unbind the vao
-			glBindVertexArray(0);
-
-			// unbind the vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-			// ---
-
-
-			// bind the top chunk's buffers as it is the chunk "behind the main chunk"
-			
-			// bind vao
-			glBindVertexArray((*bottomChunk).mesh.vao);
-
-			// bind vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, (*bottomChunk).mesh.vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bottomChunk).mesh.ebo);
-
-
-			// ---
-
-
-			// now we add the side as usual
-
-			// get block type in the form of integer
-			int blockType = get_block_type((*bottomChunk).blockTypes, backPos[0], backPos[1], 0);
-
-			// get index of block
-			int blockIndex = get_block_index((*bottomChunk).blockTypes, backPos[0], backPos[1], 0);
-
-			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
-
-
-			// generate proper vertices array and load it into sideVertices
-			create_side_vertices("back", type, backPos[0], backPos[1], 0, sideVertices);
-			
-			// generate proper indices array and load it into sideIndices
-			create_side_indices( 1*(4) , blockIndex, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 1*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 1*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			(*bottomChunk).sides += 6;
-
-
-			// ---
-
-
-			// vertex attributes
-			
-			// position
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-
-			// color
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-			glEnableVertexAttribArray(1);
-
-			// texture coords
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-			glEnableVertexAttribArray(2);
-
-
-			// ---
-			
-
-			// unbind the top chunk's buffers
-		
-			// unbind the vao
-			glBindVertexArray(0);
-
-			// unbind the vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-			
-			// ---
-
-
-			// now bind back the main chunk's buffers
-
-			// bind vao
-			glBindVertexArray((*chunk).mesh.vao);
-
-			// bind vbo and ebo
-			glBindBuffer(GL_ARRAY_BUFFER, (*chunk).mesh.vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*chunk).mesh.ebo);
-
-		}	
-		// otherwise, if back block isnt air
-		else if(get_block_type((*chunk).blockTypes, backPos[0], backPos[1], backPos[2]) != 0) {
+		// if back block isnt air and position is within chunk
+		if(get_block_type((*chunk).blockTypes, backPos[0], backPos[1], backPos[2]) != 0 && backPos[2] <= CHUNK_LENGTH-1) {
 
 			// get block type in the form of integer
 			int blockType = get_block_type((*chunk).blockTypes, backPos[0], backPos[1], backPos[2]);
@@ -1027,7 +799,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 		glm_vec3_copy((vec3){block[0]+1, block[1], block[2]}, leftPos);
 		
 		// if left block isnt air
-		if(get_block_type((*chunk).blockTypes, leftPos[0], leftPos[1], leftPos[2]) != 0) {
+		if(get_block_type((*chunk).blockTypes, leftPos[0], leftPos[1], leftPos[2]) != 0 && leftPos[0] <= CHUNK_WIDTH-1) {
 
 			// get block type in the form of integer
 			int blockType = get_block_type((*chunk).blockTypes, leftPos[0], leftPos[1], leftPos[2]);
@@ -1074,8 +846,8 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 		vec3 rightPos;
 		glm_vec3_copy((vec3){block[0]-1, block[1], block[2]}, rightPos);
 		
-		// if right block isnt air
-		if(get_block_type((*chunk).blockTypes, rightPos[0], rightPos[1], rightPos[2]) != 0) {
+		// if right block isnt air and position is within chunk
+		if(get_block_type((*chunk).blockTypes, rightPos[0], rightPos[1], rightPos[2]) != 0 && rightPos[0] >= 0) {
 
 			// get block type in the form of integer
 			int blockType = get_block_type((*chunk).blockTypes, rightPos[0], rightPos[1], rightPos[2]);
@@ -1122,7 +894,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 		vec3 bottomPos;
 		glm_vec3_copy((vec3){block[0], block[1]+1, block[2]}, bottomPos);
 		
-		// if bottom block isnt air
+		// if bottom block isnt air and position is within chunk
 		if(get_block_type((*chunk).blockTypes, bottomPos[0], bottomPos[1], bottomPos[2]) != 0) {
 
 			// get block type in the form of integer
@@ -1248,6 +1020,346 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	// ---
+	
+
+	// now we want to deal with the extra chunks if the operation was a deletion operation
+	
+	// if block being placed is air
+	if(block[3] == 0) {
+
+		// front block
+
+		// front position vector
+		vec3 frontPos;
+		glm_vec3_copy((vec3){block[0], block[1], block[2]-1}, frontPos);
+
+		// if front block position leaks into the side of the other chunk AND the chunk exists AND the block in that chunk isnt an air block (in this exact order)
+		if( frontPos[2] == -1 && topChunk != NULL && get_block_type((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1) != 0 ) {
+
+			// bind vao
+			glBindVertexArray((*topChunk).mesh.vao);
+
+			// bind vbo and ebo
+			glBindBuffer(GL_ARRAY_BUFFER, (*topChunk).mesh.vbo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*topChunk).mesh.ebo);
+
+
+			// ---
+
+
+			// get block type in the form of integer
+			int blockType = get_block_type((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1);
+
+			// get index of block
+			int blockIndex = get_block_index((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("front", type, frontPos[0], frontPos[1], CHUNK_LENGTH-1, sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 0*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 0*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 0*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			(*topChunk).sides += 6;
+
+			
+			// ---
+
+
+			// vertex attributes
+			
+			// position
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+
+			// color
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			// texture coords
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+
+			// now unbind everything
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		}
+
+		// back block
+
+		// back position vector
+		vec3 backPos;
+		glm_vec3_copy((vec3){block[0], block[1], block[2]+1}, backPos);
+
+		// if back block position leaks into the side of the other chunk AND the chunk exists AND the block in that chunk isnt an air block (in this exact order)
+		if( backPos[2] == CHUNK_LENGTH && bottomChunk != NULL && get_block_type((*bottomChunk).blockTypes, backPos[0], backPos[1], 0) != 0 ) {
+
+			// bind vao
+			glBindVertexArray((*bottomChunk).mesh.vao);
+
+			// bind vbo and ebo
+			glBindBuffer(GL_ARRAY_BUFFER, (*bottomChunk).mesh.vbo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*bottomChunk).mesh.ebo);
+
+
+			// ---
+
+
+			// get block type in the form of integer
+			int blockType = get_block_type((*bottomChunk).blockTypes, backPos[0], backPos[1], 0);
+
+			// get index of block
+			int blockIndex = get_block_index((*bottomChunk).blockTypes, backPos[0], backPos[1], 0);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("back", type, backPos[0], backPos[1], 0, sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 1*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 1*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 1*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			(*bottomChunk).sides += 6;
+
+			
+			// ---
+
+
+			// vertex attributes
+			
+			// position
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+
+			// color
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			// texture coords
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+
+			// now unbind everything
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		}
+
+		// left block
+
+		// left position vector
+		vec3 leftPos;
+		glm_vec3_copy((vec3){block[0]-1, block[1], block[2]}, leftPos);
+
+		// if left block position leaks into the side of the other chunk AND the chunk exists AND the block in that chunk isnt an air block (in this exact order)
+		if( leftPos[0] == -1 && leftChunk != NULL && get_block_type((*leftChunk).blockTypes, CHUNK_WIDTH-1, leftPos[1], leftPos[2]) != 0 ) {
+
+			// bind vao
+			glBindVertexArray((*leftChunk).mesh.vao);
+
+			// bind vbo and ebo
+			glBindBuffer(GL_ARRAY_BUFFER, (*leftChunk).mesh.vbo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*leftChunk).mesh.ebo);
+
+
+			// ---
+
+
+			// get block type in the form of integer
+			int blockType = get_block_type((*leftChunk).blockTypes, CHUNK_WIDTH-1, leftPos[1], leftPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index((*leftChunk).blockTypes, CHUNK_WIDTH-1, leftPos[1], leftPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("right", type, CHUNK_WIDTH-1, leftPos[1], leftPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 2*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 2*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 2*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			(*leftChunk).sides += 6;
+
+			
+			// ---
+
+
+			// vertex attributes
+			
+			// position
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+
+			// color
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			// texture coords
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+
+			// now unbind everything
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		}
+
+		// right block
+
+		// right position vector
+		vec3 rightPos;
+		glm_vec3_copy((vec3){block[0]+1, block[1], block[2]}, rightPos);
+
+		// if right block position leaks into the side of the other chunk AND the chunk exists AND the block in that chunk isnt an air block (in this exact order)
+		if( rightPos[0] == CHUNK_WIDTH && rightChunk != NULL && get_block_type((*rightChunk).blockTypes, 0, rightPos[1], rightPos[2]) != 0 ) {
+
+			// bind vao
+			glBindVertexArray((*rightChunk).mesh.vao);
+
+			// bind vbo and ebo
+			glBindBuffer(GL_ARRAY_BUFFER, (*rightChunk).mesh.vbo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*rightChunk).mesh.ebo);
+
+
+			// ---
+
+
+			// get block type in the form of integer
+			int blockType = get_block_type((*rightChunk).blockTypes, 0, rightPos[1], rightPos[2]);
+
+			// get index of block
+			int blockIndex = get_block_index((*rightChunk).blockTypes, 0, rightPos[1], rightPos[2]);
+
+			// define type string based on returned block type
+			if(blockType == 1) {
+				type = "grass";
+			}
+			else if(blockType == 2) {
+				type = "dirt";
+			}
+			else if(blockType == 3) {
+				type = "stone";
+			}
+			else if(blockType == 4) {
+				type = "sand";
+			}
+			else if(blockType == 0) {
+				type = "air";
+			}
+
+
+			// generate proper vertices array and load it into sideVertices
+			create_side_vertices("left", type, 0, rightPos[1], rightPos[2], sideVertices);
+			
+			// generate proper indices array and load it into sideIndices
+			create_side_indices( 3*(4) , blockIndex, sideIndices);
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * blockIndex + 3*(4*8*sizeof(float)), sizeof(sideVertices), sideVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * blockIndex + 3*(6*sizeof(int)), sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			(*rightChunk).sides += 6;
+
+			
+			// ---
+
+
+			// vertex attributes
+			
+			// position
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+
+			// color
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			// texture coords
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+			glEnableVertexAttribArray(2);
+
+			// now unbind everything
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		}
+
+
+	}
 
 }
 

@@ -225,38 +225,41 @@ void update_select_block() {
 		// get the current chunk
 		selectChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
 
-		// copy over selectPos to relativeSelectPos
-		glm_vec3_copy(selectPos, relativeSelectPos);
+		// if selected chunk isn't NULL (aka out of bounds)
+		if(selectChunk != NULL) {
+			// copy over selectPos to relativeSelectPos
+			glm_vec3_copy(selectPos, relativeSelectPos);
 
-		// remove chunk position 
-		relativeSelectPos[0] -= (*selectChunk).pos[0]*get_chunk_width();
-		relativeSelectPos[2] -= (*selectChunk).pos[1]*get_chunk_length();
+			// remove chunk position 
+			relativeSelectPos[0] -= (*selectChunk).pos[0]*get_chunk_width();
+			relativeSelectPos[2] -= (*selectChunk).pos[1]*get_chunk_length();
 
-		// round the x y z values
-		relativeSelectPos[0] = round(relativeSelectPos[0]);
-		relativeSelectPos[1] = round(relativeSelectPos[1]);
-		relativeSelectPos[2] = round(relativeSelectPos[2]);
+			// round the x y z values
+			relativeSelectPos[0] = round(relativeSelectPos[0]);
+			relativeSelectPos[1] = round(relativeSelectPos[1]);
+			relativeSelectPos[2] = round(relativeSelectPos[2]);
 
-		// if not out of y bounds (ABOVE OR BELOW CHUNK)
-		if(selectPos[1] > get_chunk_height() || selectPos[1] < 0) {
-			selectBlockType = 0;
-		}
-		else {
-			// get the block type of the block at that position
-			selectBlockType = get_block_type((*selectChunk).blockTypes, relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2]);
-		}
+			// if not out of y bounds (ABOVE OR BELOW CHUNK)
+			if(selectPos[1] > get_chunk_height() || selectPos[1] < 0) {
+				selectBlockType = 0;
+			}
+			else {
+				// get the block type of the block at that position
+				selectBlockType = get_block_type((*selectChunk).blockTypes, relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2]);
+			}
 
-		// if block type is air, then move further along the path
-		if(selectBlockType == 0) {
-			// but before moving along path, copy to last select position
-			glm_vec3_copy(selectPos, lastSelectPos);
-			
-			// move along path
-			glm_vec3_add(selectPos, (vec3){
-				(*camFront)[0]/POINTER_REDUCER,
-				(*camFront)[1]/POINTER_REDUCER,
-				(*camFront)[2]/POINTER_REDUCER
-			}, selectPos);
+			// if block type is air, then move further along the path
+			if(selectBlockType == 0) {
+				// but before moving along path, copy to last select position
+				glm_vec3_copy(selectPos, lastSelectPos);
+				
+				// move along path
+				glm_vec3_add(selectPos, (vec3){
+					(*camFront)[0]/POINTER_REDUCER,
+					(*camFront)[1]/POINTER_REDUCER,
+					(*camFront)[2]/POINTER_REDUCER
+				}, selectPos);
+			}
 		}
 
 		// increment interations
@@ -660,73 +663,34 @@ void delete_block() {
 
 
 		// declare necessary chunks for side handling
-		struct Chunk* newChunk; // main chunk, therefore created as a pointer because some stuff will be edited within it idk
+		struct Chunk* newChunk = malloc( sizeof(struct Chunk) );; 
 
-		// side chunks (default to NULL)
-		struct Chunk* leftChunk   = NULL;
-		struct Chunk* rightChunk  = NULL;
-		struct Chunk* topChunk    = NULL;
-		struct Chunk* bottomChunk = NULL;
-
-		// indices for surrounding chunks
-		int topIndex;
-
-		// allocate space for new chunk pointer
-		newChunk = malloc( sizeof(struct Chunk) );
-
-		// if left chunk isnt out of world bounds
-		if( playerChunkPos[0]-1 >= 0 ) {
-			// allocate space for left chunk pointer
-			leftChunk = malloc( sizeof(struct Chunk) );
-			// load relevant chunk
-			leftChunk = get_chunk(playerChunkPos[0]-1, playerChunkPos[1]);
-		}
-
-		// if right chunk isnt out of world bounds
-		if( playerChunkPos[0]+1 <= get_world_size()-1 ) {
-			// allocate space for right chunk pointer
-			rightChunk = malloc( sizeof(struct Chunk) );
-			// load relevant chunk
-			rightChunk = get_chunk(playerChunkPos[0]+1, playerChunkPos[1]);
-		}
-
-		// if top chunk isnt out of world bounds
-		if( playerChunkPos[1]-1 >= 0 ) {
-			// allocate space for top chunk pointer
-			topChunk = malloc( sizeof(struct Chunk) );
-			// load relevant chunk
-			topChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]-1);
-			// set index to top chunk
-			topIndex = get_chunk_index(playerChunkPos[0], playerChunkPos[0]-1);
-		}
-
-		// if bottom chunk isnt out of world bounds
-		if( playerChunkPos[1]+1 <= get_world_size()-1 ) {
-			// allocate space for bottom chunk pointer
-			bottomChunk = malloc( sizeof(struct Chunk) );
-			// load relevant chunk
-			bottomChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]+1);
-		}
+		// side chunks, allocate space for them immediately
+		struct Chunk* leftChunk   = malloc( sizeof(struct Chunk) );
+		struct Chunk* rightChunk  = malloc( sizeof(struct Chunk) );
+		struct Chunk* topChunk    = malloc( sizeof(struct Chunk) );
+		struct Chunk* bottomChunk = malloc( sizeof(struct Chunk) );
 
 		// load main chunk to where newChunk pointer points
 		newChunk = get_chunk(playerChunkPos[0], playerChunkPos[1]);
 
+		// get the pointers to the chunks (if chunk not found then it just returns NULL)
+		leftChunk   = get_chunk(playerChunkPos[0]-1, playerChunkPos[1]);
+		rightChunk  = get_chunk(playerChunkPos[0]+1, playerChunkPos[1]);
+		topChunk    = get_chunk(playerChunkPos[0],   playerChunkPos[1]-1);
+		bottomChunk = get_chunk(playerChunkPos[0],   playerChunkPos[1]+1);
+
+		// indices for surrounding chunks
+		int leftIndex;
+		int rightIndex;
+		int topIndex;
+		int bottomIndex;
+
 		// get index of that chunk
 		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
 
-		if(topChunk != NULL) {
-			printf("%i\n", (*topChunk).sides);
-		}
-
-
 		// insert block and process main+surrounding chunks to reflect the action
 		insert_block(newChunk, leftChunk, rightChunk, topChunk, bottomChunk, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 0});
-
-		if(topChunk != NULL) {
-			set_chunk(topIndex, topChunk);
-			printf("%i\n", (*topChunk).sides);
-		}
-
 
 	}
 
