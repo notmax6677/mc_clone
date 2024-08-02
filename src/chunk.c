@@ -1455,7 +1455,7 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			}
 		}
 		else {
-			if(yPos == SAND_LEVEL-1 && yPos >= noiseValue/2) {
+			if(yPos == SAND_LEVEL-1) {
 				newChunk.blockTypes[i] = -1; // water
 			}
 			else {
@@ -1603,8 +1603,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(frontVertices), frontVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8 * sizeof(float)), sizeof(frontVertices), frontVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
@@ -1622,8 +1622,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(backVertices), backVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 1*(4*8 * sizeof(float)), sizeof(backVertices), backVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 1*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
@@ -1641,8 +1641,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(leftVertices), leftVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 2*(4*8 * sizeof(float)), sizeof(leftVertices), leftVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 2*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
@@ -1660,8 +1660,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(rightVertices), rightVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 3*(4*8 * sizeof(float)), sizeof(rightVertices), rightVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 3*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
@@ -1671,7 +1671,7 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 		indicesIndex += 6 * sizeof(int);
 		indicesOffset += 4;
 
-		if(bottom) {
+		if(bottom && strcmp(type, "water") != 0) {
 			// generate proper vertices array and load it into bottomVertices
 			create_side_vertices("bottom", type, xPos, yPos, zPos, bottomVertices);
 
@@ -1679,8 +1679,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(bottomVertices), bottomVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 4*(4*8 * sizeof(float)), sizeof(bottomVertices), bottomVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 4*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
@@ -1698,8 +1698,8 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			create_side_indices(indicesOffset, i, sideIndices);
 
 			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + verticesIndex, sizeof(topVertices), topVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + indicesIndex, sizeof(sideIndices), sideIndices);
+			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 5*(4*8 * sizeof(float)), sizeof(topVertices), topVertices);
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 5*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
 
 			// increment amount of sides
 			newChunk.sides += 6;
