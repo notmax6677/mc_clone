@@ -2073,7 +2073,7 @@ void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chu
 // ---
 
 
-void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas) {
+void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas, bool water) {
 
 	// bind vao
 	glBindVertexArray(chunk.mesh.vao);
@@ -2105,6 +2105,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	// get location of uniform shading float
 	int shadingLoc = glGetUniformLocation(shaderProgram, "shading");
 
+	// get location of uniform tide float
+	int tideLoc = glGetUniformLocation(shaderProgram, "tide");
+
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
@@ -2123,6 +2126,14 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// pass block shading uniform to fragment shader
 	glUniform1f(shadingLoc, shading);
+
+	// pass tide level to vertex shader based on whether its a water chunk or not
+	if(water) {
+		glUniform1f(tideLoc, get_tide_level());
+	}
+	else {
+		glUniform1f(tideLoc, 0);
+	}
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);

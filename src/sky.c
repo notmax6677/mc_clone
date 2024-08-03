@@ -90,6 +90,19 @@ const float minimumBlockShading = 0.5f;
 // ---
 
 
+// a slight increase in water level (raises throughout the night to simulate moon)
+float tideLevel = 0.4f;
+
+// increasing tide
+float tideIncrease = 0.1f;
+
+// maximum water tide level
+const float MAX_TIDE_LEVEL = 1.0f;
+
+
+// ---
+
+
 // returns the current block shading
 float get_block_shading() {
 	return blockShading;
@@ -120,6 +133,15 @@ bool get_day_night_cycle() {
 // sets whether or not the day night cycle is active
 void set_day_night_cycle(bool value) {
 	activeCycle = value;
+}
+
+
+// ---
+
+
+// getter for tide level
+float get_tide_level() {
+	return tideLevel;
 }
 
 
@@ -328,6 +350,41 @@ void update_sky(float deltaTime) {
 			blockShading = minimumBlockShading;
 		}
 
+
+		// ---
+		
+		
+		// if its night
+		if(!isDay) {
+			// make it so that the tide increases until 40%, then stops for 20% and then decreases from 60%
+
+			// if less than 40% through the night
+			if(dayTime < MAX_HOURS * 0.4f) {
+				tideLevel += tideIncrease * deltaTime;
+			}
+			else if(dayTime > MAX_HOURS * 0.6f) { // otherwise if over 60%
+				tideLevel -= tideIncrease * deltaTime;
+			}
+
+			// cap tideLevel at MAX_TIDE_LEVEL and make sure it doesn't go below 0
+			if(tideLevel > MAX_TIDE_LEVEL) {
+				tideLevel = MAX_TIDE_LEVEL;
+			}
+			if(tideLevel < 0) {
+				tideLevel = 0;
+			}
+		}
+		else {
+			// if tide level is more than 0, then slowly decrease it
+			if(tideLevel > 0.0f) {
+				tideLevel -= tideIncrease * deltaTime;
+			}
+			else {
+				// set tide level to 0
+				tideLevel = 0.0f;
+			}
+		}
+
 	}
 	// otherwise if day/night cycle is not active
 	else {
@@ -346,6 +403,9 @@ void update_sky(float deltaTime) {
 
 		// set isDay to true so that the sun and not the moon shows
 		isDay = true;
+
+		// set tide level to constant zero
+		tideLevel = 0.0f;
 
 	}
 

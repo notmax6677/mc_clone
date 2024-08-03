@@ -8,9 +8,9 @@ uniform int underWater;
 
 uniform vec3 shading;
 
-float waterR = 0.1;
-float waterG = 0.1;
-float waterB = 0.3;
+float waterR = 0.2;
+float waterG = 0.2;
+float waterB = 0.4;
 
 uniform sampler2D inTexture;
 

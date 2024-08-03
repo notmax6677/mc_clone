@@ -444,7 +444,7 @@ void draw_world() {
 	int noiseValue = calc_chunk_noise_value( (vec2){(*camPos)[0], (*camPos)[2]}, GLM_VEC2_ZERO );
 
 	// check if camera is under water level and adjust underWaterLevel boolean accordingly
-	if((*camPos)[1] <= get_water_level() && (*camPos)[1] > noiseValue) {
+	if((*camPos)[1] <= get_water_level() + get_tide_level()) {
 		set_under_water_level(true);
 	}
 	else {
@@ -465,7 +465,7 @@ void draw_world() {
 			&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
 			&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
-			draw_chunk(chunks[index], blockShaderProgram, worldAtlas);
+			draw_chunk(chunks[index], blockShaderProgram, worldAtlas, false);
 
 
 		}
@@ -495,7 +495,7 @@ void draw_world() {
 				&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
 
-				draw_chunk(waterChunks[index], blockShaderProgram, worldAtlas);
+				draw_chunk(waterChunks[index], blockShaderProgram, worldAtlas, true);
 
 			}
 		}

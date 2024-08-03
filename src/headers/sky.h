@@ -12,6 +12,9 @@ vec3* get_sky_col();
 // getter for whether or not the current day/night cycle is active
 bool get_day_night_cycle();
 
+// getter for tide level
+float get_tide_level();
+
 // setter for active day/night cycle
 void set_day_night_cycle(bool value);
 
