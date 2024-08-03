@@ -10,6 +10,7 @@
 #include "headers/mesh.h"
 #include "headers/image.h"
 #include "headers/camera.h"
+#include "headers/sky.h"
 
 
 // ---
@@ -2088,6 +2089,8 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	mat4* view = get_view();
 	mat4* proj = get_projection();
 
+	float shading = get_block_shading();
+
 	// get locations of uniform camera matrices
 	int modelLoc = glGetUniformLocation(shaderProgram, "model");
 	int viewLoc = glGetUniformLocation(shaderProgram, "view");
@@ -2098,6 +2101,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// get location of underwater uniform
 	int uwLoc = glGetUniformLocation(shaderProgram, "underWater");
+
+	// get location of uniform shading float
+	int shadingLoc = glGetUniformLocation(shaderProgram, "shading");
 
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
@@ -2114,6 +2120,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	else {
 		glUniform1i(uwLoc, 0);
 	}
+
+	// pass block shading uniform to fragment shader
+	glUniform1f(shadingLoc, shading);
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);

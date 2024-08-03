@@ -3,6 +3,9 @@
 
 #include <CGLM/cglm.h>
 
+// returns the current block shading
+float get_block_shading();
+
 // getter for sky color
 vec3* get_sky_col();
 

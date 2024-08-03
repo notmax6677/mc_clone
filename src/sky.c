@@ -1,11 +1,10 @@
-#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
 
 #include "headers/shader.h"
-#include "headers/mesh.h"
 #include "headers/image.h"
+#include "headers/chunk.h"
 
 #include "headers/camera.h"
 
@@ -32,19 +31,20 @@ vec3 returnedSkyColor = GLM_VEC3_ZERO_INIT;
 const float SUN_DISTANCE = 5.0f;
 
 // time speed
-float timeSpeed = 2.0f;
+const float timeSpeed = 2.0f;
+const float underWorldTimeSpeed = timeSpeed * 2.5f; // time speed whilst the sun is under the world
 
 // hours
 const float MAX_HOURS = 24.0f;
 
 // time
-float dayTime = MAX_HOURS * 0.75f - 0.5f; // offset by 0.5f because thats the half width of sun
+float dayTime = MAX_HOURS * 0.75f; // offset by 0.5f because thats the half width of sun
 
 // speed at which the sky color changes
-const float COLOR_CHANGE_SPEED = 2.0f;
+const float COLOR_CHANGE_SPEED = 4.0f;
 
 // its the day
-bool isDay = true;
+bool isDay = false;
 // reached half the day
 bool halfDay = false;
 
@@ -54,9 +54,42 @@ vec3 dayColor = (vec3){163, 205, 227};
 vec3 nightColor = (vec3){32, 26, 59};
 
 // sun color
-vec3 sunColor = (vec3){255, 211, 130};
+vec3 sunColor = (vec3){247, 207, 30};
 // moon color
 vec3 moonColor = (vec3){255, 255, 255};
+
+// minimum color
+vec3 minSkyColor = (vec3){14, 18, 43};
+
+// changed from day to night or from night to day
+bool changedDayMode = false;
+
+
+// ---
+
+
+// shade that is applied to all blocks
+float blockShading = 1.0f;
+
+float targetBlockShading = 1.0f;
+
+// block shading that is applied during day
+const float dayBlockShading = 1.0f;
+
+// block shading that is applied during night
+const float nightBlockShading = 0.4f;
+
+// minimum block shading value
+const float minimumBlockShading = 0.5f;
+
+
+// ---
+
+
+// returns the current block shading
+float get_block_shading() {
+	return blockShading;
+}
 
 
 // ---
@@ -175,14 +208,28 @@ void init_sky() {
 
 // updates some sky related processes
 void update_sky(float deltaTime) {
-	// increment the day time
-	dayTime += timeSpeed * deltaTime;
+
+	// if dayTime is in given range (around under the world) 60-90%
+	if(dayTime > MAX_HOURS * 0.6f && dayTime < MAX_HOURS * 0.9f) {
+		// increment the day time with faster time speed
+		dayTime += underWorldTimeSpeed * deltaTime;
+	}
+	else { // otherise (normal)
+		// increment the day time
+		dayTime += timeSpeed * deltaTime;
+ 	}
 
 	// if day time has exceeded maximum amount in a day, reset it to 0
 	if(dayTime >= MAX_HOURS) {
 		// reset dayTime count
 		dayTime = 0;
 
+		// reset changedDayMode to false
+		changedDayMode = false;
+	}
+
+	// if day is past 75% (so right about below earth) and the day mode hasn't been switched during that cycle
+	if(dayTime >= MAX_HOURS * 0.75f && !changedDayMode) {
 	 	// invert isDay
 		isDay = !isDay;
 
@@ -193,6 +240,9 @@ void update_sky(float deltaTime) {
 		else {
 			glm_vec3_copy(nightColor, skyColor); // set sky color equal to night color values
 		}
+
+		// enable changedDayMode
+		changedDayMode = true;
 	}
 
 	// if day is more than half
@@ -216,6 +266,7 @@ void update_sky(float deltaTime) {
 		returnedSkyColor[2] = skyColor[2] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
 	}
 
+	// cap returned sky color if it goes past the values of sky color
 	if(returnedSkyColor[0] > skyColor[0]) {
 		returnedSkyColor[0] = skyColor[0];
 	}
@@ -224,6 +275,32 @@ void update_sky(float deltaTime) {
 	}
 	if(returnedSkyColor[2] > skyColor[2]) {
 		returnedSkyColor[2] = skyColor[2];
+	}
+
+	// make sure returned sky color is always more than given minimum (for when the sun is under world)	
+	if(returnedSkyColor[0] < minSkyColor[0]) {
+		returnedSkyColor[0] = minSkyColor[0];
+	}	
+	if(returnedSkyColor[1] < minSkyColor[1]) {
+		returnedSkyColor[1] = minSkyColor[1];
+	}
+	if(returnedSkyColor[2] < minSkyColor[2]) {
+		returnedSkyColor[2] = minSkyColor[2];
+	}
+
+
+	// ---
+	
+
+	// calculate average (mean) of all sky shading reached
+	float averageShade = (returnedSkyColor[0] + returnedSkyColor[1] + returnedSkyColor[2]) / 3;
+
+	// move block shading towards target block shading
+	blockShading = averageShade;
+
+	// set block shading to mimimum if it goes under
+	if(blockShading < minimumBlockShading) {
+		blockShading = minimumBlockShading;
 	}
 
 }
@@ -264,7 +341,7 @@ void draw_sky(unsigned int worldAtlas) {
 	glm_mat4_copy((*model), newModel);
 
 	// get angle of rotation for the sun (offset backwards by a fourth of a day)
-	float angle = glm_rad( (dayTime - MAX_HOURS/4) / MAX_HOURS * 360);
+	float angle = glm_rad( dayTime / MAX_HOURS * 360);
 
 	// get sun z and y values
 	float z = SUN_DISTANCE * cos(angle);
@@ -285,6 +362,9 @@ void draw_sky(unsigned int worldAtlas) {
 	// get camera position uniform
 	int camPosLoc = glGetUniformLocation(sunShaderProgram, "camPos");	
 
+	// get location of underwater uniform
+	int uwLoc = glGetUniformLocation(sunShaderProgram, "underWater");
+
 	// get shading color uniform
 	int shadingLoc = glGetUniformLocation(sunShaderProgram, "shading");
 
@@ -296,6 +376,15 @@ void draw_sky(unsigned int worldAtlas) {
 	// load data into camera position uniform
 	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1]+y, (*camPos)[2]+z);
 
+	// pass underWaterLevel boolean in the form of an integer to fragment shader
+	if(get_under_water_level()) {
+		glUniform1i(uwLoc, 1);
+	}
+	else {
+		glUniform1i(uwLoc, 0);
+	}
+
+	// send either moon or sun color to shader depending on whether its day or night
 	if(isDay) {
 		glUniform3f(shadingLoc, sunColor[0]/255, sunColor[1]/255, sunColor[2]/255);
 	}

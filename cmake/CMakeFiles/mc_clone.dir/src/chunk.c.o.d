@@ -142,4 +142,5 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
  /usr/include/strings.h /home/max/Projects/c/mc_clone/src/headers/mesh.h \
  /home/max/Projects/c/mc_clone/src/headers/image.h \
- /home/max/Projects/c/mc_clone/src/headers/camera.h
+ /home/max/Projects/c/mc_clone/src/headers/camera.h \
+ /home/max/Projects/c/mc_clone/src/headers/sky.h
