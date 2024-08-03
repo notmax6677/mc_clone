@@ -145,4 +145,5 @@ CMakeFiles/mc_clone.dir/src/main.c.o: \
  /home/max/Projects/c/mc_clone/src/headers/world.h \
  /home/max/Projects/c/mc_clone/src/headers/chunk.h \
  /home/max/Projects/c/mc_clone/src/headers/mesh.h \
- /home/max/Projects/c/mc_clone/src/headers/pointer.h
+ /home/max/Projects/c/mc_clone/src/headers/pointer.h \
+ /home/max/Projects/c/mc_clone/src/headers/sky.h

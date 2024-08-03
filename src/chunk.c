@@ -31,7 +31,7 @@ const int STONE_LEVEL = 5;
 const int SAND_LEVEL = 10;
 
 // water level (this is purely for rendering some stuff when under the water level)
-const float WATER_LEVEL = SAND_LEVEL+0.5;
+const float CAM_WATER_LEVEL = SAND_LEVEL+0.5;
 
 // boolean that checks if camera is under water
 bool underWaterLevel = false;
@@ -70,9 +70,9 @@ int get_chunk_height() {
 // ---
 
 
-// just returns the constant value of the water level float
+// just returns the constant value of the camera water level float
 float get_water_level() {
-	return WATER_LEVEL;
+	return CAM_WATER_LEVEL;
 }
 
 // getter for under water-level

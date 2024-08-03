@@ -1,5 +1,7 @@
 WHAT THE FUK IS THAT BLACK VOID THING WHEN U GO TO THE OTHER SIDE OF THE MAP (it might have been a one time thing because i tested again and it didnt appear)
 
+make the crosshair partially transparent
+
 fix the water thing so that water is only generated exactly where i want it to be generated
 
 create some ui for the block placement

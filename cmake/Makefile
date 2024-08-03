@@ -475,6 +475,30 @@ src/shader.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/shader.c.s
 .PHONY : src/shader.c.s
 
+src/sky.o: src/sky.c.o
+.PHONY : src/sky.o
+
+# target to build an object file
+src/sky.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sky.c.o
+.PHONY : src/sky.c.o
+
+src/sky.i: src/sky.c.i
+.PHONY : src/sky.i
+
+# target to preprocess a source file
+src/sky.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sky.c.i
+.PHONY : src/sky.c.i
+
+src/sky.s: src/sky.c.s
+.PHONY : src/sky.s
+
+# target to generate assembly for a file
+src/sky.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mc_clone.dir/build.make CMakeFiles/mc_clone.dir/src/sky.c.s
+.PHONY : src/sky.c.s
+
 src/test_block.o: src/test_block.c.o
 .PHONY : src/test_block.o
 
@@ -570,6 +594,9 @@ help:
 	@echo "... src/shader.o"
 	@echo "... src/shader.i"
 	@echo "... src/shader.s"
+	@echo "... src/sky.o"
+	@echo "... src/sky.i"
+	@echo "... src/sky.s"
 	@echo "... src/test_block.o"
 	@echo "... src/test_block.i"
 	@echo "... src/test_block.s"

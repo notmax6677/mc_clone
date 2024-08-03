@@ -442,7 +442,7 @@ void init_crosshair() {
 	
 	// vertices array
 	float vertices[] = {
-		// position               color                texture coords
+		// position              color                 texture coords
 
 		// front
 	  -0.04f,  0.04f,  0.0f,    1.0f, 1.0f, 1.0f,     calc_at_tex_x(0),  calc_at_tex_y(48),   // top left

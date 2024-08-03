@@ -15,6 +15,7 @@
 
 #include "headers/pointer.h"
 #include "headers/chunk.h"
+#include "headers/sky.h"
 
 
 // ---
@@ -205,6 +206,9 @@ void init_world() {
 	// initiate pointer related stuff
 	init_pointer();
 
+	// initiate sky related stuff
+	init_sky();
+
 	// randomize noise offset for chunk generation
 	randomizeNoiseOffset();
 
@@ -383,7 +387,7 @@ void init_world() {
 	sortChunks();
 }
 
-void update_world(GLFWwindow* window) {
+void update_world(GLFWwindow* window, float deltaTime) {
 	// fetch camera position
 	vec3* camPos = get_camera_pos();
 
@@ -419,12 +423,19 @@ void update_world(GLFWwindow* window) {
 	// at end of function, copy over player chunk position to lastChunkPos for next frame
 	glm_vec2_copy(playerChunkPos, lastChunkPos);
 
+	update_sky(deltaTime);
+
 	update_pointer(window);
 }
 
 void draw_world() {
+	
+	// draw the sky
+	draw_sky(worldAtlas);
+	
 
-	//draw_test_block(blockShaderProgram, worldAtlas);
+	// ---
+
 	
 	// get camera position
 	vec3* camPos = get_camera_pos();
@@ -494,6 +505,7 @@ void draw_world() {
 	// ---
 	
 
+	// draw crosshair
 	draw_crosshair(worldAtlas);
 
 }

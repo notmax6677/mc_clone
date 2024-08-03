@@ -9,6 +9,8 @@
 #include "headers/world.h"
 #include "headers/pointer.h"
 
+#include "headers/sky.h"
+
 
 // ---
 
@@ -49,14 +51,16 @@ void update(GLFWwindow* window) {
 
 	update_camera(window, deltaTime);
 
-	update_world(window);
+	update_world(window, deltaTime);
 }
 
 // frame draw
 void draw(GLFWwindow* window) {
+
+	vec3* skyCol = get_sky_col();
 	
 	// set color clear buffer
-	glClearColor( (float)152/255, (float)215/255, (float)235/255, 1.0f);
+	glClearColor( (float)(*skyCol)[0]/255, (float)(*skyCol)[1]/255, (float)(*skyCol)[2]/255, 1.0f);
 
 	// clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

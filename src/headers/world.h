@@ -22,7 +22,7 @@ void set_chunk(int index, struct Chunk* chunk);
 void init_world();
 
 // update world
-void update_world(GLFWwindow* window);
+void update_world(GLFWwindow* window, float deltaTime);
 
 // draw world
 void draw_world();

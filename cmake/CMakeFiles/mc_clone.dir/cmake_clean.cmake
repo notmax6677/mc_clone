@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/mc_clone.dir/src/pointer.c.o.d"
   "CMakeFiles/mc_clone.dir/src/shader.c.o"
   "CMakeFiles/mc_clone.dir/src/shader.c.o.d"
+  "CMakeFiles/mc_clone.dir/src/sky.c.o"
+  "CMakeFiles/mc_clone.dir/src/sky.c.o.d"
   "CMakeFiles/mc_clone.dir/src/test_block.c.o"
   "CMakeFiles/mc_clone.dir/src/test_block.c.o.d"
   "CMakeFiles/mc_clone.dir/src/world.c.o"
