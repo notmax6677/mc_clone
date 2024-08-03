@@ -118,6 +118,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	}
 
+	// KEY N - toggle day/night cycle
+	if(key == GLFW_KEY_N && action == GLFW_PRESS) {
+
+		// get current day/night cycle
+		bool active = get_day_night_cycle();
+
+		// set it to the inverse of what we got
+		set_day_night_cycle(!active);
+
+	}
+
 }
 
 // mouse callback for when the cursor is moved

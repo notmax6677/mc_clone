@@ -1,3 +1,4 @@
+#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -31,7 +32,7 @@ vec3 returnedSkyColor = GLM_VEC3_ZERO_INIT;
 const float SUN_DISTANCE = 5.0f;
 
 // time speed
-const float timeSpeed = 2.0f;
+const float timeSpeed = 0.5f;
 const float underWorldTimeSpeed = timeSpeed * 2.5f; // time speed whilst the sun is under the world
 
 // hours
@@ -63,6 +64,9 @@ vec3 minSkyColor = (vec3){14, 18, 43};
 
 // changed from day to night or from night to day
 bool changedDayMode = false;
+
+// whether or not to have an active day night cycle
+bool activeCycle = true;
 
 
 // ---
@@ -98,6 +102,24 @@ float get_block_shading() {
 // getter for sky color
 vec3* get_sky_col() {
 	return &returnedSkyColor;
+}
+
+
+// ---
+
+
+// gets whether the current day/night cycle is active
+bool get_day_night_cycle() {
+	return activeCycle;
+}
+
+
+// ---
+
+
+// sets whether or not the day night cycle is active
+void set_day_night_cycle(bool value) {
+	activeCycle = value;
 }
 
 
@@ -209,98 +231,122 @@ void init_sky() {
 // updates some sky related processes
 void update_sky(float deltaTime) {
 
-	// if dayTime is in given range (around under the world) 60-90%
-	if(dayTime > MAX_HOURS * 0.6f && dayTime < MAX_HOURS * 0.9f) {
-		// increment the day time with faster time speed
-		dayTime += underWorldTimeSpeed * deltaTime;
-	}
-	else { // otherise (normal)
-		// increment the day time
-		dayTime += timeSpeed * deltaTime;
- 	}
+	// if day/night cycle is active
+	if(activeCycle) {
 
-	// if day time has exceeded maximum amount in a day, reset it to 0
-	if(dayTime >= MAX_HOURS) {
-		// reset dayTime count
-		dayTime = 0;
+		// if dayTime is in given range (around under the world) 60-90%
+		if(dayTime > MAX_HOURS * 0.6f && dayTime < MAX_HOURS * 0.9f) {
+			// increment the day time with faster time speed
+			dayTime += underWorldTimeSpeed * deltaTime;
+		}
+		else { // otherise (normal)
+			// increment the day time
+			dayTime += timeSpeed * deltaTime;
+		}
 
-		// reset changedDayMode to false
-		changedDayMode = false;
-	}
+		// if day time has exceeded maximum amount in a day, reset it to 0
+		if(dayTime >= MAX_HOURS) {
+			// reset dayTime count
+			dayTime = 0;
 
-	// if day is past 75% (so right about below earth) and the day mode hasn't been switched during that cycle
-	if(dayTime >= MAX_HOURS * 0.75f && !changedDayMode) {
-	 	// invert isDay
-		isDay = !isDay;
+			// reset changedDayMode to false
+			changedDayMode = false;
+		}
 
-		// if its day
-		if(isDay) {
-			glm_vec3_copy(dayColor, skyColor); // set sky color equal to day color values
+		// if day is past 75% (so right about below earth) and the day mode hasn't been switched during that cycle
+		if(dayTime >= MAX_HOURS * 0.75f && !changedDayMode) {
+			// invert isDay
+			isDay = !isDay;
+
+			// if its day
+			if(isDay) {
+				glm_vec3_copy(dayColor, skyColor); // set sky color equal to day color values
+			}
+			else {
+				glm_vec3_copy(nightColor, skyColor); // set sky color equal to night color values
+			}
+
+			// enable changedDayMode
+			changedDayMode = true;
+		}
+
+		// if day is more than half
+		if(dayTime >= MAX_HOURS/2) {
+			halfDay = true;
 		}
 		else {
-			glm_vec3_copy(nightColor, skyColor); // set sky color equal to night color values
+			halfDay = false;
 		}
 
-		// enable changedDayMode
-		changedDayMode = true;
-	}
+		// below world
+		if(halfDay) {
+			returnedSkyColor[0] = skyColor[0] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
+			returnedSkyColor[1] = skyColor[1] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
+			returnedSkyColor[2] = skyColor[2] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
+		}
+		// above world
+		else {
+			returnedSkyColor[0] = skyColor[0] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
+			returnedSkyColor[1] = skyColor[1] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
+			returnedSkyColor[2] = skyColor[2] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
+		}
 
-	// if day is more than half
-	if(dayTime >= MAX_HOURS/2) {
-		halfDay = true;
+		// cap returned sky color if it goes past the values of sky color
+		if(returnedSkyColor[0] > skyColor[0]) {
+			returnedSkyColor[0] = skyColor[0];
+		}
+		if(returnedSkyColor[1] > skyColor[1]) {
+			returnedSkyColor[1] = skyColor[1];
+		}
+		if(returnedSkyColor[2] > skyColor[2]) {
+			returnedSkyColor[2] = skyColor[2];
+		}
+
+		// make sure returned sky color is always more than given minimum (for when the sun is under world)	
+		if(returnedSkyColor[0] < minSkyColor[0]) {
+			returnedSkyColor[0] = minSkyColor[0];
+		}	
+		if(returnedSkyColor[1] < minSkyColor[1]) {
+			returnedSkyColor[1] = minSkyColor[1];
+		}
+		if(returnedSkyColor[2] < minSkyColor[2]) {
+			returnedSkyColor[2] = minSkyColor[2];
+		}
+
+
+		// ---
+		
+
+		// calculate average (mean) of all sky shading reached
+		float averageShade = (returnedSkyColor[0] + returnedSkyColor[1] + returnedSkyColor[2]) / 3;
+
+		// move block shading towards target block shading
+		blockShading = averageShade;
+
+		// set block shading to mimimum if it goes under
+		if(blockShading < minimumBlockShading) {
+			blockShading = minimumBlockShading;
+		}
+
 	}
+	// otherwise if day/night cycle is not active
 	else {
-		halfDay = false;
-	}
 
-	// below world
-	if(halfDay) {
-		returnedSkyColor[0] = skyColor[0] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
-		returnedSkyColor[1] = skyColor[1] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
-		returnedSkyColor[2] = skyColor[2] * ( 1 - ( (dayTime - MAX_HOURS/2) / (MAX_HOURS/2) * COLOR_CHANGE_SPEED ) );
-	}
-	// above world
-	else {
-		returnedSkyColor[0] = skyColor[0] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
-		returnedSkyColor[1] = skyColor[1] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
-		returnedSkyColor[2] = skyColor[2] * ( dayTime / (MAX_HOURS/2) ) * COLOR_CHANGE_SPEED;
-	}
+		// set block shading to full
+		blockShading = 255;
 
-	// cap returned sky color if it goes past the values of sky color
-	if(returnedSkyColor[0] > skyColor[0]) {
-		returnedSkyColor[0] = skyColor[0];
-	}
-	if(returnedSkyColor[1] > skyColor[1]) {
-		returnedSkyColor[1] = skyColor[1];
-	}
-	if(returnedSkyColor[2] > skyColor[2]) {
-		returnedSkyColor[2] = skyColor[2];
-	}
+		// set sky color equal to day color values
+		glm_vec3_copy(dayColor, skyColor); 
 
-	// make sure returned sky color is always more than given minimum (for when the sun is under world)	
-	if(returnedSkyColor[0] < minSkyColor[0]) {
-		returnedSkyColor[0] = minSkyColor[0];
-	}	
-	if(returnedSkyColor[1] < minSkyColor[1]) {
-		returnedSkyColor[1] = minSkyColor[1];
-	}
-	if(returnedSkyColor[2] < minSkyColor[2]) {
-		returnedSkyColor[2] = minSkyColor[2];
-	}
+		// set returnedSkyColor equivalent to the normal full day color
+		glm_vec3_copy(dayColor, returnedSkyColor);
 
+		// set dayTime to a constant sixteenth of MAX_HOURS (about 45-60 degrees angle looking upwards at positive x axis)
+		dayTime = MAX_HOURS/16;
 
-	// ---
-	
+		// set isDay to true so that the sun and not the moon shows
+		isDay = true;
 
-	// calculate average (mean) of all sky shading reached
-	float averageShade = (returnedSkyColor[0] + returnedSkyColor[1] + returnedSkyColor[2]) / 3;
-
-	// move block shading towards target block shading
-	blockShading = averageShade;
-
-	// set block shading to mimimum if it goes under
-	if(blockShading < minimumBlockShading) {
-		blockShading = minimumBlockShading;
 	}
 
 }
