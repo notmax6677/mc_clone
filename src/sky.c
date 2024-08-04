@@ -1,4 +1,3 @@
-#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -11,10 +10,13 @@
 
 
 // shader program for sun
-unsigned int sunShaderProgram;
+unsigned int skyShaderProgram;
 
 // mesh for sun object
 struct Mesh sunMesh;
+
+// mesh for stars object
+struct Mesh starsMesh;
 
 // sky color in R G B values
 vec3 skyColor = GLM_VEC3_ZERO_INIT;
@@ -30,6 +32,12 @@ vec3 returnedSkyColor = GLM_VEC3_ZERO_INIT;
 
 // distance of the sun, the higher the number, the smaller the sun will appear
 const float SUN_DISTANCE = 5.0f;
+
+// distance that the stars will render at from the player, the larger the number, the further theyll render
+const float STARS_DISTANCE = 15.0f;
+
+// how much should the stars span
+const float STARS_SIZE = 5.0f;
 
 // time speed
 const float timeSpeed = 0.5f;
@@ -48,6 +56,12 @@ const float COLOR_CHANGE_SPEED = 4.0f;
 bool isDay = false;
 // reached half the day
 bool halfDay = false;
+
+// opacity of stars
+float starsOpacity = 1.0f;
+
+// speed at which the opacity of the stars fades in/out
+const float STARS_OPACITY_CHANGE_SPEED = 0.2f;
 
 // day color
 vec3 dayColor = (vec3){163, 205, 227};
@@ -148,8 +162,8 @@ float get_tide_level() {
 // ---
 
 
-// initiates sky related processes
-void init_sky() {
+// initiates sun related processes
+void init_sun() {
 
 	// create vertices array
 	float vertices[] = {
@@ -241,17 +255,14 @@ void init_sky() {
 	sunMesh.vbo = VBO;
 	sunMesh.ebo = EBO;
 
-	// also load shader program
-	sunShaderProgram = create_shader_program("shaders/sun_shader.vert", "shaders/sun_shader.frag");
-
 }
 
 
 // ---
 
 
-// updates some sky related processes
-void update_sky(float deltaTime) {
+// updates some sun related processes
+void update_sun(float deltaTime) {
 
 	// if day/night cycle is active
 	if(activeCycle) {
@@ -415,17 +426,14 @@ void update_sky(float deltaTime) {
 // ---
 
 
-// draws the sky
-void draw_sky(unsigned int worldAtlas) {
-
-	// disable depth testing specifically for the sky, so that it is drawn behind everything else
-	glDisable(GL_DEPTH_TEST);
+// draws the sun
+void draw_sun(unsigned int worldAtlas) {
 
 	// bind vao
 	glBindVertexArray(sunMesh.vao);
 
 	// use shader program
-	glUseProgram(sunShaderProgram);
+	glUseProgram(skyShaderProgram);
 
 	// bind texture
 	glBindTexture(GL_TEXTURE_2D, worldAtlas);
@@ -461,18 +469,21 @@ void draw_sky(unsigned int worldAtlas) {
 
 
 	// get locations of uniform camera matrices
-	int modelLoc = glGetUniformLocation(sunShaderProgram, "model");
-	int viewLoc = glGetUniformLocation(sunShaderProgram, "view");
-	int projLoc = glGetUniformLocation(sunShaderProgram, "proj");
+	int modelLoc = glGetUniformLocation(skyShaderProgram, "model");
+	int viewLoc = glGetUniformLocation(skyShaderProgram, "view");
+	int projLoc = glGetUniformLocation(skyShaderProgram, "proj");
 
 	// get camera position uniform
-	int camPosLoc = glGetUniformLocation(sunShaderProgram, "camPos");	
+	int camPosLoc = glGetUniformLocation(skyShaderProgram, "camPos");	
 
 	// get location of underwater uniform
-	int uwLoc = glGetUniformLocation(sunShaderProgram, "underWater");
+	int uwLoc = glGetUniformLocation(skyShaderProgram, "underWater");
 
 	// get shading color uniform
-	int shadingLoc = glGetUniformLocation(sunShaderProgram, "shading");
+	int shadingLoc = glGetUniformLocation(skyShaderProgram, "shading");
+
+	// get opacity float uniform
+	int opacityLoc = glGetUniformLocation(skyShaderProgram, "opacity");
 
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, newModel);
@@ -498,10 +509,296 @@ void draw_sky(unsigned int worldAtlas) {
 		glUniform3f(shadingLoc, moonColor[0]/255, moonColor[1]/255, moonColor[2]/255);
 	}
 
+	// just pass full 1.0f as opacity to fragment shader
+	glUniform1f(opacityLoc, 1.0f);
+
+
+	// ---
+
+
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+}
+
+
+// ---
+
+
+void init_stars() {
+
+	// create vertices array
+	float vertices[] = {
+		// position                               texture coords
+
+		// front
+	  -STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+		STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	  -STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),    // bottom left
+		STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),    // bottom right
+
+		// back
+	  -STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+		STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	  -STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),    // bottom left
+		STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),    // bottom right
+
+		// left
+	  -STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+	  -STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	  -STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),     // bottom left
+	  -STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),     // bottom right
+
+		// right
+	   STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+		STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	   STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),    // bottom left
+		STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),    // bottom right
+
+		// top
+	  -STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+		STARS_SIZE,  STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	  -STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),    // bottom left
+		STARS_SIZE,  STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),    // bottom right
+
+		// bottom
+	  -STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(80),     // top left
+		STARS_SIZE, -STARS_SIZE,  STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(80),     // top right
+	  -STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(16),  calc_at_tex_y(240),    // bottom left
+		STARS_SIZE, -STARS_SIZE, -STARS_SIZE,     calc_at_tex_x(176), calc_at_tex_y(240),    // bottom right
+
+	};
+
+	// create indices array
+	int indices[] = {
+		// front
+		0, 1, 2,
+		1, 2, 3,
+
+		// back
+		4, 5, 6,
+		5, 6, 7,
+
+		// left
+		8, 9, 10,
+		9, 10, 11,
+
+		// right
+		12, 13, 14,
+		13, 14, 15,
+
+		// bottom
+		16, 17, 18,
+		17, 18, 19,
+
+		// top
+		20, 21, 22,
+		21, 22, 23,
+	};
+
+	
+	// ---
+	
+
+	// create vbo
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+
+	// bind vbo
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	// load data into vbo
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// unbind vbo for now
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	// ---
+	
+
+	// create ebo
+	unsigned int EBO;
+	glGenBuffers(1, &EBO);
+
+	// bind ebo
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+	// load data into ebo
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// unbind ebo for now
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	// ---
+	
+
+	// create vao
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+
+	// bind vao
+	glBindVertexArray(VAO);
+
+	// bind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+	// vertex attributes
+
+	// position
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// texture coords
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	// unbind vao
+	glBindVertexArray(0);
+
+	// unbind vbo and ebo
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	
+	// ---
+	
+
+	// set mesh values to save the buffers and vao
+	starsMesh.vao = VAO;
+	starsMesh.vbo = VBO;
+	starsMesh.ebo = EBO;
+
+}
+
+void update_stars(float deltaTime) {
+
+	// if there currently is an active day/night cycle
+	if(activeCycle) {
+
+		// if its night
+		if(!isDay) {
+			starsOpacity += STARS_OPACITY_CHANGE_SPEED * deltaTime;
+
+			// cap starsOpacity at 1.0f
+			if(starsOpacity > 1.0f) {
+				starsOpacity = 1.0f;
+			}
+		}
+		else { // otherwise set opacity to 0.0f
+			starsOpacity -= STARS_OPACITY_CHANGE_SPEED * deltaTime;
+
+			// make sure starsOpacity doesn't recede below 0
+			if(starsOpacity < 0) {
+				starsOpacity = 0;
+			}
+		}
+
+	}
+	else {
+		// set starsOpacity to constant 0
+		starsOpacity = 0;
+	}
+
+}
+
+void draw_stars(unsigned int worldAtlas) {
+
+	// bind vao
+	glBindVertexArray(starsMesh.vao);
+
+	// use shader program
+	glUseProgram(skyShaderProgram);
+
+	// bind texture
+	glBindTexture(GL_TEXTURE_2D, worldAtlas);
+
+	// get camera matrices
+	mat4* model = get_model();
+	mat4* view = get_view();
+	mat4* proj = get_projection();
+
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+
+	// get locations of uniform camera matrices
+	int modelLoc = glGetUniformLocation(skyShaderProgram, "model");
+	int viewLoc = glGetUniformLocation(skyShaderProgram, "view");
+	int projLoc = glGetUniformLocation(skyShaderProgram, "proj");
+
+	// get camera position uniform
+	int camPosLoc = glGetUniformLocation(skyShaderProgram, "camPos");	
+
+	// get location of underwater uniform
+	int uwLoc = glGetUniformLocation(skyShaderProgram, "underWater");
+
+	// get shading color uniform
+	int shadingLoc = glGetUniformLocation(skyShaderProgram, "shading");
+
+	// get opacity float uniform
+	int opacityLoc = glGetUniformLocation(skyShaderProgram, "opacity");
+
+	// load data into uniforms
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
+
+	// load data into camera position uniform
+	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1], (*camPos)[2]);
+
+	// pass underWaterLevel boolean in the form of an integer to fragment shader
+	if(get_under_water_level()) {
+		glUniform1i(uwLoc, 1);
+	}
+	else {
+		glUniform1i(uwLoc, 0);
+	}
+
+	// just send white shading color for stars
+	glUniform3f(shadingLoc, 1.0f, 1.0f, 1.0f);
+
+	// send starsOpacity as opacity uniform value to fragment shader
+	glUniform1f(opacityLoc, starsOpacity);
+
+
+	// ---
+	
+
+	// draw the elements
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+}
+
+
+// ---
+
+
+void init_sky() {
+	init_sun();
+
+	init_stars();
+
+	// also load shader program
+	skyShaderProgram = create_shader_program("shaders/sky_shader.vert", "shaders/sky_shader.frag");
+}
+
+void update_sky(float deltaTIme) {
+	update_sun(deltaTIme);
+
+	update_stars(deltaTIme);
+}
+
+void draw_sky(unsigned int worldAtlas) {
+	// disable depth testing specifically for the sky, so that it is drawn behind everything else
+	glDisable(GL_DEPTH_TEST);
+
+	draw_stars(worldAtlas);
+
+	draw_sun(worldAtlas);
+
 	// re-enable depth testing to render everything else
 	glEnable(GL_DEPTH_TEST);
-
 }

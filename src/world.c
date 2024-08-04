@@ -228,10 +228,10 @@ void init_world() {
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, false, GLM_VEC4_ZERO);
+		chunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, false);
 
 		// generate indexed chunk, but now for water part of the chunk
-		waterChunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, true, GLM_VEC4_ZERO);
+		waterChunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, true);
 
 		// increment chunk count
 		chunkCount++;

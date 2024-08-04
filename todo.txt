@@ -1,25 +1,18 @@
 WHAT THE FUK IS THAT BLACK VOID THING WHEN U GO TO THE OTHER SIDE OF THE MAP (it might have been a one time thing because i tested again and it didnt appear)
 
+find out a decent looking layout for the stars
 
-make the crosshair partially transparent
+why is it so slow when running in wireframe mode
 
-fix the water thing so that water is only generated exactly where i want it to be generated
+create stars that appear at night, and that'll be the end of the day/night cycle system
+
+create tree generation
 
 create some ui for the block placement
 
 TRY to fix the small bug with select block that sometimes happens along the border of a chunk with another chunk
 
 fix the grainy stuff in the water
-
-make the water generation work properly bec theres a lot of it thats generated underground where it shouldnt be
-
-remove the invisible faces that are drawn when rendering water blocks (if its not too much effort, otherwise its ok)
-
-dynamic water movement???
-
-water animations???
-
-create tree generation
 
 create distance fog idk it just looks cool
 

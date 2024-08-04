@@ -1368,7 +1368,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 // ---
 
 
-struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
+struct Chunk generate_chunk(vec2 position, bool water) {
 
 	// create new chunk structure instance
 	struct Chunk newChunk;
@@ -1606,14 +1606,14 @@ struct Chunk generate_chunk(vec2 position, bool water, vec4 block) {
 			// load proper vertices and indices array into VBO via glBufferSubData
 			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8 * sizeof(float)), sizeof(frontVertices), frontVertices);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
 		}
 		// increment vertices and indices index, as well as indices offset
 		verticesIndex += 4*8 * sizeof(float);
 		indicesIndex += 6 * sizeof(int);
 		indicesOffset += 4;
+
+		// increment amount of sides
+		newChunk.sides += 6;
 
 		if(back) {
 			// generate proper vertices array and load it into backVertices
