@@ -66,6 +66,7 @@ add_executable(${PROJECT_NAME}
 
 	# --- header only ---
 	./src/headers/mesh.h
+	./src/headers/tex_coords.h
 	# --- --- ---
 )
 

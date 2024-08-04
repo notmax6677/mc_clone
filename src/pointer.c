@@ -630,7 +630,7 @@ void place_block() {
 		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
 
 		// insert block and process main main, surrounding chunks can be passed as NULL as when placing a block it wont matter
-		insert_block(newChunk, NULL, NULL, NULL, NULL, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 1});
+		insert_block(newChunk, NULL, NULL, NULL, NULL, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 5});
 
 		set_chunk(index, newChunk);
 

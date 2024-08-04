@@ -222,6 +222,7 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: /home/max/Projects/c/mc_clone/src/chunk.c
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
   /home/max/Projects/c/mc_clone/src/headers/sky.h \
+  /home/max/Projects/c/mc_clone/src/headers/tex_coords.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
   /usr/include/endian.h \
@@ -1452,6 +1453,8 @@ CMakeFiles/mc_clone.dir/src/world.c.o: /home/max/Projects/c/mc_clone/src/world.c
 /home/max/Projects/c/mc_clone/src/shader.c:
 
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+/home/max/Projects/c/mc_clone/src/headers/tex_coords.h:
 
 /home/max/Projects/c/mc_clone/src/headers/sky.h:
 

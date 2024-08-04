@@ -5,12 +5,15 @@
 #include <NOISE/noise1234.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "headers/mesh.h"
 #include "headers/image.h"
 #include "headers/camera.h"
 #include "headers/sky.h"
+
+#include "headers/tex_coords.h"
 
 
 // ---
@@ -31,6 +34,16 @@ const int STONE_LEVEL = 5;
 // level at which sand blocks appear, coming from bottom
 const int SAND_LEVEL = 10;
 
+// chance of a tree spawning on a grass block (ranges from 0.0f - 1.0f)
+const float CHANCE_OF_TREE = 0.005f;
+
+// maximum and minimum tree height in blocks
+const int MAX_TREE_HEIGHT = 6;
+const int MIN_TREE_HEIGHT = 5;
+
+// trees can only be placed TREE_BUFFER_LEVEL amount of blocks below STONE_LEVEL
+const int TREE_BUFFER_LEVEL = 4;
+
 // water level (this is purely for rendering some stuff when under the water level)
 const float CAM_WATER_LEVEL = SAND_LEVEL+0.5;
 
@@ -41,6 +54,42 @@ bool underWaterLevel = false;
 float randomNoiseOffset = 0.0f;
 // divide random noise offset value by this
 const float RAND_NOISE_DIVIDER = 2000;
+
+
+// ---
+
+
+// takes an int and returns the string counterpart to that int block type
+const char* int_to_string_block_type(int type) {
+	// define type string based on returned block type
+	if(type == 1) {
+		return "grass";
+	}
+	else if(type == 2) {
+		return "dirt";
+	}
+	else if(type == 3) {
+		return "stone";
+	}
+	else if(type == 4) {
+		return "sand";
+	}
+	else if(type == 5) {
+		return "log";
+	}
+	else if(type == 6) {
+		return "leaves";
+	}
+	else if(type == 0) {
+		return "air";
+	}
+	else if(type == -1) {
+		return "water";
+	}
+
+	// if none of the previous conditions met, return NULL
+	return NULL;
+}
 
 
 // ---
@@ -119,201 +168,6 @@ struct Chunk {
 // ---
 
 
-// grass block texture coordinates
-int GRASS_TEX_COORDS[] = {
-	// front
-	0,  0,
-	16, 0,
-	0,  16,
-	16, 16,
-
-	// back
-	16, 0,
-	0,  0,
-	16, 16,
-	0,  16,
-
-	// left
-	0,  0,
-	16, 0,
-	0,  16,
-	16, 16,
-
-	// right
-	0,  0,
-	16, 0,
-	0,  16,
-	16, 16,
-
-	// bottom
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// top
-	32, 0,
-	48, 0,
-	32, 16,
-	48, 16,
-};
-// dirt block texture coordinates
-int DIRT_TEX_COORDS[] = {
-	// front
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// back
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// left
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// right
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// bottom
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-
-	// top
-	16, 0,
-	32, 0,
-	16, 16,
-	32, 16,
-};
-// stone block texture coordinates
-int STONE_TEX_COORDS[] = {
-	// front
-	48, 0,
-	64, 0,
-	48, 16,
-	64, 16,
-
-	// back
-	48, 0,
-	64, 0,
-	48, 16,
-	64, 16,
-
-	// left
-	48, 0,
-	64, 0,
-	48, 16,
-	64, 16,
-
-	// right
-	48, 0,
-	64, 0,
-	48, 16,
-	64, 16,
-
-	// bottom
-	64, 0,
-	80, 0,
-	64, 16,
-	80, 16,
-
-	// top
-	80, 0,
-	96, 0,
-	80, 16,
-	96, 16,
-};
-// SAND block texture coordinates
-int SAND_TEX_COORDS[] = {
-	// front
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-
-	// back
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-
-	// left
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-
-	// right
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-
-	// bottom
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-
-	// top
-	96, 0,
-	112, 0,
-	96, 16,
-	112, 16,
-};
-// water block texture coordinates
-int WATER_TEX_COORDS[] = {
-	// front
-   240, 224,
-	256, 224,
-	240, 240,
-	256, 240,
-
-	// back
-   240, 224,
-	256, 224,
-	240, 240,
-	256, 240,
-
-	// left
-   240, 224,
-	256, 224,
-	240, 240,
-	256, 240,
-
-	// right
-   240, 224,
-	256, 224,
-	240, 240,
-	256, 240,
-
-	// bottom
-   240, 224,
-	256, 224,
-	240, 240,
-	256, 240,
-
-	// top
-	112, 0,
-	128, 0,
-	112, 16,
-	128, 16,
-};
-
-
-// ---
-
-
 // gets the block type at a position relative to the chunk based on coordinates
 int get_block_type(int* blockTypes, int xPos, int yPos, int zPos) {
 	return blockTypes[yPos*16*16 + zPos*16 + xPos];
@@ -374,6 +228,14 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 	else if(strcmp(blockType, "sand") == 0) {
 		// copy sand texture coords array to tex_coords
 		memcpy(texCoords, SAND_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "log") == 0) {
+		// copy wood log texture coords array to tex_coords
+		memcpy(texCoords, LOG_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "leaves") == 0) {
+		// copy leaves texture coords array to tex_coords
+		memcpy(texCoords, LEAVES_TEX_COORDS, sizeof(int) * 8*6);
 	}
 	else if(strcmp(blockType, "water") == 0) {
 		// copy sand texture coords array to tex_coords
@@ -504,22 +366,8 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 	// declare type string
 	const char* type;
 
-	// define type string based on returned block type
-	if(block[3] == 1) {
-		type = "grass";
-	}
-	else if(block[3] == 2) {
-		type = "dirt";
-	}
-	else if(block[3] == 3) {
-		type = "stone";
-	}
-	else if(block[3] == 4) {
-		type = "sand";
-	}
-	else if(block[3] == 0) {
-		type = "air";
-	}
+	// convert type to string
+	type = int_to_string_block_type(block[3]);
 
 
 	int verticesIndex = 0;
@@ -713,21 +561,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, frontPos[0], frontPos[1], frontPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -761,21 +595,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, backPos[0], backPos[1], backPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -809,21 +629,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, leftPos[0], leftPos[1], leftPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -857,21 +663,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, rightPos[0], rightPos[1], rightPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -905,21 +697,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, bottomPos[0], bottomPos[1], bottomPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -953,21 +731,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*chunk).blockTypes, topPos[0], topPos[1], topPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -1058,21 +822,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*topChunk).blockTypes, frontPos[0], frontPos[1], CHUNK_LENGTH-1);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -1140,21 +890,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*bottomChunk).blockTypes, backPos[0], backPos[1], 0);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -1222,21 +958,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*leftChunk).blockTypes, CHUNK_WIDTH-1, leftPos[1], leftPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -1304,21 +1026,7 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 			int blockIndex = get_block_index((*rightChunk).blockTypes, 0, rightPos[1], rightPos[2]);
 
 			// define type string based on returned block type
-			if(blockType == 1) {
-				type = "grass";
-			}
-			else if(blockType == 2) {
-				type = "dirt";
-			}
-			else if(blockType == 3) {
-				type = "stone";
-			}
-			else if(blockType == 4) {
-				type = "sand";
-			}
-			else if(blockType == 0) {
-				type = "air";
-			}
+			type = int_to_string_block_type(blockType);
 
 
 			// generate proper vertices array and load it into sideVertices
@@ -1440,6 +1148,23 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 			else if(yPos <= SAND_LEVEL && yPos <= noiseValue) {
 				newChunk.blockTypes[i] = 4; // sand
 			}
+			else if(yPos == noiseValue+1 
+					&& yPos < CHUNK_HEIGHT-STONE_LEVEL-TREE_BUFFER_LEVEL && yPos > SAND_LEVEL+1
+					&& xPos > 0 && xPos < CHUNK_WIDTH-1
+					&& zPos > 0 && zPos < CHUNK_LENGTH-1) {
+				// tree generation
+
+				// random value in between 0-1, determines if a tree will be placed
+				float randomValue = (float)rand() / RAND_MAX;
+
+				// if value is less than the chance to spawn a tree
+				if(randomValue < CHANCE_OF_TREE) {
+					newChunk.blockTypes[i] = 5; // first log block, later used to generate the trees
+				}
+				else {
+					newChunk.blockTypes[i] = 0; // air
+				}
+			}
 			else if(yPos == noiseValue) {
 				newChunk.blockTypes[i] = 1; // grass
 			}
@@ -1501,6 +1226,105 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 	zPos = 0;
 
 	
+	// ---
+	
+
+	// another for loop, find all the start blocks for trees and expand on them
+	for(int i=0; i < blockAmount; i++) {
+
+		// if the block is a wood log and the block below it is grass (meaning its the first log block of the tree)
+		if(newChunk.blockTypes[i] == 5 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) == 1) {
+
+			// get amount of log blocks to expand upon for blocks (remove 1 cus we already start with one)
+			int logAmount = ( (float)rand() / (float)(RAND_MAX) ) * (MAX_TREE_HEIGHT-MIN_TREE_HEIGHT) + MIN_TREE_HEIGHT - 1;
+
+			// if indexed y position is below half of the stone level (trying to prevent segfaults by indexing out of blockTypes)
+			if(yPos+logAmount > CHUNK_HEIGHT-STONE_LEVEL) {
+				// cap logAmount at that value
+				logAmount = CHUNK_HEIGHT-STONE_LEVEL - yPos;
+			}
+
+			// iterate thru log amount
+			for(int l=0; l < logAmount; l++) {
+
+				// get index of log block
+				int logIndex = get_block_index(newChunk.blockTypes, xPos, yPos+l, zPos);
+
+				// set that indexed block to a log block
+				newChunk.blockTypes[logIndex] = 5;
+
+			}
+
+			
+			// ---
+
+
+			// now leaves blocks
+
+			// top (100% spawn)
+			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount, zPos)] = 6;
+
+			// left (100% spawn)
+			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos-1, yPos+logAmount-1, zPos)] = 6;
+
+			// right (100% spawn)
+			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+1, yPos+logAmount-1, zPos)] = 6;
+
+			// back (100% spawn)
+			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos-1)] = 6;
+
+			// front (100% spawn)
+			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos+1)] = 6;
+
+			// random amount of extra blocks (12 extra spots if u count it)
+			int extraLeaves = (int)( ((float)rand() / (float)RAND_MAX) * 12 );
+
+			for(int l=0; l < extraLeaves; l++) {
+				// x can be from -1 - 1
+				int x =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+
+				// y can be either 0 or 1
+				int y =  floor( ((float)rand() / (float)RAND_MAX) * 2 );
+
+				// z can be from -1 - 1
+				int z =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+
+				// insert this new leaves block
+			  	newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+x, yPos+logAmount-1+y, zPos+z)] = 6;
+
+			}
+
+		}
+
+		// ---
+
+
+		xPos++;
+	
+		// if x position exceeds 16th block then reset it and increment z position
+		if(xPos >= 16) {
+			zPos++;
+			xPos = 0;
+		}
+
+		// if z position exceeds 16th block then reset it (as well as x) and increment y position
+		if(zPos >= 16) {
+			yPos++;
+			zPos = 0;
+			xPos = 0;
+		}
+
+	}
+
+	// ---
+	
+
+	// reset positions
+	xPos = 0;
+	yPos = 0;
+	zPos = 0;
+
+
 	// ---
 	
 
@@ -1573,24 +1397,12 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 		}
 
 		// declare type string
-		char* type;
+		const char* type;
 
-		// define type string based on returned block type
-		if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 1) {
-			type = "grass";
-		}
-		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 2) {
-			type = "dirt";
-		}
-		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 3) {
-			type = "stone";
-		}
-		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 4) {
-			type = "sand";
-		}
-		else if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == -1) {
-			type = "water";
-		}
+		// get string counterpart from int format of block type
+		type = int_to_string_block_type(
+				get_block_type(newChunk.blockTypes, xPos, yPos, zPos)
+		);
 
 
 		// only load vertices and indices for necessary sides

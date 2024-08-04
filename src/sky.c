@@ -412,6 +412,12 @@ void update_sun(float deltaTime) {
 		// set dayTime to a constant sixteenth of MAX_HOURS (about 45-60 degrees angle looking upwards at positive x axis)
 		dayTime = MAX_HOURS/16;
 
+		// set halfDay to false as MAX_HOURs/16 < MAX_HOURS/2
+		halfDay = false;
+
+		// set changed day mode to false
+		changedDayMode = false;
+
 		// set isDay to true so that the sun and not the moon shows
 		isDay = true;
 

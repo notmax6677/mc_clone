@@ -1,12 +1,5 @@
 WHAT THE FUK IS THAT BLACK VOID THING WHEN U GO TO THE OTHER SIDE OF THE MAP (it might have been a one time thing because i tested again and it didnt appear)
 
-T for toggle water
-
-what is this little bug with like the day, when you press N and make it day and then resume the cycle, sometimes it creates another day afterwards
-
-why is it so slow when running in wireframe mode
-
-create stars that appear at night, and that'll be the end of the day/night cycle system
 
 create tree generation
 
