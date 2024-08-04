@@ -41,7 +41,7 @@ struct Chunk {
 void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk, vec4 block);
 
 // generates a chunk
-struct Chunk generate_chunk(vec2 position, bool water);
+struct Chunk generate_chunk(vec2 position, int world_size, bool water);
 
 // optimize the chunks to remove internal faces
 void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk);

@@ -1076,13 +1076,18 @@ void insert_block(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* ri
 // ---
 
 
-struct Chunk generate_chunk(vec2 position, bool water) {
+struct Chunk generate_chunk(vec2 position, int world_size, bool water) {
 
 	// create new chunk structure instance
 	struct Chunk newChunk;
 
 	// allocate integer amount of maximum blocks possible in a chunk
 	int blockAmount = CHUNK_WIDTH*CHUNK_HEIGHT*CHUNK_LENGTH;
+
+	// if water then change the value of block amount
+	if(water) {
+		blockAmount = CHUNK_WIDTH*CHUNK_HEIGHT * world_size*world_size;
+	}
 
 	// x and y pos for placing blocks
 	int xPos = 0;
@@ -1123,24 +1128,27 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 
 
 	// ---
-	
-
-	int noiseValue = 0;
-
-	// first iteration, load all coordinates of blocks, as this allows for later optimization
-	for(int i=0; i < blockAmount; i++) {
-
-		// calculate noise value
 
 
-		noiseValue = calc_chunk_noise_value((vec2){xPos, zPos}, position);
-		
-		// cap noise value to chunk height
-		if(noiseValue >= CHUNK_HEIGHT) {
-			noiseValue = CHUNK_HEIGHT-1;
-		}
+	// if its not a water chunk
+	if(!water) {
 
-		if(!water) {
+
+		int noiseValue = 0;
+
+		// first iteration, load all coordinates of blocks, as this allows for later optimization
+		for(int i=0; i < blockAmount; i++) {
+
+			// calculate noise value
+
+
+			noiseValue = calc_chunk_noise_value((vec2){xPos, zPos}, position);
+			
+			// cap noise value to chunk height
+			if(noiseValue >= CHUNK_HEIGHT) {
+				noiseValue = CHUNK_HEIGHT-1;
+			}
+
 			// based on noise value, fill with blocks or air
 			if(yPos > CHUNK_HEIGHT-STONE_LEVEL && yPos <= noiseValue) {
 				newChunk.blockTypes[i] = 3; // stone
@@ -1179,365 +1187,421 @@ struct Chunk generate_chunk(vec2 position, bool water) {
 			if(yPos == 0) {
 				newChunk.blockTypes[i] = 4; // sand
 			}
-		}
-		else {
-			if(yPos == SAND_LEVEL-1) {
-				newChunk.blockTypes[i] = -1; // water
-			}
-			else {
-				newChunk.blockTypes[i] = 0; // air
-			}
-
-			// if bottom most layer, then fill it in automatically
-			if(yPos == 0) {
-				newChunk.blockTypes[i] = 0; // air
-			}
-
-		}
-		
-
-		// ---
-
-
-		xPos++;
-	
-		// if x position exceeds 16th block then reset it and increment z position
-		if(xPos >= 16) {
-			zPos++;
-			xPos = 0;
-		}
-
-		// if z position exceeds 16th block then reset it (as well as x) and increment y position
-		if(zPos >= 16) {
-			yPos++;
-			zPos = 0;
-			xPos = 0;
-		}
-
-	}
-
-
-	// ---
-	
-
-	// reset positions
-	xPos = 0;
-	yPos = 0;
-	zPos = 0;
-
-	
-	// ---
-	
-
-	// another for loop, find all the start blocks for trees and expand on them
-	for(int i=0; i < blockAmount; i++) {
-
-		// if the block is a wood log and the block below it is grass (meaning its the first log block of the tree)
-		if(newChunk.blockTypes[i] == 5 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) == 1) {
-
-			// get amount of log blocks to expand upon for blocks (remove 1 cus we already start with one)
-			int logAmount = ( (float)rand() / (float)(RAND_MAX) ) * (MAX_TREE_HEIGHT-MIN_TREE_HEIGHT) + MIN_TREE_HEIGHT - 1;
-
-			// if indexed y position is below half of the stone level (trying to prevent segfaults by indexing out of blockTypes)
-			if(yPos+logAmount > CHUNK_HEIGHT-STONE_LEVEL) {
-				// cap logAmount at that value
-				logAmount = CHUNK_HEIGHT-STONE_LEVEL - yPos;
-			}
-
-			// iterate thru log amount
-			for(int l=0; l < logAmount; l++) {
-
-				// get index of log block
-				int logIndex = get_block_index(newChunk.blockTypes, xPos, yPos+l, zPos);
-
-				// set that indexed block to a log block
-				newChunk.blockTypes[logIndex] = 5;
-
-			}
-
 			
+
 			// ---
 
 
-			// now leaves blocks
+			xPos++;
+		
+			// if x position exceeds 16th block then reset it and increment z position
+			if(xPos >= 16) {
+				zPos++;
+				xPos = 0;
+			}
 
-			// top (100% spawn)
-			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount, zPos)] = 6;
+			// if z position exceeds 16th block then reset it (as well as x) and increment y position
+			if(zPos >= 16) {
+				yPos++;
+				zPos = 0;
+				xPos = 0;
+			}
 
-			// left (100% spawn)
-			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos-1, yPos+logAmount-1, zPos)] = 6;
+		}
 
-			// right (100% spawn)
-			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+1, yPos+logAmount-1, zPos)] = 6;
 
-			// back (100% spawn)
-			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos-1)] = 6;
+		// ---
+		
 
-			// front (100% spawn)
-			newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos+1)] = 6;
+		// reset positions
+		xPos = 0;
+		yPos = 0;
+		zPos = 0;
 
-			// random amount of extra blocks (12 extra spots if u count it)
-			int extraLeaves = (int)( ((float)rand() / (float)RAND_MAX) * 12 );
+		
+		// ---
+		
 
-			for(int l=0; l < extraLeaves; l++) {
-				// x can be from -1 - 1
-				int x =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+		// another for loop, find all the start blocks for trees and expand on them
+		for(int i=0; i < blockAmount; i++) {
 
-				// y can be either 0 or 1
-				int y =  floor( ((float)rand() / (float)RAND_MAX) * 2 );
+			// if the block is a wood log and the block below it is grass (meaning its the first log block of the tree)
+			if(newChunk.blockTypes[i] == 5 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) == 1) {
 
-				// z can be from -1 - 1
-				int z =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+				// get amount of log blocks to expand upon for blocks (remove 1 cus we already start with one)
+				int logAmount = ( (float)rand() / (float)(RAND_MAX) ) * (MAX_TREE_HEIGHT-MIN_TREE_HEIGHT) + MIN_TREE_HEIGHT - 1;
 
-				// insert this new leaves block
-			  	newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+x, yPos+logAmount-1+y, zPos+z)] = 6;
+				// if indexed y position is below half of the stone level (trying to prevent segfaults by indexing out of blockTypes)
+				if(yPos+logAmount > CHUNK_HEIGHT-STONE_LEVEL) {
+					// cap logAmount at that value
+					logAmount = CHUNK_HEIGHT-STONE_LEVEL - yPos;
+				}
 
+				// iterate thru log amount
+				for(int l=0; l < logAmount; l++) {
+
+					// get index of log block
+					int logIndex = get_block_index(newChunk.blockTypes, xPos, yPos+l, zPos);
+
+					// set that indexed block to a log block
+					newChunk.blockTypes[logIndex] = 5;
+
+				}
+
+				
+				// ---
+
+
+				// now leaves blocks
+
+				// top (100% spawn)
+				newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount, zPos)] = 6;
+
+				// left (100% spawn)
+				newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos-1, yPos+logAmount-1, zPos)] = 6;
+
+				// right (100% spawn)
+				newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+1, yPos+logAmount-1, zPos)] = 6;
+
+				// back (100% spawn)
+				newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos-1)] = 6;
+
+				// front (100% spawn)
+				newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos, yPos+logAmount-1, zPos+1)] = 6;
+
+				// random amount of extra blocks (12 extra spots if u count it)
+				int extraLeaves = (int)( ((float)rand() / (float)RAND_MAX) * 12 );
+
+				for(int l=0; l < extraLeaves; l++) {
+					// x can be from -1 - 1
+					int x =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+
+					// y can be either 0 or 1
+					int y =  floor( ((float)rand() / (float)RAND_MAX) * 2 );
+
+					// z can be from -1 - 1
+					int z =  floor( ((float)rand() / (float)RAND_MAX) * 3  - 1);
+
+					// insert this new leaves block
+					newChunk.blockTypes[get_block_index(newChunk.blockTypes, xPos+x, yPos+logAmount-1+y, zPos+z)] = 6;
+
+				}
+
+			}
+
+			// ---
+
+
+			xPos++;
+		
+			// if x position exceeds 16th block then reset it and increment z position
+			if(xPos >= 16) {
+				zPos++;
+				xPos = 0;
+			}
+
+			// if z position exceeds 16th block then reset it (as well as x) and increment y position
+			if(zPos >= 16) {
+				yPos++;
+				zPos = 0;
+				xPos = 0;
 			}
 
 		}
 
 		// ---
-
-
-		xPos++;
-	
-		// if x position exceeds 16th block then reset it and increment z position
-		if(xPos >= 16) {
-			zPos++;
-			xPos = 0;
-		}
-
-		// if z position exceeds 16th block then reset it (as well as x) and increment y position
-		if(zPos >= 16) {
-			yPos++;
-			zPos = 0;
-			xPos = 0;
-		}
-
-	}
-
-	// ---
-	
-
-	// reset positions
-	xPos = 0;
-	yPos = 0;
-	zPos = 0;
-
-
-	// ---
-	
-
-	// define side vertices arrays for each side of a block
-	float frontVertices  [4*8];
-	float backVertices   [4*8];
-	float leftVertices   [4*8];
-	float rightVertices  [4*8];
-	float bottomVertices [4*8];
-	float topVertices    [4*8];
-
-	// create single side indices array
-	int sideIndices[6];
-
-	// now iterate (again) thru all block positions
-	for(int i=0; i < blockAmount; i++) {
-
-		// add on vertices index
-		int verticesIndex = 0;
-
-		int indicesIndex = 0;
-		int indicesOffset = 0;
-
-
-		// ---
-	
-
-		// booleans to tell whether to add those sides or not
-		bool front  = true;
-		bool back   = true;
-		bool left   = true;
-		bool right  = true;
-		bool bottom = true;
-		bool top    = true;
-
-		// set all to false if block type is 0 (air)
-		if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 0) {
-			front  = false;
-			back   = false;
-			left   = false;
-			right  = false;
-			bottom = false;
-			top    = false;
-		}
-				
-		// front
-		if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) > 0 ) {
-			front = false;
-		}
-		// back
-		if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) > 0 ) {
-			back = false;
-		}
-		// left
-		if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) > 0 ) {
-			left = false;
-		}
-		// right
-		if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
-			right = false;
-		}
-		// bottom (remove bottom face if it is the bottom-most block too)
-		if( (yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0)
-				|| yPos == 0) {
-			bottom = false;
-		}
-		// top
-		if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) > 0 ) {
-			top = false;
-		}
-
-		// declare type string
-		const char* type;
-
-		// get string counterpart from int format of block type
-		type = int_to_string_block_type(
-				get_block_type(newChunk.blockTypes, xPos, yPos, zPos)
-		);
-
-
-		// only load vertices and indices for necessary sides
 		
 
-		if(front) {
-			// generate proper vertices array and load it into frontVertices
-			create_side_vertices("front", type, xPos, yPos, zPos, frontVertices);
-			
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8 * sizeof(float)), sizeof(frontVertices), frontVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-		}
-		// increment vertices and indices index, as well as indices offset
-		verticesIndex += 4*8 * sizeof(float);
-		indicesIndex += 6 * sizeof(int);
-		indicesOffset += 4;
-
-		// increment amount of sides
-		newChunk.sides += 6;
-
-		if(back) {
-			// generate proper vertices array and load it into backVertices
-			create_side_vertices("back", type, xPos, yPos, zPos, backVertices);
-
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 1*(4*8 * sizeof(float)), sizeof(backVertices), backVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 1*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
-		}
-		// increment vertices and indices index, as well as indices offset
-		verticesIndex += 4*8 * sizeof(float);
-		indicesIndex += 6 * sizeof(int);
-		indicesOffset += 4;
-
-		if(left) {
-			// generate proper vertices array and load it into leftVertices
-			create_side_vertices("left", type,  xPos, yPos, zPos, leftVertices);
-
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 2*(4*8 * sizeof(float)), sizeof(leftVertices), leftVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 2*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
-		}
-		// increment vertices and indices index, as well as indices offset
-		verticesIndex += 4*8 * sizeof(float);
-		indicesIndex += 6 * sizeof(int);
-		indicesOffset += 4;
-
-		if(right) {
-			// generate proper vertices array and load it into rightVertices
-			create_side_vertices("right", type, xPos, yPos, zPos, rightVertices);
-
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 3*(4*8 * sizeof(float)), sizeof(rightVertices), rightVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 3*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
-		}
-		// increment vertices and indices index, as well as indices offset
-		verticesIndex += 4*8 * sizeof(float);
-		indicesIndex += 6 * sizeof(int);
-		indicesOffset += 4;
-
-		if(bottom && strcmp(type, "water") != 0) {
-			// generate proper vertices array and load it into bottomVertices
-			create_side_vertices("bottom", type, xPos, yPos, zPos, bottomVertices);
-
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 4*(4*8 * sizeof(float)), sizeof(bottomVertices), bottomVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 4*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
-		}
-		// increment vertices and indices index, as well as indices offset
-		verticesIndex += 4*8 * sizeof(float);
-		indicesIndex += 6 * sizeof(int);
-		indicesOffset += 4;
-
-		if(top) {
-			// generate proper vertices array and load it into topVertices
-			create_side_vertices("top", type, xPos, yPos, zPos, topVertices);
-
-			// generate proper indices array and load it into sideIndices
-			create_side_indices(indicesOffset, i, sideIndices);
-
-			// load proper vertices and indices array into VBO via glBufferSubData
-			glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 5*(4*8 * sizeof(float)), sizeof(topVertices), topVertices);
-			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 5*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
-
-			// increment amount of sides
-			newChunk.sides += 6;
-		}
+		// reset positions
+		xPos = 0;
+		yPos = 0;
+		zPos = 0;
 
 
 		// ---
+		
+
+		// define side vertices arrays for each side of a block
+		float frontVertices  [4*8];
+		float backVertices   [4*8];
+		float leftVertices   [4*8];
+		float rightVertices  [4*8];
+		float bottomVertices [4*8];
+		float topVertices    [4*8];
+
+		// create single side indices array
+		int sideIndices[6];
+
+		// now iterate (again) thru all block positions
+		for(int i=0; i < blockAmount; i++) {
+
+			// add on vertices index
+			int verticesIndex = 0;
+
+			int indicesIndex = 0;
+			int indicesOffset = 0;
 
 
-		xPos++;
-	
-		// if x position exceeds 16th block then reset it and increment z position
-		if(xPos >= 16) {
-			zPos++;
-			xPos = 0;
+			// ---
+		
+
+			// booleans to tell whether to add those sides or not
+			bool front  = true;
+			bool back   = true;
+			bool left   = true;
+			bool right  = true;
+			bool bottom = true;
+			bool top    = true;
+
+			// set all to false if block type is 0 (air)
+			if(get_block_type(newChunk.blockTypes, xPos, yPos, zPos) == 0) {
+				front  = false;
+				back   = false;
+				left   = false;
+				right  = false;
+				bottom = false;
+				top    = false;
+			}
+					
+			// front
+			if( zPos != CHUNK_LENGTH-1 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos+1) > 0 ) {
+				front = false;
+			}
+			// back
+			if( zPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos, zPos-1) > 0 ) {
+				back = false;
+			}
+			// left
+			if( xPos != 0 && get_block_type(newChunk.blockTypes, xPos-1, yPos, zPos) > 0 ) {
+				left = false;
+			}
+			// right
+			if( xPos != CHUNK_WIDTH-1 && get_block_type(newChunk.blockTypes, xPos+1, yPos, zPos) > 0 ) {
+				right = false;
+			}
+			// bottom (remove bottom face if it is the bottom-most block too)
+			if( (yPos != 0 && get_block_type(newChunk.blockTypes, xPos, yPos-1, zPos) > 0)
+					|| yPos == 0) {
+				bottom = false;
+			}
+			// top
+			if( yPos != CHUNK_HEIGHT-1 && get_block_type(newChunk.blockTypes, xPos, yPos+1, zPos) > 0 ) {
+				top = false;
+			}
+
+			// declare type string
+			const char* type;
+
+			// get string counterpart from int format of block type
+			type = int_to_string_block_type(
+					get_block_type(newChunk.blockTypes, xPos, yPos, zPos)
+			);
+
+
+			// only load vertices and indices for necessary sides
+			
+
+			if(front) {
+				// generate proper vertices array and load it into frontVertices
+				create_side_vertices("front", type, xPos, yPos, zPos, frontVertices);
+				
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 0*(4*8 * sizeof(float)), sizeof(frontVertices), frontVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 0*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+			}
+			// increment vertices and indices index, as well as indices offset
+			verticesIndex += 4*8 * sizeof(float);
+			indicesIndex += 6 * sizeof(int);
+			indicesOffset += 4;
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+			if(back) {
+				// generate proper vertices array and load it into backVertices
+				create_side_vertices("back", type, xPos, yPos, zPos, backVertices);
+
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 1*(4*8 * sizeof(float)), sizeof(backVertices), backVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 1*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				// increment amount of sides
+				newChunk.sides += 6;
+			}
+			// increment vertices and indices index, as well as indices offset
+			verticesIndex += 4*8 * sizeof(float);
+			indicesIndex += 6 * sizeof(int);
+			indicesOffset += 4;
+
+			if(left) {
+				// generate proper vertices array and load it into leftVertices
+				create_side_vertices("left", type,  xPos, yPos, zPos, leftVertices);
+
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 2*(4*8 * sizeof(float)), sizeof(leftVertices), leftVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 2*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				// increment amount of sides
+				newChunk.sides += 6;
+			}
+			// increment vertices and indices index, as well as indices offset
+			verticesIndex += 4*8 * sizeof(float);
+			indicesIndex += 6 * sizeof(int);
+			indicesOffset += 4;
+
+			if(right) {
+				// generate proper vertices array and load it into rightVertices
+				create_side_vertices("right", type, xPos, yPos, zPos, rightVertices);
+
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 3*(4*8 * sizeof(float)), sizeof(rightVertices), rightVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 3*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				// increment amount of sides
+				newChunk.sides += 6;
+			}
+			// increment vertices and indices index, as well as indices offset
+			verticesIndex += 4*8 * sizeof(float);
+			indicesIndex += 6 * sizeof(int);
+			indicesOffset += 4;
+
+			if(bottom && strcmp(type, "water") != 0) {
+				// generate proper vertices array and load it into bottomVertices
+				create_side_vertices("bottom", type, xPos, yPos, zPos, bottomVertices);
+
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 4*(4*8 * sizeof(float)), sizeof(bottomVertices), bottomVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 4*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				// increment amount of sides
+				newChunk.sides += 6;
+			}
+			// increment vertices and indices index, as well as indices offset
+			verticesIndex += 4*8 * sizeof(float);
+			indicesIndex += 6 * sizeof(int);
+			indicesOffset += 4;
+
+			if(top) {
+				// generate proper vertices array and load it into topVertices
+				create_side_vertices("top", type, xPos, yPos, zPos, topVertices);
+
+				// generate proper indices array and load it into sideIndices
+				create_side_indices(indicesOffset, i, sideIndices);
+
+				// load proper vertices and indices array into VBO via glBufferSubData
+				glBufferSubData(GL_ARRAY_BUFFER, (sizeof(float) * 6*4*8) * i + 5*(4*8 * sizeof(float)), sizeof(topVertices), topVertices);
+				glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, (sizeof(int) * 6*6) * i + 5*(6 * sizeof(int)), sizeof(sideIndices), sideIndices);
+
+				// increment amount of sides
+				newChunk.sides += 6;
+			}
+
+
+			// ---
+
+
+			xPos++;
+		
+			// if x position exceeds 16th block then reset it and increment z position
+			if(xPos >= 16) {
+				zPos++;
+				xPos = 0;
+			}
+
+			// if z position exceeds 16th block then reset it (as well as x) and increment y position
+			if(zPos >= 16) {
+				yPos++;
+				zPos = 0;
+				xPos = 0;
+			}
+
 		}
 
-		// if z position exceeds 16th block then reset it (as well as x) and increment y position
-		if(zPos >= 16) {
-			yPos++;
-			zPos = 0;
-			xPos = 0;
-		}
 
 	}
+	else { // if its a water chunk
+
+		// chunk x and y position
+		int chunkX = 0;
+		int chunkY = 0;
+
+		// create single side indices array
+		//int sideIndices[6];
+
+		// top vertices array
+		float topVertices[4*8];
+
+		// offset for indices
+		int indicesOffset = 0;
+
+		// x y z values for water face
+		int x = 0;
+		int y = SAND_LEVEL-1;
+		int z = 0;
+
+		// iterate through all water blocks/faces thingies in the world
+		for(int b=0; b < CHUNK_LENGTH*CHUNK_WIDTH*world_size*world_size; b++) {
+
+
+			// generate proper vertices array and load it into topVertices
+			create_side_vertices("top", "water", x, y, z, topVertices);
+
+			// generate custom indices array
+			int sideIndices[] = {
+				indicesOffset, indicesOffset+1, indicesOffset+2,
+				indicesOffset+1, indicesOffset+2, indicesOffset+3,
+			};
+
+			// load proper vertices and indices array into VBO via glBufferSubData
+			glBufferSubData(GL_ARRAY_BUFFER, 
+					b * ( sizeof(float) * 4*8 ), 
+					sizeof(topVertices), topVertices);
+
+			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 
+					b * ( sizeof(int) * 6 ),
+					sizeof(sideIndices), sideIndices);
+
+			// increment amount of sides
+			newChunk.sides += 6;
+
+			// increment indices offset
+			indicesOffset += 4;
+
+
+			// ---
+
+			
+			// position handling
+
+			x++;
+
+			if(x >= world_size*CHUNK_WIDTH) {
+				x = 0;
+				z++;
+			}
+
+		}
+
+
+
+
+	}
+	
 
 	// unbind vbo and ebo
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

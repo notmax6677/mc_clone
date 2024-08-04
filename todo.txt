@@ -1,7 +1,7 @@
-WHAT THE FUK IS THAT BLACK VOID THING WHEN U GO TO THE OTHER SIDE OF THE MAP (it might have been a one time thing because i tested again and it didnt appear)
 
+make chunks larger and also reduce world size so that less draw calls are made for a world of the same size, i think this would optimize it a bit
 
-create tree generation
+make it so that the water coloring doesn't activate when the water is toggled off
 
 create some ui for the block placement
 
@@ -10,5 +10,3 @@ TRY to fix the small bug with select block that sometimes happens along the bord
 fix the grainy stuff in the water
 
 create distance fog idk it just looks cool
-
-make it so that the world is somehow infinite

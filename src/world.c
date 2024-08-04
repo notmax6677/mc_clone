@@ -48,7 +48,7 @@ unsigned int blockShaderProgram;
 struct Chunk* chunks;
 
 // array of chunks with water blocks
-struct Chunk* waterChunks;
+struct Chunk waterChunk;
 
 int chunkCount = 0;
 
@@ -231,9 +231,6 @@ void init_world() {
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
 
-	// and waterChunks
-	waterChunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
-
 	// allocate for chunksDrawOrder
 	chunksDrawOrder = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(int));
 
@@ -241,13 +238,13 @@ void init_world() {
 	int xPos = 0;
 	int yPos = 0;
 
+	// generate water chunk
+	waterChunk  = generate_chunk((vec2){0, 0}, WORLD_SIZE, true);
+
 	// iterate thru x and z based on render distance
 	for(int i = 0; i < WORLD_SIZE*WORLD_SIZE; i++) {
 		// generate indexed chunk
-		chunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, false);
-
-		// generate indexed chunk, but now for water part of the chunk
-		waterChunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, true);
+		chunks[chunkCount] = generate_chunk((vec2){xPos, yPos}, WORLD_SIZE, false);
 
 		// increment chunk count
 		chunkCount++;
@@ -500,21 +497,7 @@ void draw_world() {
 
 	// if not underwater and drawing water mode is on
 	if(!get_under_water_level() && drawingWater) {
-		// iterate thru x and z based on render distance
-		for(int i = 0; i < chunkCount; i++) {
-
-			int index = (int)chunksDrawOrder[i];
-			
-			if((chunks[index].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-				&& chunks[index].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
-				&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-				&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
-
-
-				draw_chunk(waterChunks[index], blockShaderProgram, worldAtlas, true);
-
-			}
-		}
+			draw_chunk(waterChunk, blockShaderProgram, worldAtlas, true);
 	}
 
 
