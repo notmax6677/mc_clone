@@ -129,6 +129,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	}
 
+	// KEY T - toggle drawing water
+	if(key == GLFW_KEY_T && action == GLFW_PRESS) {
+
+		// call toggle drawing water method
+		toggleDrawingWater();
+
+	}
+
 }
 
 // mouse callback for when the cursor is moved

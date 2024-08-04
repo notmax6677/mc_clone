@@ -6,6 +6,9 @@
 
 #include "chunk.h"
 
+// toggles whether or not to draw water
+void toggleDrawingWater();
+
 // getter for world size
 int get_world_size();
 

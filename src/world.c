@@ -59,6 +59,22 @@ int* chunksDrawOrder;
 // ---
 
 
+// whether or not to render the water
+bool drawingWater = true;
+
+
+// ---
+
+
+// toggles drawing water mode
+void toggleDrawingWater() {
+	drawingWater = !drawingWater;
+}
+
+
+// ---
+
+
 // getter for world size
 int get_world_size() {
 	return WORLD_SIZE;
@@ -482,8 +498,8 @@ void draw_world() {
 	// ---
 	
 
-	// if not underwater
-	if(!get_under_water_level()) {
+	// if not underwater and drawing water mode is on
+	if(!get_under_water_level() && drawingWater) {
 		// iterate thru x and z based on render distance
 		for(int i = 0; i < chunkCount; i++) {
 
