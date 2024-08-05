@@ -1965,6 +1965,10 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	mat4* view = get_view();
 	mat4* proj = get_projection();
 
+	// get camera position
+	vec3* camPos = get_camera_pos();
+
+	// get block shading
 	float shading = get_block_shading();
 
 	// get locations of uniform camera matrices
@@ -1983,6 +1987,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// get location of uniform tide float
 	int tideLoc = glGetUniformLocation(shaderProgram, "tide");
+
+	// get location of camera position uniform vector
+	int camPosLoc = glGetUniformLocation(shaderProgram, "camPos");
 
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
@@ -2010,6 +2017,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	else {
 		glUniform1f(tideLoc, 0);
 	}
+
+	// pass camera position as uniform vector3 to vertex shader
+	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1], (*camPos)[2]);
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);
