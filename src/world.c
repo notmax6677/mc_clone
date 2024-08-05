@@ -25,8 +25,8 @@
 bool wireframeMode = false;
 
 // render distance of chunks
-const int RENDER_DISTANCE = 6;
-const int WORLD_SIZE = 20;
+const int RENDER_DISTANCE = 3;
+const int WORLD_SIZE = 10;
 
 // keep track of last chunk position of player
 vec2 lastChunkPos = GLM_VEC2_ZERO;

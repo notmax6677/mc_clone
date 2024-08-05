@@ -20,9 +20,9 @@
 
 
 // settings
-const int CHUNK_WIDTH  = 16;  // x
+const int CHUNK_WIDTH  = 32;  // x
 const int CHUNK_HEIGHT = 32;  // y
-const int CHUNK_LENGTH = 16;  // z
+const int CHUNK_LENGTH = 32;  // z
 
 // noise settings
 const int NOISE_ZOOM = 50;
@@ -170,15 +170,15 @@ struct Chunk {
 
 // gets the block type at a position relative to the chunk based on coordinates
 int get_block_type(int* blockTypes, int xPos, int yPos, int zPos) {
-	return blockTypes[yPos*16*16 + zPos*16 + xPos];
+	return blockTypes[yPos*CHUNK_WIDTH*CHUNK_LENGTH + zPos*CHUNK_LENGTH + xPos];
 }
 // returns the actual index of a block at given relative coordinates to chunk
 int get_block_index(int* blockTypes, int xPos, int yPos, int zPos) {
-	return yPos*16*16 + zPos*16 + xPos;
+	return yPos*CHUNK_WIDTH*CHUNK_LENGTH + zPos*CHUNK_LENGTH + xPos;
 }
 // sets the block type at a position relative to the chunk based on coordinates
 void set_block_type(int* blockTypes, int xPos, int yPos, int zPos, int type) {
-	blockTypes[yPos*16*16 + zPos*16 + xPos] = type;
+	blockTypes[yPos*CHUNK_WIDTH*CHUNK_LENGTH + zPos*CHUNK_LENGTH + xPos] = type;
 }
 
 
@@ -1195,13 +1195,13 @@ struct Chunk generate_chunk(vec2 position, int world_size, bool water) {
 			xPos++;
 		
 			// if x position exceeds 16th block then reset it and increment z position
-			if(xPos >= 16) {
+			if(xPos >= CHUNK_WIDTH) {
 				zPos++;
 				xPos = 0;
 			}
 
 			// if z position exceeds 16th block then reset it (as well as x) and increment y position
-			if(zPos >= 16) {
+			if(zPos >= CHUNK_LENGTH) {
 				yPos++;
 				zPos = 0;
 				xPos = 0;
@@ -1295,13 +1295,13 @@ struct Chunk generate_chunk(vec2 position, int world_size, bool water) {
 			xPos++;
 		
 			// if x position exceeds 16th block then reset it and increment z position
-			if(xPos >= 16) {
+			if(xPos >= CHUNK_WIDTH) {
 				zPos++;
 				xPos = 0;
 			}
 
 			// if z position exceeds 16th block then reset it (as well as x) and increment y position
-			if(zPos >= 16) {
+			if(zPos >= CHUNK_LENGTH) {
 				yPos++;
 				zPos = 0;
 				xPos = 0;
@@ -1518,13 +1518,13 @@ struct Chunk generate_chunk(vec2 position, int world_size, bool water) {
 			xPos++;
 		
 			// if x position exceeds 16th block then reset it and increment z position
-			if(xPos >= 16) {
+			if(xPos >= CHUNK_WIDTH) {
 				zPos++;
 				xPos = 0;
 			}
 
 			// if z position exceeds 16th block then reset it (as well as x) and increment y position
-			if(zPos >= 16) {
+			if(zPos >= CHUNK_LENGTH) {
 				yPos++;
 				zPos = 0;
 				xPos = 0;
@@ -1990,7 +1990,7 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, *proj);
 
 	// load chunk position/offset into corresponding uniform vector
-	glUniform2f(posLoc, chunk.pos[0]*16, chunk.pos[1]*16);
+	glUniform2f(posLoc, chunk.pos[0]*CHUNK_WIDTH, chunk.pos[1]*CHUNK_LENGTH);
 
 	// pass underWaterLevel boolean in the form of an integer to fragment shader
 	if(underWaterLevel) {
