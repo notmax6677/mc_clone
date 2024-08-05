@@ -25,6 +25,6 @@ void init_sky();
 void update_sky(float deltaTime);
 
 // draws the sky
-void draw_sky(unsigned int worldAtlas);
+void draw_sky(unsigned int worldAtlas, bool drawingWater);
 
 #endif

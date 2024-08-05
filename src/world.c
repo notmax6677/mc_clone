@@ -67,7 +67,7 @@ bool drawingWater = true;
 
 
 // toggles drawing water mode
-void toggleDrawingWater() {
+void toggle_drawing_water() {
 	drawingWater = !drawingWater;
 }
 
@@ -226,7 +226,7 @@ void init_world() {
 	init_sky();
 
 	// randomize noise offset for chunk generation
-	randomizeNoiseOffset();
+	randomize_noise_offset();
 
 	// allocate size to chunks
 	chunks = calloc(WORLD_SIZE*WORLD_SIZE, sizeof(struct Chunk));
@@ -408,8 +408,8 @@ void update_world(GLFWwindow* window, float deltaTime) {
 	vec2 playerChunkPos;
 	glm_vec2_copy(
 			(vec2) { 
-				floor((*camPos)[0] / get_chunk_width()), 
-				floor((*camPos)[2] / get_chunk_length())
+				round((*camPos)[0] / get_chunk_width()), 
+				round((*camPos)[2] / get_chunk_length())
 			}, 
 			playerChunkPos);
 
@@ -444,7 +444,7 @@ void update_world(GLFWwindow* window, float deltaTime) {
 void draw_world() {
 	
 	// draw the sky
-	draw_sky(worldAtlas);
+	draw_sky(worldAtlas, drawingWater);
 	
 
 	// ---
@@ -478,7 +478,7 @@ void draw_world() {
 			&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
 			&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
 
-			draw_chunk(chunks[index], blockShaderProgram, worldAtlas, false);
+			draw_chunk(chunks[index], blockShaderProgram, worldAtlas, false, drawingWater);
 
 
 		}
@@ -497,7 +497,7 @@ void draw_world() {
 
 	// if not underwater and drawing water mode is on
 	if(!get_under_water_level() && drawingWater) {
-			draw_chunk(waterChunk, blockShaderProgram, worldAtlas, true);
+			draw_chunk(waterChunk, blockShaderProgram, worldAtlas, true, drawingWater);
 	}
 
 

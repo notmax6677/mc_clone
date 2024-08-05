@@ -433,7 +433,7 @@ void update_sun(float deltaTime) {
 
 
 // draws the sun
-void draw_sun(unsigned int worldAtlas) {
+void draw_sun(unsigned int worldAtlas, bool drawingWater) {
 
 	// bind vao
 	glBindVertexArray(sunMesh.vao);
@@ -500,7 +500,7 @@ void draw_sun(unsigned int worldAtlas) {
 	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1]+y, (*camPos)[2]+z);
 
 	// pass underWaterLevel boolean in the form of an integer to fragment shader
-	if(get_under_water_level()) {
+	if(get_under_water_level() && drawingWater) {
 		glUniform1i(uwLoc, 1);
 	}
 	else {
@@ -710,7 +710,7 @@ void update_stars(float deltaTime) {
 
 }
 
-void draw_stars(unsigned int worldAtlas) {
+void draw_stars(unsigned int worldAtlas, bool drawingWater) {
 
 	// bind vao
 	glBindVertexArray(starsMesh.vao);
@@ -756,7 +756,7 @@ void draw_stars(unsigned int worldAtlas) {
 	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1], (*camPos)[2]);
 
 	// pass underWaterLevel boolean in the form of an integer to fragment shader
-	if(get_under_water_level()) {
+	if(get_under_water_level() && drawingWater) {
 		glUniform1i(uwLoc, 1);
 	}
 	else {
@@ -797,13 +797,13 @@ void update_sky(float deltaTIme) {
 	update_stars(deltaTIme);
 }
 
-void draw_sky(unsigned int worldAtlas) {
+void draw_sky(unsigned int worldAtlas, bool drawingWater) {
 	// disable depth testing specifically for the sky, so that it is drawn behind everything else
 	glDisable(GL_DEPTH_TEST);
 
-	draw_stars(worldAtlas);
+	draw_stars(worldAtlas, drawingWater);
 
-	draw_sun(worldAtlas);
+	draw_sun(worldAtlas, drawingWater);
 
 	// re-enable depth testing to render everything else
 	glEnable(GL_DEPTH_TEST);

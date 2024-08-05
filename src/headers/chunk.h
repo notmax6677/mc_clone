@@ -5,8 +5,11 @@
 
 #include "mesh.h"
 
+// toggles fog visibility
+void toggle_fog();
+
 // randomizes the noise offset
-void randomizeNoiseOffset();
+void randomize_noise_offset();
 
 // getters for chunk sizes
 int get_chunk_width();
@@ -47,6 +50,6 @@ struct Chunk generate_chunk(vec2 position, int world_size, bool water);
 void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chunk* rightChunk, struct Chunk* topChunk, struct Chunk* bottomChunk);
 
 // draw a chunk
-void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas, bool water);
+void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas, bool water, bool drawingWater);
 
 #endif

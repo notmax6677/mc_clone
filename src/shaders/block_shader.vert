@@ -14,6 +14,8 @@ uniform float tide;
 
 uniform vec3 camPos;
 
+uniform int fog;
+
 out vec3 col;
 out vec2 texCoord;
 out float opacity;
@@ -28,13 +30,18 @@ void main() {
 	col = aCol;
 	texCoord = aTexCoord;
 
-	float xOp = 1 - abs(camPos.x - (aPos.x+chunkOffset.x)) / MAXIMUM_OPACITY_DISTANCE;
-	float yOp = 1 - abs(camPos.y - aPos.y) / MAXIMUM_OPACITY_DISTANCE;
-	float zOp = 1 - abs(camPos.z - (aPos.z+chunkOffset.y)) / MAXIMUM_OPACITY_DISTANCE;
+	if(fog == 1) {
+		float xOp = 1 - abs(camPos.x - (aPos.x+chunkOffset.x)) / MAXIMUM_OPACITY_DISTANCE;
+		float yOp = 1 - abs(camPos.y - aPos.y) / MAXIMUM_OPACITY_DISTANCE;
+		float zOp = 1 - abs(camPos.z - (aPos.z+chunkOffset.y)) / MAXIMUM_OPACITY_DISTANCE;
 
-	opacity = (( xOp + yOp + zOp ) / 3) * OPACITY_MULTIPLIER;
+		opacity = (( xOp + yOp + zOp ) / 3) * OPACITY_MULTIPLIER;
 
-	if(opacity > 1.0) {
+		if(opacity > 1.0) {
+			opacity = 1.0;
+		}
+	}
+	else {
 		opacity = 1.0;
 	}
 }

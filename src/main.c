@@ -133,7 +133,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if(key == GLFW_KEY_T && action == GLFW_PRESS) {
 
 		// call toggle drawing water method
-		toggleDrawingWater();
+		toggle_drawing_water();
+
+	}
+
+	// KEY V - toggle fog visibility
+	if(key == GLFW_KEY_V && action == GLFW_PRESS) {
+
+		// toggle the fog
+		toggle_fog();
 
 	}
 

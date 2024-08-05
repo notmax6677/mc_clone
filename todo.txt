@@ -1,8 +1,4 @@
 
-make it so that you can toggle the fog
-
-make it so that the water coloring doesn't activate when the water is toggled off
-
 make a button so that you can toggle zoom
 
 make window resizable so that it doesn't stretch
@@ -10,7 +6,5 @@ make window resizable so that it doesn't stretch
 create some ui for the block placement
 
 TRY to fix the small bug with select block that sometimes happens along the border of a chunk with another chunk
-
-fix the grainy stuff in the water (anti-aliasing?)
 
 cleanup code, create system to properly free everything from memory and properly terminate program

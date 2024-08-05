@@ -50,6 +50,9 @@ const float CAM_WATER_LEVEL = SAND_LEVEL+0.5;
 // boolean that checks if camera is under water
 bool underWaterLevel = false;
 
+// boolean that states whether or not to have fog on
+bool showFog = true;
+
 // random noise offset
 float randomNoiseOffset = 0.0f;
 // divide random noise offset value by this
@@ -95,8 +98,17 @@ const char* int_to_string_block_type(int type) {
 // ---
 
 
+// toggles fog visibility
+void toggle_fog() {
+	showFog = !showFog;
+}
+
+
+// ---
+
+
 // randomizes the noise offset
-void randomizeNoiseOffset() {
+void randomize_noise_offset() {
 	// set random noise offset
 	randomNoiseOffset = rand() / RAND_NOISE_DIVIDER;
 }
@@ -1949,7 +1961,7 @@ void handle_chunk_sides(struct Chunk* chunk, struct Chunk* leftChunk, struct Chu
 // ---
 
 
-void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas, bool water) {
+void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int worldAtlas, bool water, bool drawingWater) {
 
 	// bind vao
 	glBindVertexArray(chunk.mesh.vao);
@@ -1991,6 +2003,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	// get location of camera position uniform vector
 	int camPosLoc = glGetUniformLocation(shaderProgram, "camPos");
 
+	// get location of uniform boolean for showing fog
+	int fogLoc = glGetUniformLocation(shaderProgram, "fog");
+
 	// load data into uniforms
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, *model);
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, *view);
@@ -2000,7 +2015,7 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 	glUniform2f(posLoc, chunk.pos[0]*CHUNK_WIDTH, chunk.pos[1]*CHUNK_LENGTH);
 
 	// pass underWaterLevel boolean in the form of an integer to fragment shader
-	if(underWaterLevel) {
+	if(underWaterLevel && drawingWater) {
 		glUniform1i(uwLoc, 1);
 	}
 	else {
@@ -2020,6 +2035,9 @@ void draw_chunk(struct Chunk chunk, unsigned int shaderProgram, unsigned int wor
 
 	// pass camera position as uniform vector3 to vertex shader
 	glUniform3f(camPosLoc, (*camPos)[0], (*camPos)[1], (*camPos)[2]);
+
+	// pass showFog boolean as uniform int to vertex shader
+	glUniform1i(fogLoc, showFog);
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 36 * chunk.sides, GL_UNSIGNED_INT, 0);
