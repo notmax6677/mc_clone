@@ -65,7 +65,7 @@ void draw(GLFWwindow* window) {
 	// clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	draw_world();
+	draw_world(window);
 }
 
 
@@ -145,6 +145,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	}
 
+	// KEY C - toggle camera zoom
+	if(key == GLFW_KEY_C && action == GLFW_PRESS) {
+		
+		// toggle zoom
+		toggle_zoom();
+
+	}
+
 }
 
 // mouse callback for when the cursor is moved
@@ -161,6 +169,9 @@ void mouse_input_callback(GLFWwindow* window, int button, int action, int mods) 
 void resize_callback(GLFWwindow* window, int width, int height) {
 	// set viewport
 	glViewport(0, 0, width, height);
+
+	// call resize callback for camera
+	camera_resize_callback(width, height);
 }
 
 

@@ -5,6 +5,12 @@
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
 
+// toggles the zoom of the camera
+void toggle_zoom();
+
+// callback for when the window is resized, but regarding specifically camera related processes
+void camera_resize_callback(int width, int height);
+
 // mouse position callback but only for camera processes
 void camera_mouse_callback(GLFWwindow* window, double xpos, double ypos);
 

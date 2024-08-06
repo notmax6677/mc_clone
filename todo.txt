@@ -1,7 +1,6 @@
 
-make a button so that you can toggle zoom
 
-make window resizable so that it doesn't stretch
+make a button so that you can toggle zoom
 
 create some ui for the block placement
 

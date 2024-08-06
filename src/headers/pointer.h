@@ -11,7 +11,7 @@ void init_pointer();
 void update_pointer(GLFWwindow* window);
 
 // draws pointer related stuff
-void draw_pointer(unsigned int worldAtlas);
+void draw_pointer(GLFWwindow* window, unsigned int worldAtlas);
 
 
 // ---
@@ -20,7 +20,7 @@ void draw_pointer(unsigned int worldAtlas);
 // also have the individual draw functions separate
 
 // draws the crosshair
-void draw_crosshair(unsigned int worldAtlas);
+void draw_crosshair(GLFWwindow* window, unsigned int worldAtlas);
 
 // draws the select block
 void draw_select_block(unsigned int worldAtlas);

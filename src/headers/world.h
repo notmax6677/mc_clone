@@ -28,7 +28,7 @@ void init_world();
 void update_world(GLFWwindow* window, float deltaTime);
 
 // draw world
-void draw_world();
+void draw_world(GLFWwindow* window);
 
 // getters
 

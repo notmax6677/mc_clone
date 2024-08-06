@@ -1,4 +1,3 @@
-#include <CGLM/vec3.h>
 #include <GLAD33/glad.h>
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
@@ -15,6 +14,14 @@ bool cursorLocked = false; // if cursor is locked or not
 float cursorLastX, cursorLastY; // cursor last frame coordinates
 
 
+// fov values for when zooming or not zooming
+const float NORMAL_FOV = 45.0f;
+const float ZOOM_FOV = 20.0f;
+
+// whether or not player is zooming
+bool zooming = false;
+
+
 // camera pitch + yaw
 float pitch = 0.0f;
 float yaw = 0.0f;
@@ -28,6 +35,50 @@ mat4 projection = GLM_MAT4_IDENTITY_INIT;
 vec3 cameraPos = GLM_VEC3_ZERO_INIT;
 vec3 cameraFront = GLM_VEC3_ZERO_INIT;
 vec3 cameraUp = GLM_VEC3_ZERO_INIT;
+
+
+// ---
+
+
+// last recorded widtha and height of window
+int lastRecordedWidth = 0;
+int lastRecordedHeight = 0;
+
+
+// ---
+
+
+// toggles the zoom of the camera
+void toggle_zoom() {
+	// inverse zoom boolean
+	zooming = !zooming;
+
+	// change fov value based on zooming bool
+	if(zooming) {
+		fov = ZOOM_FOV;
+	}
+	else {
+		fov = NORMAL_FOV;
+	}
+
+	// update projection matrix
+	glm_perspective( glm_rad(fov), (float)lastRecordedWidth/lastRecordedHeight, nearZ, farZ, projection );
+}
+
+
+// ---
+
+
+// callback for when the window is resized, but regarding specifically camera related processes
+void camera_resize_callback(int width, int height) {
+	// update projection matrix
+	glm_perspective( glm_rad(fov), (float)width/height, nearZ, farZ, projection );
+
+	// update last recorded width/height
+	lastRecordedWidth = width;
+	lastRecordedHeight = height;
+}
+
 
 // ---
 
@@ -208,6 +259,10 @@ void init_camera(GLFWwindow* window) {
 
 	// initiate projection matrix
 	glm_perspective( glm_rad(fov), (float)width/height, nearZ, farZ, projection);
+
+	// set initial values of last recorded width/height
+	lastRecordedWidth = width;
+	lastRecordedHeight = height;
 
 	// initiate cursor last positions by setting in the middle of the screen
 	cursorLastX = (float)width/2;

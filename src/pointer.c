@@ -545,7 +545,7 @@ void init_crosshair() {
 // ---
 
 
-void draw_crosshair(unsigned int worldAtlas) {
+void draw_crosshair(GLFWwindow* window, unsigned int worldAtlas) {
 
 	// bind vao
 	glBindVertexArray(crosshairMesh.vao);
@@ -555,6 +555,15 @@ void draw_crosshair(unsigned int worldAtlas) {
 
 	// bind texture
 	glBindTexture(GL_TEXTURE_2D, worldAtlas);
+
+	// get location of world size vector2 uniform
+	int windowSizeLoc = glGetUniformLocation(crosshairShaderProgram, "windowSize");
+
+	int width, height;
+
+	glfwGetWindowSize(window, &width, &height);
+
+	glUniform2f(windowSizeLoc, width, height);
 
 	// draw the elements
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -574,9 +583,9 @@ void update_pointer(GLFWwindow* window) {
 	update_select_block();
 }
 
-void draw_pointer(unsigned int worldAtlas) {
+void draw_pointer(GLFWwindow* window, unsigned int worldAtlas) {
 	draw_select_block(worldAtlas);
-	draw_crosshair(worldAtlas);
+	draw_crosshair(window, worldAtlas);
 }
 
 

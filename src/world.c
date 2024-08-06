@@ -441,7 +441,7 @@ void update_world(GLFWwindow* window, float deltaTime) {
 	update_pointer(window);
 }
 
-void draw_world() {
+void draw_world(GLFWwindow* window) {
 	
 	// draw the sky
 	draw_sky(worldAtlas, drawingWater);
@@ -474,9 +474,9 @@ void draw_world() {
 		int index = (int)chunksDrawOrder[i];
 		
 		if((chunks[index].pos[0] < lastChunkPos[0]+RENDER_DISTANCE
-			&& chunks[index].pos[0] > lastChunkPos[0]-RENDER_DISTANCE)
+			&& chunks[index].pos[0] >= lastChunkPos[0]-RENDER_DISTANCE)
 			&& (chunks[index].pos[1] < lastChunkPos[1]+RENDER_DISTANCE
-			&& chunks[index].pos[1] > lastChunkPos[1]-RENDER_DISTANCE)) {
+			&& chunks[index].pos[1] >= lastChunkPos[1]-RENDER_DISTANCE)) {
 
 			draw_chunk(chunks[index], blockShaderProgram, worldAtlas, false, drawingWater);
 
@@ -505,7 +505,7 @@ void draw_world() {
 	
 
 	// draw crosshair
-	draw_crosshair(worldAtlas);
+	draw_crosshair(window, worldAtlas);
 
 }
 
