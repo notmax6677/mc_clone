@@ -65,33 +65,60 @@ const float RAND_NOISE_DIVIDER = 2000;
 // takes an int and returns the string counterpart to that int block type
 const char* int_to_string_block_type(int type) {
 	// define type string based on returned block type
-	if(type == 1) {
-		return "grass";
-	}
-	else if(type == 2) {
-		return "dirt";
-	}
-	else if(type == 3) {
-		return "stone";
-	}
-	else if(type == 4) {
-		return "sand";
-	}
-	else if(type == 5) {
-		return "log";
-	}
-	else if(type == 6) {
-		return "leaves";
-	}
-	else if(type == 0) {
-		return "air";
-	}
-	else if(type == -1) {
-		return "water";
+	
+	switch(type) {
+		case 1:
+			return "grass";
+			break;
+
+		case 2:
+			return "dirt";
+			break;
+
+		case 3:
+			return "stone";
+			break;
+
+		case 4:
+			return "sand";
+			break;
+
+		case 5:
+			return "log";
+			break;
+
+		case 6:
+			return "leaves";
+			break;
+
+		case 7:
+			return "planks";
+			break;
+
+		case 8:
+			return "bricks";
+			break;
+
+		case 9:
+			return "diamond";
+			break;
+
+		case 10:
+			return "smile";
+			break;
+
+		case 0:
+			return "air";
+			break;
+
+		case -1:
+			return "water";
+			break;
+
+		default:
+			return NULL; // return NULL by default
 	}
 
-	// if none of the previous conditions met, return NULL
-	return NULL;
 }
 
 
@@ -248,6 +275,22 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 	else if(strcmp(blockType, "leaves") == 0) {
 		// copy leaves texture coords array to tex_coords
 		memcpy(texCoords, LEAVES_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "planks") == 0) {
+		// copy planks texture coords array to tex_coords
+		memcpy(texCoords, PLANKS_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "bricks") == 0) {
+		// copy bricks texture coords array to tex_coords
+		memcpy(texCoords, BRICKS_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "diamond") == 0) {
+		// copy diamond texture coords array to tex_coords
+		memcpy(texCoords, DIAMOND_TEX_COORDS, sizeof(int) * 8*6);
+	}
+	else if(strcmp(blockType, "smile") == 0) {
+		// copy smile texture coords array to tex_coords
+		memcpy(texCoords, SMILE_TEX_COORDS, sizeof(int) * 8*6);
 	}
 	else if(strcmp(blockType, "water") == 0) {
 		// copy sand texture coords array to tex_coords

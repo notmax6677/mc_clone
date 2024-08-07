@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "headers/chunk.h"
+#include "headers/menu.h"
 #include "headers/world.h"
 #include "headers/camera.h"
 #include "headers/image.h"
@@ -266,8 +267,9 @@ void update_select_block() {
 		iterations++;
 	}
 
-	// if blocktype is still air by the end, then just move the select position to 0, 0, 0 to avoid it being shown
-	if(selectBlockType == 0) {
+	// if blocktype is still air by the end or selectPos y coordinate is above chunk height bounds,
+	// then just move the select position to 0, 0, 0 to avoid it being shown
+	if(selectBlockType == 0 || selectPos[1] >= get_chunk_height()-1) {
 		glm_vec3_copy(GLM_VEC3_ZERO, selectPos);
 		// set selectingSomething to false
 		selectingSomething = false;
@@ -559,10 +561,13 @@ void draw_crosshair(GLFWwindow* window, unsigned int worldAtlas) {
 	// get location of world size vector2 uniform
 	int windowSizeLoc = glGetUniformLocation(crosshairShaderProgram, "windowSize");
 
+	// window width and height integers to later be filled
 	int width, height;
 
+	// get the window size and fill width/height values with data
 	glfwGetWindowSize(window, &width, &height);
 
+	// pass width and height as a uniform vector2 to the vertex shader
 	glUniform2f(windowSizeLoc, width, height);
 
 	// draw the elements
@@ -639,7 +644,8 @@ void place_block() {
 		int index = get_chunk_index(playerChunkPos[0], playerChunkPos[1]);
 
 		// insert block and process main main, surrounding chunks can be passed as NULL as when placing a block it wont matter
-		insert_block(newChunk, NULL, NULL, NULL, NULL, (vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], 5});
+		insert_block(newChunk, NULL, NULL, NULL, NULL,
+				(vec4){relativeSelectPos[0], relativeSelectPos[1], relativeSelectPos[2], get_selected_item()});
 
 		set_chunk(index, newChunk);
 

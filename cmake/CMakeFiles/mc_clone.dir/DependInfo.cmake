@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/max/Projects/c/mc_clone/src/file.c" "CMakeFiles/mc_clone.dir/src/file.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/file.c.o.d"
   "/home/max/Projects/c/mc_clone/src/image.c" "CMakeFiles/mc_clone.dir/src/image.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/image.c.o.d"
   "/home/max/Projects/c/mc_clone/src/main.c" "CMakeFiles/mc_clone.dir/src/main.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/main.c.o.d"
+  "/home/max/Projects/c/mc_clone/src/menu.c" "CMakeFiles/mc_clone.dir/src/menu.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/menu.c.o.d"
   "/home/max/Projects/c/mc_clone/src/pointer.c" "CMakeFiles/mc_clone.dir/src/pointer.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/pointer.c.o.d"
   "/home/max/Projects/c/mc_clone/src/shader.c" "CMakeFiles/mc_clone.dir/src/shader.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/shader.c.o.d"
   "/home/max/Projects/c/mc_clone/src/sky.c" "CMakeFiles/mc_clone.dir/src/sky.c.o" "gcc" "CMakeFiles/mc_clone.dir/src/sky.c.o.d"

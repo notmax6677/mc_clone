@@ -1,9 +1,11 @@
 
 
-make a button so that you can toggle zoom
-
-create some ui for the block placement
-
-TRY to fix the small bug with select block that sometimes happens along the border of a chunk with another chunk
+spawn in the middle of the map
 
 cleanup code, create system to properly free everything from memory and properly terminate program
+
+localize project dependencies so that only make and cmake installations are necessary to download and compile this
+
+add macos compatibility for opengl core 3.3 and glfw (maybe ask discord if anything should be done LMAO)
+
+do you need to include headers in the CMakeLists.txt?

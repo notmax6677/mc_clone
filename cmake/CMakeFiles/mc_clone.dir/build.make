@@ -181,10 +181,24 @@ CMakeFiles/mc_clone.dir/src/sky.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/mc_clone.dir/src/sky.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/max/Projects/c/mc_clone/src/sky.c -o CMakeFiles/mc_clone.dir/src/sky.c.s
 
+CMakeFiles/mc_clone.dir/src/menu.c.o: CMakeFiles/mc_clone.dir/flags.make
+CMakeFiles/mc_clone.dir/src/menu.c.o: /home/max/Projects/c/mc_clone/src/menu.c
+CMakeFiles/mc_clone.dir/src/menu.c.o: CMakeFiles/mc_clone.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/mc_clone.dir/src/menu.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/mc_clone.dir/src/menu.c.o -MF CMakeFiles/mc_clone.dir/src/menu.c.o.d -o CMakeFiles/mc_clone.dir/src/menu.c.o -c /home/max/Projects/c/mc_clone/src/menu.c
+
+CMakeFiles/mc_clone.dir/src/menu.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/mc_clone.dir/src/menu.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/max/Projects/c/mc_clone/src/menu.c > CMakeFiles/mc_clone.dir/src/menu.c.i
+
+CMakeFiles/mc_clone.dir/src/menu.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/mc_clone.dir/src/menu.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/max/Projects/c/mc_clone/src/menu.c -o CMakeFiles/mc_clone.dir/src/menu.c.s
+
 CMakeFiles/mc_clone.dir/src/shader.c.o: CMakeFiles/mc_clone.dir/flags.make
 CMakeFiles/mc_clone.dir/src/shader.c.o: /home/max/Projects/c/mc_clone/src/shader.c
 CMakeFiles/mc_clone.dir/src/shader.c.o: CMakeFiles/mc_clone.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/mc_clone.dir/src/shader.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/mc_clone.dir/src/shader.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/mc_clone.dir/src/shader.c.o -MF CMakeFiles/mc_clone.dir/src/shader.c.o.d -o CMakeFiles/mc_clone.dir/src/shader.c.o -c /home/max/Projects/c/mc_clone/src/shader.c
 
 CMakeFiles/mc_clone.dir/src/shader.c.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/mc_clone.dir/src/shader.c.s: cmake_force
 CMakeFiles/mc_clone.dir/src/image.c.o: CMakeFiles/mc_clone.dir/flags.make
 CMakeFiles/mc_clone.dir/src/image.c.o: /home/max/Projects/c/mc_clone/src/image.c
 CMakeFiles/mc_clone.dir/src/image.c.o: CMakeFiles/mc_clone.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/mc_clone.dir/src/image.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/mc_clone.dir/src/image.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/mc_clone.dir/src/image.c.o -MF CMakeFiles/mc_clone.dir/src/image.c.o.d -o CMakeFiles/mc_clone.dir/src/image.c.o -c /home/max/Projects/c/mc_clone/src/image.c
 
 CMakeFiles/mc_clone.dir/src/image.c.i: cmake_force
@@ -212,7 +226,7 @@ CMakeFiles/mc_clone.dir/src/image.c.s: cmake_force
 CMakeFiles/mc_clone.dir/src/file.c.o: CMakeFiles/mc_clone.dir/flags.make
 CMakeFiles/mc_clone.dir/src/file.c.o: /home/max/Projects/c/mc_clone/src/file.c
 CMakeFiles/mc_clone.dir/src/file.c.o: CMakeFiles/mc_clone.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/mc_clone.dir/src/file.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/mc_clone.dir/src/file.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/mc_clone.dir/src/file.c.o -MF CMakeFiles/mc_clone.dir/src/file.c.o.d -o CMakeFiles/mc_clone.dir/src/file.c.o -c /home/max/Projects/c/mc_clone/src/file.c
 
 CMakeFiles/mc_clone.dir/src/file.c.i: cmake_force
@@ -233,6 +247,7 @@ mc_clone_OBJECTS = \
 "CMakeFiles/mc_clone.dir/src/pointer.c.o" \
 "CMakeFiles/mc_clone.dir/src/world.c.o" \
 "CMakeFiles/mc_clone.dir/src/sky.c.o" \
+"CMakeFiles/mc_clone.dir/src/menu.c.o" \
 "CMakeFiles/mc_clone.dir/src/shader.c.o" \
 "CMakeFiles/mc_clone.dir/src/image.c.o" \
 "CMakeFiles/mc_clone.dir/src/file.c.o"
@@ -248,6 +263,7 @@ bin/mc_clone: CMakeFiles/mc_clone.dir/src/test_block.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/pointer.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/world.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/sky.c.o
+bin/mc_clone: CMakeFiles/mc_clone.dir/src/menu.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/shader.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/image.c.o
 bin/mc_clone: CMakeFiles/mc_clone.dir/src/file.c.o
@@ -258,7 +274,7 @@ bin/mc_clone: lib/libcglm.so.0.9.5
 bin/mc_clone: /usr/lib/x86_64-linux-gnu/librt.a
 bin/mc_clone: /usr/lib/x86_64-linux-gnu/libm.so
 bin/mc_clone: CMakeFiles/mc_clone.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking C executable bin/mc_clone"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/max/Projects/c/mc_clone/cmake/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking C executable bin/mc_clone"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mc_clone.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

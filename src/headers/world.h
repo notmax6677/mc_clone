@@ -12,6 +12,9 @@ void toggle_drawing_water();
 // getter for world size
 int get_world_size();
 
+// getter for the value of the world atlas
+unsigned int get_world_atlas();
+
 // gets the chunk object based on the snapped chunks position
 struct Chunk* get_chunk(int xPos, int yPos);
 

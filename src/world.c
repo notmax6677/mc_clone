@@ -84,6 +84,15 @@ int get_world_size() {
 // ---
 
 
+// getter for the value of the world atlas
+unsigned int get_world_atlas() {
+	return worldAtlas;
+}
+
+
+// ---
+
+
 // sorts a chunks array based on distance from camera, back to front
 void sortChunks() {
 	// create new vec2 array, x for chunk index, y for distance from player

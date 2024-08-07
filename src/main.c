@@ -8,6 +8,7 @@
 #include "headers/camera.h"
 #include "headers/world.h"
 #include "headers/pointer.h"
+#include "headers/menu.h"
 
 #include "headers/sky.h"
 
@@ -40,6 +41,8 @@ void init(GLFWwindow* window) {
 	init_camera(window);
 
 	init_world();
+
+	init_menu();
 }
 
 // frame update
@@ -52,6 +55,8 @@ void update(GLFWwindow* window) {
 	update_camera(window, deltaTime);
 
 	update_world(window, deltaTime);
+
+	update_menu(window);
 }
 
 // frame draw
@@ -66,6 +71,9 @@ void draw(GLFWwindow* window) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	draw_world(window);
+
+	draw_menu(window, get_world_atlas());
+
 }
 
 
