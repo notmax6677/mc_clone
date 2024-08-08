@@ -316,7 +316,7 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
 		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
 
-		r = 0.8f; g = 0.8f; b = 0.8f;
+		r = 0.85f; g = 0.85f; b = 0.85f;
 
 		textureOffset = 8;
 	}
@@ -326,7 +326,7 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
 		x4 = 0.0f; y4 = 0.0f; z4 = 1.0f;
 
-		r = 0.8f; g = 0.8f; b = 0.8f;
+		r = 0.75f; g = 0.75f; b = 0.75f;
 
 		textureOffset = 16;
 	}
@@ -345,6 +345,8 @@ void create_side_vertices(const char* side, const char* blockType, int xPos, int
 		x2 = 1.0f; y2 = 0.0f; z2 = 1.0f;
 		x3 = 0.0f; y3 = 0.0f; z3 = 0.0f;
 		x4 = 1.0f; y4 = 0.0f; z4 = 0.0f;
+
+		r = 0.7f; g = 0.7f; b = 0.7f;
 
 		textureOffset = 32;
 	}
