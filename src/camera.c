@@ -48,6 +48,16 @@ int lastRecordedHeight = 0;
 // ---
 
 
+// centres the camera by positioning it in the centre of the world
+void centre_cam_pos(int world_size, int chunk_width, int chunk_length) {
+	cameraPos[0] = (world_size/2) * chunk_width;  // x
+	cameraPos[2] = (world_size/2) * chunk_length; // z
+}
+
+
+// ---
+
+
 // toggles the zoom of the camera
 void toggle_zoom() {
 	// inverse zoom boolean

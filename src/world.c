@@ -407,6 +407,13 @@ void init_world() {
 
 	// sort chunk draw order
 	sortChunks();
+
+
+	// ---
+	
+
+	// centre the camera in the middle of world
+	centre_cam_pos(WORLD_SIZE, get_chunk_width(), get_chunk_length());
 }
 
 void update_world(GLFWwindow* window, float deltaTime) {
