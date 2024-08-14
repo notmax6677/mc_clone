@@ -26,7 +26,7 @@
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include <stdarg.h>
 
@@ -78,6 +78,7 @@ int main(int argc, char** argv)
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+    glfwSetInputMode(window, GLFW_UNLIMITED_MOUSE_BUTTONS, GLFW_TRUE);
 
     glfwMakeContextCurrent(window);
     gladLoadGL(glfwGetProcAddress);

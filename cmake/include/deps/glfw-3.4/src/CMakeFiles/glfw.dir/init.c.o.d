@@ -20,6 +20,7 @@ include/deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/platform.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/null_platform.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/wl_platform.h \
@@ -47,7 +48,6 @@ include/deps/glfw-3.4/src/CMakeFiles/glfw.dir/init.c.o: \
  /usr/include/xkbcommon/xkbcommon-keysyms.h \
  /usr/include/xkbcommon/xkbcommon-compat.h \
  /usr/include/xkbcommon/xkbcommon-compose.h \
- /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/xkb_unicode.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/posix_poll.h \
  /usr/include/poll.h /usr/include/x86_64-linux-gnu/sys/poll.h \

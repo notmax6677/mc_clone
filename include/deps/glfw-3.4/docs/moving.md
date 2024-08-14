@@ -27,7 +27,7 @@ __Old syntax__
 
 __New syntax__
 ```c
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 
@@ -451,7 +451,7 @@ __Old syntax__
 __New syntax__
 ```c
 #define GLFW_INCLUDE_GLU
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 There are many libraries that offer replacements for the functionality offered

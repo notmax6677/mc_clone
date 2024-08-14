@@ -34,7 +34,7 @@
 #define GLAD_GL_IMPLEMENTATION
 #include <glad/gl.h>
 #define GLFW_INCLUDE_NONE
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -630,6 +630,7 @@ int main(int argc, char** argv)
             glfwTerminate();
             exit(EXIT_FAILURE);
         }
+        glfwSetInputMode(slots[i].window, GLFW_UNLIMITED_MOUSE_BUTTONS, GLFW_TRUE);
 
         glfwSetWindowUserPointer(slots[i].window, slots + i);
 

@@ -153,7 +153,6 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: /home/max/Projects/c/mc_clone/src/chunk.c
   /home/max/Projects/c/mc_clone/include/CGLM/cglm.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
-  /home/max/Projects/c/mc_clone/include/NOISE/noise1234.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -221,6 +220,7 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: /home/max/Projects/c/mc_clone/src/chunk.c
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
+  /home/max/Projects/c/mc_clone/include/NOISE/noise1234.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
@@ -363,7 +363,6 @@ CMakeFiles/mc_clone.dir/src/file.c.o: /home/max/Projects/c/mc_clone/src/file.c \
   /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h
 
 CMakeFiles/mc_clone.dir/src/image.c.o: /home/max/Projects/c/mc_clone/src/image.c \
-  /home/max/Projects/c/mc_clone/include/STB/stb_image.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -431,6 +430,7 @@ CMakeFiles/mc_clone.dir/src/image.c.o: /home/max/Projects/c/mc_clone/src/image.c
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
+  /home/max/Projects/c/mc_clone/include/STB/stb_image.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
   /usr/include/endian.h \

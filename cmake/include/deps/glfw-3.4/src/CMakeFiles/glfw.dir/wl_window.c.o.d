@@ -20,6 +20,7 @@ include/deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
+ /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/platform.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/null_platform.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/wl_platform.h \
@@ -49,7 +50,6 @@ include/deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o: \
  /usr/include/xkbcommon/xkbcommon-keysyms.h \
  /usr/include/xkbcommon/xkbcommon-compat.h \
  /usr/include/xkbcommon/xkbcommon-compose.h \
- /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/xkb_unicode.h \
  /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/posix_poll.h \
  /usr/include/poll.h /usr/include/x86_64-linux-gnu/sys/poll.h \
@@ -177,14 +177,14 @@ include/deps/glfw-3.4/src/CMakeFiles/glfw.dir/wl_window.c.o: \
  /usr/include/x86_64-linux-gnu/sys/timerfd.h \
  /usr/include/x86_64-linux-gnu/bits/timerfd.h \
  /usr/include/linux/input-event-codes.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/wayland-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/wayland-client-protocol.h \
  /usr/include/wayland-client.h /usr/include/wayland-client-core.h \
  /usr/include/wayland-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/xdg-shell-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/xdg-decoration-unstable-v1-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/viewporter-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/relative-pointer-unstable-v1-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/pointer-constraints-unstable-v1-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/xdg-activation-v1-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/idle-inhibit-unstable-v1-client-protocol.h \
- /home/max/Projects/c/mc_clone/include/deps/glfw-3.4/src/fractional-scale-v1-client-protocol.h
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/xdg-shell-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/xdg-decoration-unstable-v1-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/viewporter-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/relative-pointer-unstable-v1-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/pointer-constraints-unstable-v1-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/xdg-activation-v1-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/idle-inhibit-unstable-v1-client-protocol.h \
+ /home/max/Projects/c/mc_clone/cmake/include/deps/glfw-3.4/src/fractional-scale-v1-client-protocol.h

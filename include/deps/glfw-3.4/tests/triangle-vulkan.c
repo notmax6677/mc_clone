@@ -44,7 +44,7 @@
 #define GLAD_VULKAN_IMPLEMENTATION
 #include <glad/vulkan.h>
 #define GLFW_INCLUDE_NONE
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #define DEMO_TEXTURE_COUNT 1
 #define VERTEX_BUFFER_BIND_ID 0

@@ -20,7 +20,7 @@ You should include the GLFW header in the source files where you use OpenGL or
 GLFW.
 
 ```c
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 This header defines all the constants and declares all the types and function
@@ -51,7 +51,7 @@ Most extension loaders also define macros that disable similar headers below it.
 
 ```c
 #include <glad/gl.h>
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 Both of these mechanisms depend on the extension loader header defining a known
@@ -62,7 +62,7 @@ headers in any order.
 
 ```c
 #define GLFW_INCLUDE_NONE
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <glad/gl.h>
 ```
 
@@ -194,7 +194,7 @@ defining it in your source code before including the GLFW header.
 
 ```c
 #define GLFW_DLL
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 All link-time dependencies for GLFW are already listed in the _Additional
@@ -242,7 +242,7 @@ done before including the GLFW header:
 
 ```c
 #define GLFW_DLL
-#include "../include/GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 ```
 
 It can also be done on the command-line:
@@ -310,7 +310,7 @@ With a few changes to your `CMakeLists.txt` you can locate the package and
 target files generated when GLFW is installed.
 
 ```cmake
-find_package(glfw3 3.4 REQUIRED)
+find_package(glfw3 3.5 REQUIRED)
 ```
 
 Once GLFW has been added to the project, link against it with the `glfw` target.
@@ -390,8 +390,8 @@ If you are using the dynamic library version of GLFW, add it to the project
 dependencies.
 
 If you are using the static library version of GLFW, add it and the Cocoa,
-OpenGL and IOKit frameworks to the project as dependencies.  They can all be
-found in `/System/Library/Frameworks`.
+OpenGL, IOKit and QuartzCore frameworks to the project as dependencies.  They
+can all be found in `/System/Library/Frameworks`.
 
 
 ### With command-line or makefile on macOS {#build_link_osx}
@@ -405,7 +405,7 @@ command-line yourself using the `-l` and `-framework` switches.
 If you are using the dynamic GLFW library, which is named `libglfw.3.dylib`, do:
 
 ```sh
-cc -o myprog myprog.c -lglfw -framework Cocoa -framework OpenGL -framework IOKit
+cc -o myprog myprog.c -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework QuartzCore
 ```
 
 If you are using the static library, named `libglfw3.a`, substitute `-lglfw3`
