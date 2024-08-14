@@ -1,6 +1,5 @@
 #include "../include/GLAD33/glad.h"
 #include "../include/GLFW/glfw3.h"
-#include "../include/CGLM/cglm.h"
 
 #include <stdio.h>
 #include <time.h>
@@ -205,6 +204,11 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+// enable forward compatibility if running on mac os
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);	
+#endif
 
 	// create window object
 	GLFWwindow* window = glfwCreateWindow(initWidth, initHeight, initTitle, NULL, NULL);
