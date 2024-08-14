@@ -1,6 +1,6 @@
 #include "../include/GLAD33/glad.h"
 #include "../include/GLFW/glfw3.h"
-#include <CGLM/cglm.h>
+#include "../include/CGLM/cglm.h"
 
 #include <NOISE/noise1234.h>
 

@@ -20,8 +20,8 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
  /home/max/Projects/c/mc_clone/src/../include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/common.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/cglm.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/common.h \
  /usr/include/stdlib.h /usr/include/x86_64-linux-gnu/bits/waitflags.h \
  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
  /usr/include/x86_64-linux-gnu/bits/floatn.h \
@@ -57,67 +57,67 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/float.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/types.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/types.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdalign.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/intrin.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/intrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/mm_malloc.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/emmintrin.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/x86.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/intrin.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/util.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec2-ext.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec4-ext.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/vec3-ext.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/ivec2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/ivec3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/ivec4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/mat4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/../../common.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/../intrin.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/x86.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/intrin.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/util.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec2-ext.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec4-ext.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/vec3-ext.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/ivec2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/ivec3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/ivec4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/mat4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/../../common.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/../intrin.h \
  /usr/include/assert.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat4x2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat4x3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/mat3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat3x2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat3x4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/mat2.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat2x3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/mat2x4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/affine.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/affine-mat.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/affine.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/affine-pre.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/affine-post.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/cam.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/plane.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/persp.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/../common.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/../plane.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/../mat4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/ortho_rh_no.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/persp_rh_no.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/persp.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/view_rh_no.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/view_rh.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/frustum.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/quat.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/simd/sse2/quat.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/euler.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/handed/euler_to_quat_rh.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/handed/../common.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/aabb2d.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/box.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/color.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/io.h /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat4x2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat4x3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/mat3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat3x2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat3x4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/mat2.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat2x3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/mat2x4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/affine.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/affine-mat.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/affine.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/affine-pre.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/affine-post.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/cam.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/plane.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/persp.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/../common.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/../plane.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/../mat4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/ortho_rh_no.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/persp_rh_no.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/persp.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/view_rh_no.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/view_rh.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/frustum.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/quat.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/simd/sse2/quat.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/euler.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/handed/euler_to_quat_rh.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/handed/../common.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/aabb2d.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/box.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/color.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/io.h \
+ /usr/include/stdio.h /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
@@ -126,16 +126,16 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/project.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/project_no.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/../vec3.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/clipspace/../vec4.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/sphere.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/ease.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/curve.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/bezier.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/ray.h \
- /home/max/Projects/c/mc_clone/./include/CGLM/affine2d.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/project.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/project_no.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/../vec3.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/clipspace/../vec4.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/sphere.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/ease.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/curve.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/bezier.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/ray.h \
+ /home/max/Projects/c/mc_clone/src/../include/CGLM/affine2d.h \
  /home/max/Projects/c/mc_clone/./include/NOISE/noise1234.h \
  /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
@@ -145,5 +145,6 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /home/max/Projects/c/mc_clone/src/headers/camera.h \
  /home/max/Projects/c/mc_clone/./include/../include/GLAD33/glad.h \
  /home/max/Projects/c/mc_clone/./include/../include/GLFW/glfw3.h \
+ /home/max/Projects/c/mc_clone/./include/../include/CGLM/cglm.h \
  /home/max/Projects/c/mc_clone/src/headers/sky.h \
  /home/max/Projects/c/mc_clone/src/headers/tex_coords.h

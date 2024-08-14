@@ -1,7 +1,7 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <CGLM/cglm.h>
+#include "../include/CGLM/cglm.h"
 
 #include "mesh.h"
 

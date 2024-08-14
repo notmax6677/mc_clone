@@ -3,7 +3,7 @@
 
 #include "../include/GLAD33/glad.h"
 #include "../include/GLFW/glfw3.h"
-#include <CGLM/cglm.h>
+#include "../include/CGLM/cglm.h"
 
 // centres the camera by positioning it in the centre of the world
 void centre_cam_pos(int world_size, int chunk_width, int chunk_length);

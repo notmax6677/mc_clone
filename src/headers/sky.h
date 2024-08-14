@@ -1,7 +1,7 @@
 #ifndef SKY_H
 #define SKY_H
 
-#include <CGLM/cglm.h>
+#include "../include/CGLM/cglm.h"
 
 // returns the current block shading
 float get_block_shading();
