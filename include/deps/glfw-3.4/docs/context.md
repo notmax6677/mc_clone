@@ -185,7 +185,7 @@ it suppresses the development environment's OpenGL or OpenGL ES header.
 
 ```c
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 Finally, you need to initialize glad once you have a suitable current context.
@@ -267,7 +267,7 @@ the GLFW header.
 
 ```c
 #define GLFW_INCLUDE_GLEXT
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 
@@ -310,7 +310,7 @@ when used together.
 
 ```c
 #define GLFW_INCLUDE_GLEXT
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 
 #define glSpecializeShaderARB pfnSpecializeShaderARB
 PFNGLSPECIALIZESHADERARBPROC pfnSpecializeShaderARB;

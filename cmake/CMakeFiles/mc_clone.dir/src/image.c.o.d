@@ -77,7 +77,7 @@ CMakeFiles/mc_clone.dir/src/image.c.o: \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/mm_malloc.h \
  /home/max/Projects/c/mc_clone/src/../include/GLAD33/glad.h \
  /home/max/Projects/c/mc_clone/src/../include/GLAD33/khrplatform.h \
- /home/max/Projects/c/mc_clone/./include/GLFW/glfw3.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLFW/glfw3.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/common.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/float.h \

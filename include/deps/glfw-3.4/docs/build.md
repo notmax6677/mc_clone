@@ -20,7 +20,7 @@ You should include the GLFW header in the source files where you use OpenGL or
 GLFW.
 
 ```c
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 This header defines all the constants and declares all the types and function
@@ -51,7 +51,7 @@ Most extension loaders also define macros that disable similar headers below it.
 
 ```c
 #include <glad/gl.h>
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 Both of these mechanisms depend on the extension loader header defining a known
@@ -62,7 +62,7 @@ headers in any order.
 
 ```c
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 #include <glad/gl.h>
 ```
 
@@ -194,7 +194,7 @@ defining it in your source code before including the GLFW header.
 
 ```c
 #define GLFW_DLL
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 All link-time dependencies for GLFW are already listed in the _Additional
@@ -242,7 +242,7 @@ done before including the GLFW header:
 
 ```c
 #define GLFW_DLL
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 It can also be done on the command-line:

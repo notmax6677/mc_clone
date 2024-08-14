@@ -20,7 +20,7 @@ In the source files of your application where you use GLFW, you need to include
 its header file.
 
 ```c
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 This header provides all the constants, types and function prototypes of the
@@ -38,7 +38,7 @@ include the one from your development environment.
 
 ```c
 #include <glad/gl.h>
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 To make sure there will be no header conflicts, you can define @ref
@@ -48,7 +48,7 @@ in any order.
 
 ```c
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 #include <glad/gl.h>
 ```
 

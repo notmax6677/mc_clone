@@ -70,9 +70,9 @@ CMakeFiles/mc_clone.dir/src/camera.c.o: /home/max/Projects/c/mc_clone/src/camera
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
   /usr/include/endian.h \
@@ -150,6 +150,7 @@ CMakeFiles/mc_clone.dir/src/camera.c.o: /home/max/Projects/c/mc_clone/src/camera
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/chunk.c.o: /home/max/Projects/c/mc_clone/src/chunk.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -214,10 +215,10 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: /home/max/Projects/c/mc_clone/src/chunk.c
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/NOISE/noise1234.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
@@ -424,10 +425,10 @@ CMakeFiles/mc_clone.dir/src/image.c.o: /home/max/Projects/c/mc_clone/src/image.c
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/STB/stb_image.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
   /usr/include/endian.h \
@@ -518,6 +519,7 @@ CMakeFiles/mc_clone.dir/src/image.c.o: /home/max/Projects/c/mc_clone/src/image.c
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/main.c.o: /home/max/Projects/c/mc_clone/src/main.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -582,9 +584,9 @@ CMakeFiles/mc_clone.dir/src/main.c.o: /home/max/Projects/c/mc_clone/src/main.c \
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/menu.h \
@@ -739,9 +741,9 @@ CMakeFiles/mc_clone.dir/src/menu.c.o: /home/max/Projects/c/mc_clone/src/menu.c \
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
   /home/max/Projects/c/mc_clone/src/headers/shader.h \
@@ -822,6 +824,7 @@ CMakeFiles/mc_clone.dir/src/menu.c.o: /home/max/Projects/c/mc_clone/src/menu.c \
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/pointer.c.o: /home/max/Projects/c/mc_clone/src/pointer.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -886,9 +889,9 @@ CMakeFiles/mc_clone.dir/src/pointer.c.o: /home/max/Projects/c/mc_clone/src/point
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
@@ -1037,9 +1040,9 @@ CMakeFiles/mc_clone.dir/src/shader.c.o: /home/max/Projects/c/mc_clone/src/shader
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/file.h \
   /usr/include/alloca.h \
   /usr/include/assert.h \
@@ -1118,6 +1121,7 @@ CMakeFiles/mc_clone.dir/src/shader.c.o: /home/max/Projects/c/mc_clone/src/shader
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/sky.c.o: /home/max/Projects/c/mc_clone/src/sky.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -1182,9 +1186,9 @@ CMakeFiles/mc_clone.dir/src/sky.c.o: /home/max/Projects/c/mc_clone/src/sky.c \
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
@@ -1267,6 +1271,7 @@ CMakeFiles/mc_clone.dir/src/sky.c.o: /home/max/Projects/c/mc_clone/src/sky.c \
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/test_block.c.o: /home/max/Projects/c/mc_clone/src/test_block.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -1331,9 +1336,9 @@ CMakeFiles/mc_clone.dir/src/test_block.c.o: /home/max/Projects/c/mc_clone/src/te
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
+  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
-  /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \
   /home/max/Projects/c/mc_clone/src/headers/mesh.h \
@@ -1414,6 +1419,7 @@ CMakeFiles/mc_clone.dir/src/test_block.c.o: /home/max/Projects/c/mc_clone/src/te
   /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h
 
 CMakeFiles/mc_clone.dir/src/world.c.o: /home/max/Projects/c/mc_clone/src/world.c \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
   /home/max/Projects/c/mc_clone/include/CGLM/aabb2d.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-mat.h \
   /home/max/Projects/c/mc_clone/include/CGLM/affine-post.h \
@@ -1478,10 +1484,10 @@ CMakeFiles/mc_clone.dir/src/world.c.o: /home/max/Projects/c/mc_clone/src/world.c
   /home/max/Projects/c/mc_clone/include/CGLM/vec3.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4-ext.h \
   /home/max/Projects/c/mc_clone/include/CGLM/vec4.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
-  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/include/GLFW/glfw3.h \
   /home/max/Projects/c/mc_clone/include/NOISE/noise1234.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/glad.h \
+  /home/max/Projects/c/mc_clone/include/GLAD33/khrplatform.h \
   /home/max/Projects/c/mc_clone/src/headers/camera.h \
   /home/max/Projects/c/mc_clone/src/headers/chunk.h \
   /home/max/Projects/c/mc_clone/src/headers/image.h \

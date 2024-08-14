@@ -18,7 +18,7 @@ CMakeFiles/mc_clone.dir/src/shader.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /home/max/Projects/c/mc_clone/./include/GLFW/glfw3.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/common.h \

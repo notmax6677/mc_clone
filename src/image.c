@@ -2,7 +2,7 @@
 #include <STB/stb_image.h>
 
 #include "../include/GLAD33/glad.h"
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 #include <CGLM/cglm.h>
 
 // loads an image texture and returns the gl reference object to it

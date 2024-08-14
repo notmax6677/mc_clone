@@ -2,7 +2,7 @@
 #define CAMERA_H
 
 #include "../include/GLAD33/glad.h"
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 #include <CGLM/cglm.h>
 
 // centres the camera by positioning it in the centre of the world

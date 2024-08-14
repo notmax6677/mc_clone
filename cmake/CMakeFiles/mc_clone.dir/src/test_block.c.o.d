@@ -19,7 +19,7 @@ CMakeFiles/mc_clone.dir/src/test_block.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
- /home/max/Projects/c/mc_clone/./include/GLFW/glfw3.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/cglm.h \
  /home/max/Projects/c/mc_clone/./include/CGLM/common.h \
@@ -140,4 +140,5 @@ CMakeFiles/mc_clone.dir/src/test_block.c.o: \
  /home/max/Projects/c/mc_clone/src/headers/image.h \
  /home/max/Projects/c/mc_clone/src/headers/camera.h \
  /home/max/Projects/c/mc_clone/./include/../include/GLAD33/glad.h \
+ /home/max/Projects/c/mc_clone/./include/../include/GLFW/glfw3.h \
  /home/max/Projects/c/mc_clone/src/headers/mesh.h

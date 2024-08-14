@@ -59,7 +59,7 @@ the GLFW header.
 
 ```c
 #define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 If you instead want to include the Vulkan header from a custom location or use
@@ -67,7 +67,7 @@ your own custom Vulkan header then do this before the GLFW header.
 
 ```c
 #include <path/to/vulkan.h>
-#include <GLFW/glfw3.h>
+#include "../include/GLFW/glfw3.h"
 ```
 
 Unless a Vulkan header is included, either by the GLFW header or above it, the following
