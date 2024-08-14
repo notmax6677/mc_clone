@@ -1,6 +1,6 @@
 CMakeFiles/mc_clone.dir/src/image.c.o: \
  /home/max/Projects/c/mc_clone/src/image.c /usr/include/stdc-predef.h \
- /home/max/Projects/c/mc_clone/./include/STB/stb_image.h \
+ /home/max/Projects/c/mc_clone/src/../include/STB/stb_image.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

@@ -136,7 +136,7 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /home/max/Projects/c/mc_clone/src/../include/CGLM/bezier.h \
  /home/max/Projects/c/mc_clone/src/../include/CGLM/ray.h \
  /home/max/Projects/c/mc_clone/src/../include/CGLM/affine2d.h \
- /home/max/Projects/c/mc_clone/./include/NOISE/noise1234.h \
+ /home/max/Projects/c/mc_clone/src/../include/NOISE/noise1234.h \
  /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \

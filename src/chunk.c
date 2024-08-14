@@ -2,7 +2,7 @@
 #include "../include/GLFW/glfw3.h"
 #include "../include/CGLM/cglm.h"
 
-#include <NOISE/noise1234.h>
+#include "../include/NOISE/noise1234.h"
 
 #include <stdio.h>
 #include <stdlib.h>

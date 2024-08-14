@@ -1,5 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include <STB/stb_image.h>
+#include "../include/STB/stb_image.h"
 
 #include "../include/GLAD33/glad.h"
 #include "../include/GLFW/glfw3.h"
