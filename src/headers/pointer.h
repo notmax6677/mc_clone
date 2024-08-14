@@ -1,7 +1,7 @@
 #ifndef POINTER_H
 #define POINTER_H
 
-#include <GLAD33/glad.h>
+#include "../include/GLAD33/glad.h"
 #include <GLFW/glfw3.h>
 
 // initiates pointer related stuff

@@ -1,7 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <GLAD33/glad.h>
+#include "../include/GLAD33/glad.h"
 #include <GLFW/glfw3.h>
 
 #include "chunk.h"

@@ -1,8 +1,8 @@
 CMakeFiles/mc_clone.dir/src/test_block.c.o: \
  /home/max/Projects/c/mc_clone/src/test_block.c \
  /usr/include/stdc-predef.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/glad.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -139,4 +139,5 @@ CMakeFiles/mc_clone.dir/src/test_block.c.o: \
  /home/max/Projects/c/mc_clone/./include/CGLM/affine2d.h \
  /home/max/Projects/c/mc_clone/src/headers/image.h \
  /home/max/Projects/c/mc_clone/src/headers/camera.h \
+ /home/max/Projects/c/mc_clone/./include/../include/GLAD33/glad.h \
  /home/max/Projects/c/mc_clone/src/headers/mesh.h

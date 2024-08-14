@@ -1,7 +1,7 @@
 CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /home/max/Projects/c/mc_clone/src/chunk.c /usr/include/stdc-predef.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/glad.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -143,5 +143,6 @@ CMakeFiles/mc_clone.dir/src/chunk.c.o: \
  /usr/include/strings.h /home/max/Projects/c/mc_clone/src/headers/mesh.h \
  /home/max/Projects/c/mc_clone/src/headers/image.h \
  /home/max/Projects/c/mc_clone/src/headers/camera.h \
+ /home/max/Projects/c/mc_clone/./include/../include/GLAD33/glad.h \
  /home/max/Projects/c/mc_clone/src/headers/sky.h \
  /home/max/Projects/c/mc_clone/src/headers/tex_coords.h

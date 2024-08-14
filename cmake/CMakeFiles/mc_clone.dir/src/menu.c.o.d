@@ -1,7 +1,7 @@
 CMakeFiles/mc_clone.dir/src/menu.c.o: \
  /home/max/Projects/c/mc_clone/src/menu.c /usr/include/stdc-predef.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/glad.h \
- /home/max/Projects/c/mc_clone/./include/GLAD33/khrplatform.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/glad.h \
+ /home/max/Projects/c/mc_clone/src/../include/GLAD33/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \

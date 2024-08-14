@@ -1,7 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <STB/stb_image.h>
 
-#include <GLAD33/glad.h>
+#include "../include/GLAD33/glad.h"
 #include <GLFW/glfw3.h>
 #include <CGLM/cglm.h>
 
