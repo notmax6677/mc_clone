@@ -529,6 +529,19 @@ void draw_world(GLFWwindow* window) {
 // ---
 
 
+// terminates stuff from the world
+void terminate_world() {
+
+	// free everything from heap memory
+	free(chunks);
+	free(chunksDrawOrder);
+
+}
+
+
+// ---
+
+
 // getters
 
 // gets the current wireframe mode

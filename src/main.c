@@ -80,6 +80,15 @@ void draw(GLFWwindow* window) {
 // ---
 
 
+// terminate everything in the game (freeing from heap and stuff like that)
+void terminate() {
+	terminate_world();
+}
+
+
+// ---
+
+
 // callback for when keys are pressed, down, released etc
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
@@ -265,6 +274,9 @@ int main() {
 
 	// terminate glfw at end of program
 	glfwTerminate();
+
+	// call custom terminate method
+	terminate();
 
 	return 0;
 }

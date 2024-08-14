@@ -33,6 +33,9 @@ void update_world(GLFWwindow* window, float deltaTime);
 // draw world
 void draw_world(GLFWwindow* window);
 
+// terminate stuff from world
+void terminate_world();
+
 // getters
 
 // gets the current wireframe mode
