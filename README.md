@@ -2,13 +2,13 @@
 
 # image
 
-<b>Features:</b>
-- Procedural world generation
-- Distance-based fog
-- Block variation
-- Day/night cycle
-- Time based moving water levels
-- Fully breakable/buildable world
+<b>[Features:](https://github.com/notmax6677/mc_clone/edit/main/README.md#features)</b>
+- Procedural World Generation
+- Distance-Based Fog
+- Block Variation
+- Day/Night Cycle
+- Dynamic Water-Levels
+- Fully Breakable/Buildable World
 
 ## Small Description
 So this project was mainly a product of my own curiosity that was heavily inspired by [JDH's Minecraft series](https://github.com/jdah/minecraft-weekend),
@@ -46,16 +46,18 @@ which I admit wasn't much of an efficient choice, as I had to kinda re-learn som
 
 <b>KEY X</b> : Toggle X-Ray/Wireframe Mode
 
-## Procedural World Generation
+## Features
 
-## Distance-Based Fog
+### Procedural World Generation
 
-## Block Variation
+### Distance-Based Fog
 
-## Day/Night Cycle
+### Block Variation
 
-## Dynamic Water-Levels
+### Day/Night Cycle
 
-## Fully Breakable/Buildable World
+### Dynamic Water-Levels
+
+### Fully Breakable/Buildable World
 
 ## Building
