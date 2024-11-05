@@ -2,7 +2,7 @@
 
 # image
 
-<b>[Features:](https://github.com/notmax6677/mc_clone/edit/main/README.md#features)</b>
+<b>[Features:](https://github.com/notmax6677/mc_clone/main/README.md#features)</b>
 - Procedural World Generation
 - Distance-Based Fog
 - Block Variation
